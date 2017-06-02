@@ -9,20 +9,6 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.IO;
 
-//Put requests have the following format
-//{ "mode": mode_code, "action": "PUT_REQUEST", "source" : source, "session": session, "target": target, "tuple" : tuple }
-
-//Get requests have the following format
-//{ "mode": mode_code, "action": request,       "source" : source, "session": session, "target": target, "template" : template }
-
-
-//Put responses
-//{ "action": "PUT_RESPONSE", "source" : source, "session": session, "target": target, "code" : code , "message": message }
-
-//Get responses
-//{ "action": response,       "source" : source, "session": session, "target": target, "result": result , "code" : code , "message": message }
-
-
 namespace dotSpace.Objects.Network
 {
     [DataContract]
@@ -34,7 +20,9 @@ namespace dotSpace.Objects.Network
             this.Code = code;
             this.Message = message;
         }
+        [DataMember]
         public int Code { get; set; }
+        [DataMember]
         public string Message { get; set; }
 
     }

@@ -8,6 +8,20 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 
+//Put requests have the following format
+//{ "mode": mode_code, "action": "PUT_REQUEST", "source" : source, "session": session, "target": target, "tuple" : tuple }
+
+//Get requests have the following format
+//{ "mode": mode_code, "action": request,       "source" : source, "session": session, "target": target, "template" : template }
+
+
+//Put responses
+//{ "action": "PUT_RESPONSE", "source" : source, "session": session, "target": target, "code" : code , "message": message }
+
+//Get responses
+//{ "action": response,       "source" : source, "session": session, "target": target, "result": result , "code" : code , "message": message }
+
+
 namespace dotSpace.Objects.Network
 {
     [DataContract]
@@ -46,8 +60,7 @@ namespace dotSpace.Objects.Network
             MemoryStream stream1 = new MemoryStream();
             DataContractJsonSerializer ser = new DataContractJsonSerializer(this.GetType());
             ser.WriteObject(stream1, this);
-
-            return Encoding.UTF8.GetString(stream1.GetBuffer());
+            return Encoding.UTF8.GetString(stream1.ToArray());
         }
     }
 }
