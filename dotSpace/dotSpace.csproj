@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="BaseClasses\AgentBase.cs" />
     <Compile Include="BaseClasses\NodeBase.cs" />
-    <Compile Include="BaseClasses\ResponseBase.cs" />
+    <Compile Include="Objects\Network\Messages\BasicResponse.cs" />
     <Compile Include="Enumerations\Action.cs" />
     <Compile Include="Enumerations\ConnectionMode.cs" />
     <Compile Include="Interfaces\IFields.cs" />
@@ -53,16 +53,21 @@
     <Compile Include="Interfaces\ITuple.cs" />
     <Compile Include="Interfaces\ITupleSpace.cs" />
     <Compile Include="BaseClasses\MessageBase.cs" />
+    <Compile Include="Objects\Network\ConnProtocol.cs" />
     <Compile Include="Objects\Network\Messages\GetRequest.cs" />
     <Compile Include="Objects\Network\Messages\GetResponse.cs" />
     <Compile Include="Objects\Network\Messages\PutResponse.cs" />
     <Compile Include="Objects\Network\Messages\PutRequest.cs" />
-    <Compile Include="Objects\Network\RemoteNode.cs" />
-    <Compile Include="BaseClasses\RequestBase.cs" />
+    <Compile Include="Objects\Network\ClientNode.cs" />
+    <Compile Include="Objects\Network\Messages\BasicRequest.cs" />
+    <Compile Include="Objects\Network\ServerNode.cs" />
+    <Compile Include="Objects\Network\TcpListener.cs" />
     <Compile Include="Objects\Pattern.cs" />
     <Compile Include="Objects\Network\Port.cs" />
+    <Compile Include="Objects\ProcessRequest.cs" />
     <Compile Include="Objects\Tuple.cs" />
     <Compile Include="Objects\TupleSpace.cs" />
+    <Compile Include="Objects\Json.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

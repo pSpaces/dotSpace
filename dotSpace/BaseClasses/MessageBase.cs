@@ -55,12 +55,6 @@ namespace dotSpace.Objects.Network
             }
         }
 
-        public string GetData()
-        {
-            MemoryStream stream1 = new MemoryStream();
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(this.GetType());
-            ser.WriteObject(stream1, this);
-            return Encoding.UTF8.GetString(stream1.ToArray());
-        }
+
     }
 }

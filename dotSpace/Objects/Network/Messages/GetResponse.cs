@@ -12,8 +12,8 @@ using System.IO;
 namespace dotSpace.Objects.Network
 {
     [DataContract]
-    [KnownType(typeof(RequestBase))]
-    public class GetResponse : ResponseBase
+    [KnownType(typeof(BasicRequest))]
+    public class GetResponse : BasicResponse
     {
         public GetResponse(string source, string session, string target, IFields result, int code, string message) : base(ActionType.GET_RESPONSE, source, session, target, code, message)
         {

@@ -12,8 +12,8 @@ using System.IO;
 namespace dotSpace.Objects.Network
 {
     [DataContract]
-    [KnownType(typeof(RequestBase))]
-    public class PutRequest : RequestBase
+    [KnownType(typeof(BasicRequest))]
+    public class PutRequest : BasicRequest
     {
         public PutRequest(ConnectionMode mode, string source, string session, string target, ITuple tuple) : base(mode, ActionType.PUT_REQUEST, source, session, target)
         {

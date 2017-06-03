@@ -12,8 +12,8 @@ using System.IO;
 namespace dotSpace.Objects.Network
 {
     [DataContract]
-    [KnownType(typeof(RequestBase))]
-    public class GetRequest : RequestBase
+    [KnownType(typeof(BasicRequest))]
+    public class GetRequest : BasicRequest
     {
         public GetRequest(ConnectionMode mode, string source, string session, string target, IPattern template) : base(mode, ActionType.GET_REQUEST, source, session, target)
         {

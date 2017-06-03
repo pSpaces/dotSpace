@@ -6,9 +6,9 @@ namespace dotSpace.Objects.Network
 {
     [DataContract]
     [KnownType(typeof(MessageBase))]
-    public abstract class RequestBase : MessageBase
+    public class BasicRequest : MessageBase
     {
-        public RequestBase(ConnectionMode mode, ActionType action, string source, string session, string target) : base(action, source, session, target)
+        public BasicRequest(ConnectionMode mode, ActionType action, string source, string session, string target) : base(action, source, session, target)
         {
             this.Mode = mode;
 
