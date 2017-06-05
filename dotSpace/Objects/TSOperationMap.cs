@@ -23,7 +23,7 @@ namespace dotSpace.Objects
             this.operationMap.Add(typeof(QueryPRequest), this.PerformQueryP);
         }
 
-        public BasicResponse ExecuteRequest(BasicRequest request)
+        public BasicResponse Execute(BasicRequest request)
         {
             Type requestType = request.GetType();
             if (this.operationMap.ContainsKey(requestType))
@@ -33,7 +33,6 @@ namespace dotSpace.Objects
 
             return new BasicResponse(request.Action, request.Source, request.Session, request.Target, 400, "Unknown operation");
         }
-
         private BasicResponse PerformPut(BasicRequest request)
         {
             ITupleSpace ts = this.serverNode[request.Target];
@@ -45,7 +44,6 @@ namespace dotSpace.Objects
             }
             return new PutResponse(request.Source, request.Session, request.Target, 404, "Unknown target");
         }
-
         private BasicResponse PerformGet(BasicRequest request)
         {
             ITupleSpace ts = this.serverNode[request.Target];
@@ -57,7 +55,6 @@ namespace dotSpace.Objects
             }
             return new GetResponse(request.Source, request.Session, request.Target, null, 404, "Unknown target");
         }
-
         private BasicResponse PerformGetP(BasicRequest request)
         {
             ITupleSpace ts = this.serverNode[request.Target];
@@ -69,7 +66,6 @@ namespace dotSpace.Objects
             }
             return new GetPResponse(request.Source, request.Session, request.Target, null, 404, "Unknown target");
         }
-
         private BasicResponse PerformQuery(BasicRequest request)
         {
             ITupleSpace ts = this.serverNode[request.Target];

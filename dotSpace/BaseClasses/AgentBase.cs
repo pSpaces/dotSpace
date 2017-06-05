@@ -1,10 +1,5 @@
 ﻿using dotSpace.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace dotSpace.BaseClasses
 {
@@ -32,7 +27,5 @@ namespace dotSpace.BaseClasses
         }
 
         public abstract void DoWork();
-
-
     }
 }

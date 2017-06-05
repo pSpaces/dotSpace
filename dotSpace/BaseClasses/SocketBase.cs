@@ -45,6 +45,14 @@ namespace dotSpace.Objects.Network
                 this.client.Close();
             }
         }
+        public void Close()
+        {
+            if (this.client.Connected)
+            {
+                this.client.Close();
+            }
+        }
+
         protected abstract MessageBase Decode<T>(string msg) where T : MessageBase;
         protected string Encode(MessageBase message)
         {
