@@ -1,7 +1,7 @@
 ﻿using dotSpace.Enumerations;
 using System.Runtime.Serialization;
 
-namespace dotSpace.Objects.Network
+namespace dotSpace.Objects.Network.Messages.Responses
 {
     [DataContract]
     [KnownType(typeof(MessageBase))]

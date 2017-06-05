@@ -12,6 +12,7 @@ namespace dotSpace.Objects
         public Tuple(params object[] fields)
         {
             this.Fields = fields;
+
         }
 
         public int Size { get { return Fields.Length; } }

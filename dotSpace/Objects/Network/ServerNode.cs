@@ -1,6 +1,8 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Enumerations;
 using dotSpace.Interfaces;
+using dotSpace.Objects.Network.Messages.Requests;
+using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 
@@ -12,20 +14,22 @@ namespace dotSpace.Objects.Network
         #region // Fields
         private TcpListener listener;
         private Dictionary<string, ITupleSpace> spaces;
-        private Dictionary<ConnectionMode, Protocol> protocols;
+        private Dictionary<ConnectionMode, ProtocolBase> protocols;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public ServerNode(int port, bool listenOnStart = false)
+        public ServerNode(int port, string address = "", bool listenOnStart = false)
         {
-            this.listener = new TcpListener(port);
+            address = string.IsNullOrEmpty(address) ? this.GetLocalIPAddress() : address;
+            this.listener = new TcpListener(address, port);
             this.spaces = new Dictionary<string, ITupleSpace>();
-            this.protocols = new Dictionary<ConnectionMode, Protocol>();
+            this.protocols = new Dictionary<ConnectionMode, ProtocolBase>();
             this.protocols.Add(ConnectionMode.CONN, new ConnProtocol(this));
-            this.protocols.Add(ConnectionMode.PUSH, new PushProtocol(this));
+            //this.protocols.Add(ConnectionMode.PUSH, new PushProtocol(this));
+            //this.protocols.Add(ConnectionMode.PULL, new PushProtocol(this));
             if (listenOnStart)
             {
                 this.StartListen();
@@ -54,25 +58,25 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public override ITuple Get(string identifier, IPattern pattern)
+        public override ITuple Get(string target, IPattern pattern)
         {
-            return this[identifier].Get(pattern);
+            return this[target].Get(pattern);
         }
-        public override ITuple GetP(string identifier, IPattern pattern)
+        public override ITuple GetP(string target, IPattern pattern)
         {
-            return this[identifier].GetP(pattern);
+            return this[target].GetP(pattern);
         }
-        public override ITuple Query(string identifier, IPattern pattern)
+        public override ITuple Query(string target, IPattern pattern)
         {
-            return this[identifier].Query(pattern);
+            return this[target].Query(pattern);
         }
-        public override ITuple QueryP(string identifier, IPattern pattern)
+        public override ITuple QueryP(string target, IPattern pattern)
         {
-            return this[identifier].QueryP(pattern);
+            return this[target].QueryP(pattern);
         }
-        public override void Put(string identifier, ITuple t)
+        public override void Put(string target, ITuple t)
         {
-            this[identifier].Put(t);
+            this[target].Put(t);
         }
         public void StartListen()
         {
@@ -95,18 +99,6 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Protected Methods
 
-        protected override T Decode<T>(string msg) 
-        {
-            BasicRequest breq = msg.Deserialize<BasicRequest>();
-            switch (breq.Action)
-            {
-                case ActionType.PUT_REQUEST: return msg.Deserialize<PutRequest>() as T;
-                case ActionType.GET_REQUEST: return msg.Deserialize<GetRequest>() as T;
-                case ActionType.QUERY_REQUEST: return msg.Deserialize<GetRequest>() as T;
-            }
-
-            return default(T);
-        }
 
         #endregion
 
@@ -115,17 +107,29 @@ namespace dotSpace.Objects.Network
 
         private void OnClientConnect(TcpClient client)
         {
-            BasicRequest request = this.Receive<BasicRequest>(client);
-            //this.GetProtocol(request)?.Execute(client, request);
+            ServerSocket socket = new ServerSocket(client);
+            MessageBase message = socket.Receive<BasicRequest>();
+            BasicRequest request = this.ValidateMessage<BasicRequest>(message);
+            this.GetProtocol(request)?.Execute(socket, request);
         }
-        private Protocol GetProtocol(BasicRequest request)
+        private ProtocolBase GetProtocol(BasicRequest request)
         {
             if (this.protocols.ContainsKey(request.Mode))
             {
                 return this.protocols[request.Mode];
             }
 
-            return null;
+            return null; // TODO: return response error
+        }
+
+
+        private T ValidateMessage<T>(MessageBase message) where T : BasicRequest
+        {
+            if (message is BasicRequest)
+            {
+                return message as T;
+            }
+            throw new Exception(string.Format("Unknown request"));
         }
 
         #endregion

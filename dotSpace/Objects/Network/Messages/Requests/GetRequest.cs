@@ -1,15 +1,8 @@
 ﻿using dotSpace.Enumerations;
 using dotSpace.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using System.IO;
 
-namespace dotSpace.Objects.Network
+namespace dotSpace.Objects.Network.Messages.Requests
 {
     [DataContract]
     [KnownType(typeof(BasicRequest))]

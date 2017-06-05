@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace dotSpace.Objects.Network
+namespace dotSpace.Objects.Network.Messages.Requests
 {
     [DataContract]
     [KnownType(typeof(MessageBase))]

@@ -45,7 +45,18 @@
   <ItemGroup>
     <Compile Include="BaseClasses\AgentBase.cs" />
     <Compile Include="BaseClasses\NodeBase.cs" />
-    <Compile Include="Objects\Network\Messages\BasicResponse.cs" />
+    <Compile Include="BaseClasses\ProtocolBase.cs" />
+    <Compile Include="Objects\Network\Messages\Requests\GetPRequest.cs" />
+    <Compile Include="Objects\Network\Messages\Requests\QueryPRequest.cs" />
+    <Compile Include="Objects\Network\Messages\Requests\QueryRequest.cs" />
+    <Compile Include="Objects\Network\Messages\Responses\GetPResponse.cs" />
+    <Compile Include="Objects\Network\Messages\Responses\QueryPResponse.cs" />
+    <Compile Include="Objects\Network\Messages\Responses\QueryResponse.cs" />
+    <Compile Include="Objects\Network\PullProtocol.cs" />
+    <Compile Include="Objects\Network\PushProtocol.cs" />
+    <Compile Include="Objects\Network\ServerSocket.cs" />
+    <Compile Include="Objects\Network\ClientSocket.cs" />
+    <Compile Include="Objects\Network\Messages\Responses\BasicResponse.cs" />
     <Compile Include="Enumerations\Action.cs" />
     <Compile Include="Enumerations\ConnectionMode.cs" />
     <Compile Include="Interfaces\IFields.cs" />
@@ -54,23 +65,26 @@
     <Compile Include="Interfaces\ITupleSpace.cs" />
     <Compile Include="BaseClasses\MessageBase.cs" />
     <Compile Include="Objects\Network\ConnProtocol.cs" />
-    <Compile Include="Objects\Network\Messages\GetRequest.cs" />
-    <Compile Include="Objects\Network\Messages\GetResponse.cs" />
-    <Compile Include="Objects\Network\Messages\PutResponse.cs" />
-    <Compile Include="Objects\Network\Messages\PutRequest.cs" />
+    <Compile Include="Objects\Network\Messages\Requests\GetRequest.cs" />
+    <Compile Include="Objects\Network\Messages\Responses\GetResponse.cs" />
+    <Compile Include="Objects\Network\Messages\Responses\PutResponse.cs" />
+    <Compile Include="Objects\Network\Messages\Requests\PutRequest.cs" />
     <Compile Include="Objects\Network\ClientNode.cs" />
-    <Compile Include="Objects\Network\Messages\BasicRequest.cs" />
+    <Compile Include="Objects\Network\Messages\Requests\BasicRequest.cs" />
     <Compile Include="Objects\Network\ServerNode.cs" />
+    <Compile Include="BaseClasses\SocketBase.cs" />
     <Compile Include="Objects\Network\TcpListener.cs" />
     <Compile Include="Objects\Pattern.cs" />
     <Compile Include="Objects\Network\Port.cs" />
-    <Compile Include="Objects\ProcessRequest.cs" />
+    <Compile Include="Objects\TSOperationMap.cs" />
     <Compile Include="Objects\Tuple.cs" />
     <Compile Include="Objects\TupleSpace.cs" />
     <Compile Include="Objects\Json.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Notes.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

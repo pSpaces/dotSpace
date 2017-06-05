@@ -25,10 +25,10 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public TcpListener(int port)
+        public TcpListener(string address, int port)
         {
             this.port = port;
-            this.ipAddress = IPAddress.Parse(this.GetLocalIPAddress());
+            this.ipAddress = IPAddress.Parse(address);
             this.listener = new System.Net.Sockets.TcpListener(ipAddress, this.port);
         }
 
@@ -57,19 +57,6 @@ namespace dotSpace.Objects.Network
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Private Methods
-
-        private string GetLocalIPAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            throw new Exception("Local IP Address Not Found!");
-        }
 
         private void Listen()
         {
