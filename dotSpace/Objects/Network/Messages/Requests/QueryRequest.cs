@@ -8,9 +8,9 @@ namespace dotSpace.Objects.Network.Messages.Requests
     [KnownType(typeof(BasicRequest))]
     public class QueryRequest : BasicRequest
     {
-        public QueryRequest(ConnectionMode mode, string source, string session, string target, IPattern template) : base(mode, ActionType.QUERY_REQUEST, source, session, target)
+        public QueryRequest(ConnectionMode mode, string source, string session, string target, object[] template) : base(mode, ActionType.QUERY_REQUEST, source, session, target)
         {
-            this.Template = template.Fields;
+            this.Template = template;
         }
 
         [DataMember]

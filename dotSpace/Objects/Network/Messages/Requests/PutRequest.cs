@@ -8,9 +8,9 @@ namespace dotSpace.Objects.Network.Messages.Requests
     [KnownType(typeof(BasicRequest))]
     public class PutRequest : BasicRequest
     {
-        public PutRequest(ConnectionMode mode, string source, string session, string target, ITuple tuple) : base(mode, ActionType.PUT_REQUEST, source, session, target)
+        public PutRequest(ConnectionMode mode, string source, string session, string target, object[] tuple) : base(mode, ActionType.PUT_REQUEST, source, session, target)
         {
-            this.Tuple = tuple.Fields;
+            this.Tuple = tuple;
         }
 
         [DataMember]

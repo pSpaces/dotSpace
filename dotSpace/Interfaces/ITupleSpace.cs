@@ -13,5 +13,11 @@ namespace dotSpace.Interfaces
         ITuple Query(IPattern pattern);
         ITuple QueryP(IPattern pattern);
         void Put(ITuple t);
+
+        ITuple Get(params object[] values);
+        ITuple GetP(params object[] values);
+        ITuple Query(params object[] values);
+        ITuple QueryP(params object[] values);
+        void Put(params object[] values);
     }
 }

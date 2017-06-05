@@ -21,7 +21,7 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public ServerNode(int port, string address = "", bool listenOnStart = false) : base(address, port)
+        public ServerNode(int port, string address = "", bool listenOnStart = true) : base(address, port)
         {
             this.listener = new TcpListener(this.address, this.port);
             this.spaces = new Dictionary<string, ITupleSpace>();
@@ -73,10 +73,32 @@ namespace dotSpace.Objects.Network
         {
             return this[target]?.QueryP(pattern);
         }
-        public override void Put(string target, ITuple t)
+        public override void Put(string target, ITuple tuple)
         {
-            this[target]?.Put(t);
+            this[target]?.Put(tuple);
         }
+        public override ITuple Get(string target, params object[] pattern)
+        {
+            return this[target]?.Get(pattern);
+        }
+        public override ITuple GetP(string target, params object[] pattern)
+        {
+            return this[target]?.GetP(pattern);
+        }
+        public override ITuple Query(string target, params object[] pattern)
+        {
+            return this[target]?.Query(pattern);
+        }
+        public override ITuple QueryP(string target, params object[] pattern)
+        {
+            return this[target]?.QueryP(pattern);
+        }
+        public override void Put(string target, params object[] tuple)
+        {
+            this[target]?.Put(tuple);
+        }
+
+
         public void StartListen()
         {
             this.listener.Start(this.OnClientConnect);

@@ -25,33 +25,55 @@ namespace dotSpace.Objects.Network
 
         public override ITuple Get(string target, IPattern pattern)
         {
+            return this.Get(target, pattern.Fields);
+        }
+        public override ITuple GetP(string target, IPattern pattern)
+        {
+            return this.GetP(target, pattern.Fields);
+        }
+        public override ITuple Query(string target, IPattern pattern)
+        {
+            return this.Query(target, pattern.Fields);
+        }
+        public override ITuple QueryP(string target, IPattern pattern)
+        {
+            return this.QueryP(target, pattern.Fields);
+        }
+        public override void Put(string target, ITuple tuple)
+        {
+            this.Put(target, tuple.Fields);
+        }
+
+        public override ITuple Get(string target, params object[] pattern)
+        {
             GetRequest request = new GetRequest(this.mode, this.GetSource(), this.GetSessionId(), target, pattern);
             GetResponse response = this.GetProtocol()?.PerformRequest<GetResponse>(this.CreateEndpoint(), request);
             return response.Result == null ? null : new Tuple(response.Result);
         }
-        public override ITuple GetP(string target, IPattern pattern)
+        public override ITuple GetP(string target, params object[] pattern)
         {
             GetPRequest request = new GetPRequest(this.mode, this.GetSource(), this.GetSessionId(), target, pattern);
             GetPResponse response = this.GetProtocol()?.PerformRequest<GetPResponse>(this.CreateEndpoint(), request);
             return response.Result == null ? null : new Tuple(response.Result);
         }
-        public override ITuple Query(string target, IPattern pattern)
+        public override ITuple Query(string target, params object[] pattern)
         {
             QueryRequest request = new QueryRequest(this.mode, this.GetSource(), this.GetSessionId(), target, pattern);
             QueryResponse response = this.GetProtocol()?.PerformRequest<QueryResponse>(this.CreateEndpoint(), request);
             return response.Result == null ? null : new Tuple(response.Result);
         }
-        public override ITuple QueryP(string target, IPattern pattern)
+        public override ITuple QueryP(string target, params object[] pattern)
         {
             QueryPRequest request = new QueryPRequest(this.mode, this.GetSource(), this.GetSessionId(), target, pattern);
             QueryPResponse response = this.GetProtocol()?.PerformRequest<QueryPResponse>(this.CreateEndpoint(), request);
             return response.Result == null ? null : new Tuple(response.Result);
         }
-        public override void Put(string target, ITuple tuple)
+        public override void Put(string target, params object[] tuple)
         {
             PutRequest request = new PutRequest(this.mode, this.GetSource(), this.GetSessionId(), target, tuple);
             this.GetProtocol()?.PerformRequest<PutResponse>(this.CreateEndpoint(), request);
         }
+
 
         private string GetSessionId()
         {

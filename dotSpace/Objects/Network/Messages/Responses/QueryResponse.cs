@@ -8,9 +8,9 @@ namespace dotSpace.Objects.Network.Messages.Responses
     [KnownType(typeof(BasicResponse))]
     public class QueryResponse : BasicResponse
     {
-        public QueryResponse(string source, string session, string target, IFields result, int code, string message) : base(ActionType.QUERY_RESPONSE, source, session, target, code, message)
+        public QueryResponse(string source, string session, string target, object[] result, StatusCode code, string message) : base(ActionType.QUERY_RESPONSE, source, session, target, code, message)
         {
-            this.Result = result == null ? null : result.Fields;
+            this.Result = result;
         }
 
         [DataMember]

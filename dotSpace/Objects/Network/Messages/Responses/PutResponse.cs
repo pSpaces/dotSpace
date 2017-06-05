@@ -7,7 +7,7 @@ namespace dotSpace.Objects.Network.Messages.Responses
     [KnownType(typeof(BasicResponse))]
     public class PutResponse : BasicResponse
     {
-        public PutResponse(string source, string session, string target, int code, string message) : base(ActionType.PUT_RESPONSE, source, session, target, code, message)
+        public PutResponse(string source, string session, string target, StatusCode code, string message) : base(ActionType.PUT_RESPONSE, source, session, target, code, message)
         {
         }
     }

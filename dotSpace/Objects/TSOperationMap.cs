@@ -1,4 +1,5 @@
-﻿using dotSpace.Interfaces;
+﻿using dotSpace.Enumerations;
+using dotSpace.Interfaces;
 using dotSpace.Objects.Network;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
@@ -31,7 +32,7 @@ namespace dotSpace.Objects
                 return this.operationMap[requestType](request);
             }
 
-            return new BasicResponse(request.Action, request.Source, request.Session, request.Target, 400, "Unknown operation");
+            return new BasicResponse(request.Action, request.Source, request.Session, request.Target, StatusCode.METHOD_NOT_ALLOWED, StatusMessage.METHOD_NOT_ALLOWED);
         }
         private BasicResponse PerformPut(BasicRequest request)
         {
@@ -40,9 +41,9 @@ namespace dotSpace.Objects
             {
                 PutRequest putReq = (PutRequest)request;
                 ts.Put(new Tuple(putReq.Tuple));
-                return new PutResponse(request.Source, request.Session, request.Target, 200, "OK");
+                return new PutResponse(request.Source, request.Session, request.Target, StatusCode.OK, StatusMessage.OK);
             }
-            return new PutResponse(request.Source, request.Session, request.Target, 404, "Unknown target");
+            return new PutResponse(request.Source, request.Session, request.Target, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
         private BasicResponse PerformGet(BasicRequest request)
         {
@@ -51,9 +52,9 @@ namespace dotSpace.Objects
             {
                 GetRequest getReq = (GetRequest)request;
                 ITuple tuple = ts.Get(new Pattern(getReq.Template));
-                return new GetResponse(request.Source, request.Session, request.Target, tuple, 200, "OK");
+                return new GetResponse(request.Source, request.Session, request.Target, tuple?.Fields ?? null, StatusCode.OK, StatusMessage.OK);
             }
-            return new GetResponse(request.Source, request.Session, request.Target, null, 404, "Unknown target");
+            return new GetResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
         private BasicResponse PerformGetP(BasicRequest request)
         {
@@ -62,9 +63,9 @@ namespace dotSpace.Objects
             {
                 GetPRequest getReq = (GetPRequest)request;
                 ITuple tuple = ts.GetP(new Pattern(getReq.Template));
-                return new GetPResponse(request.Source, request.Session, request.Target, tuple, 200, "OK");
+                return new GetPResponse(request.Source, request.Session, request.Target, tuple?.Fields ?? null, StatusCode.OK, StatusMessage.OK);
             }
-            return new GetPResponse(request.Source, request.Session, request.Target, null, 404, "Unknown target");
+            return new GetPResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
         private BasicResponse PerformQuery(BasicRequest request)
         {
@@ -73,9 +74,9 @@ namespace dotSpace.Objects
             {
                 QueryRequest getReq = (QueryRequest)request;
                 ITuple tuple = ts.Query(new Pattern(getReq.Template));
-                return new QueryResponse(request.Source, request.Session, request.Target, tuple, 200, "OK");
+                return new QueryResponse(request.Source, request.Session, request.Target, tuple?.Fields ?? null, StatusCode.OK, StatusMessage.OK);
             }
-            return new QueryResponse(request.Source, request.Session, request.Target, null, 404, "Unknown target");
+            return new QueryResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
         private BasicResponse PerformQueryP(BasicRequest request)
         {
@@ -84,9 +85,9 @@ namespace dotSpace.Objects
             {
                 QueryPRequest getReq = (QueryPRequest)request;
                 ITuple tuple = ts.QueryP(new Pattern(getReq.Template));
-                return new QueryPResponse(request.Source, request.Session, request.Target, tuple, 200, "OK");
+                return new QueryPResponse(request.Source, request.Session, request.Target, tuple?.Fields ?? null, StatusCode.OK, StatusMessage.OK);
             }
-            return new QueryPResponse(request.Source, request.Session, request.Target, null, 404, "Unknown target");
+            return new QueryPResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
     }
 }

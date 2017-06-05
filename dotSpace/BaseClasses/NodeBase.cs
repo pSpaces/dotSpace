@@ -20,7 +20,13 @@ namespace dotSpace.BaseClasses
         public abstract ITuple GetP(string target, IPattern pattern);
         public abstract ITuple Query(string target, IPattern pattern);
         public abstract ITuple QueryP(string target, IPattern pattern);
-        public abstract void Put(string target, ITuple t);
+        public abstract void Put(string target, ITuple tuple);
+
+        public abstract ITuple Get(string target, params object[] pattern);
+        public abstract ITuple GetP(string target, params object[] pattern);
+        public abstract ITuple Query(string target, params object[] pattern);
+        public abstract ITuple QueryP(string target, params object[] pattern);
+        public abstract void Put(string target, params object[] tuple);
 
         public IPEndPoint CreateEndpoint()
         {

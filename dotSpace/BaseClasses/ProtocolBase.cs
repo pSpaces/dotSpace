@@ -1,4 +1,5 @@
-﻿using dotSpace.Objects;
+﻿using dotSpace.Enumerations;
+using dotSpace.Objects;
 using dotSpace.Objects.Network;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
@@ -29,13 +30,13 @@ namespace dotSpace.BaseClasses
             if (message is BasicResponse)
             {
                 BasicResponse response = (BasicResponse)message;
-                if (response.Code == 200)
+                if (response.Code == StatusCode.OK)
                 {
                     return message as T;
                 }
                 throw new Exception(string.Format("{0} - {1}", response.Code, response.Message));
             }
-            throw new Exception(string.Format("Unknown response"));
+            throw new Exception(string.Format("{0} - {1}", StatusCode.BAD_RESPONSE, StatusMessage.BAD_RESPONSE));
         }
 
         protected T ValidateRequest<T>(MessageBase message) where T : BasicRequest
@@ -44,7 +45,7 @@ namespace dotSpace.BaseClasses
             {
                 return message as T;
             }
-            throw new Exception(string.Format("Unknown request"));
+            throw new Exception(string.Format("{0} - {1}", StatusCode.BAD_REQUEST, StatusMessage.BAD_REQUEST));
         }
     }
 }

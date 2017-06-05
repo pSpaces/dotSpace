@@ -1,5 +1,4 @@
 ﻿using dotSpace.Enumerations;
-using dotSpace.Interfaces;
 using System.Runtime.Serialization;
 
 namespace dotSpace.Objects.Network.Messages.Responses
@@ -8,9 +7,9 @@ namespace dotSpace.Objects.Network.Messages.Responses
     [KnownType(typeof(BasicResponse))]
     public class GetResponse : BasicResponse
     {
-        public GetResponse(string source, string session, string target, IFields result, int code, string message) : base(ActionType.GET_RESPONSE, source, session, target, code, message)
+        public GetResponse(string source, string session, string target, object[] result, StatusCode code, string message) : base(ActionType.GET_RESPONSE, source, session, target, code, message)
         {
-            this.Result = result == null ? null : result.Fields;
+            this.Result = result;
         }
 
         [DataMember]

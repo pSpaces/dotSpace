@@ -2,6 +2,8 @@
 {
     public interface IPattern : IFields
     {
-        bool Match(IFields entity);
+        int Size { get; }
+
+        object this[int idx] { get; }
     }
 }

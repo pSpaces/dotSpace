@@ -46,6 +46,7 @@
     <Compile Include="BaseClasses\AgentBase.cs" />
     <Compile Include="BaseClasses\NodeBase.cs" />
     <Compile Include="BaseClasses\ProtocolBase.cs" />
+    <Compile Include="Enumerations\StatusCode.cs" />
     <Compile Include="Objects\Network\Messages\Requests\GetPRequest.cs" />
     <Compile Include="Objects\Network\Messages\Requests\QueryPRequest.cs" />
     <Compile Include="Objects\Network\Messages\Requests\QueryRequest.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="BaseClasses\SocketBase.cs" />
     <Compile Include="Objects\Network\TcpListener.cs" />
     <Compile Include="Objects\Pattern.cs" />
+    <Compile Include="Objects\StatusMessage.cs" />
     <Compile Include="Objects\TSOperationMap.cs" />
     <Compile Include="Objects\Tuple.cs" />
     <Compile Include="Objects\TupleSpace.cs" />
