@@ -5,17 +5,24 @@ using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network
 {
-    public class ClientSocket : SocketBase
+    public sealed class ClientSocket : SocketBase
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
+
         public ClientSocket(TcpClient client) : base(client)
         {
-
-        }
+        } 
 
         public ClientSocket(IPEndPoint endpoint) : base(new TcpClient())
         {
             this.client.Connect(endpoint);
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Protected Methods
 
         protected override MessageBase Decode<T>(string msg)
         {
@@ -32,6 +39,8 @@ namespace dotSpace.Objects.Network
             }
 
             return breq;
-        }
+        } 
+
+        #endregion
     }
 }

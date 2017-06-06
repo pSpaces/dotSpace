@@ -10,10 +10,18 @@ using System.Collections.Generic;
 
 namespace dotSpace.Objects.Network
 {
-    public class ClientNode : NodeBase
+    public sealed class ClientNode : NodeBase
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Fields
+
         private ConnectionMode mode;
         private Dictionary<ConnectionMode, ProtocolBase> protocols;
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
 
         public ClientNode(ConnectionMode mode, string address, int port) : base(address, port)
         {
@@ -23,6 +31,11 @@ namespace dotSpace.Objects.Network
             //this.protocols.Add(ConnectionMode.PUSH, new PushProtocol(this));
             //this.protocols.Add(ConnectionMode.PULL, new PushProtocol(this));
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
 
         public override ITuple Get(string target, IPattern pattern)
         {
@@ -42,7 +55,7 @@ namespace dotSpace.Objects.Network
         {
             GetPRequest request = new GetPRequest(this.mode, this.GetSource(), this.GetSessionId(), target, pattern);
             GetPResponse response = this.GetProtocol()?.PerformRequest<GetPResponse>(this.CreateEndpoint(), request);
-            return response.Result == null ? null : new Tuple(response.Result);            
+            return response.Result == null ? null : new Tuple(response.Result);
         }
         public override IEnumerable<ITuple> GetAll(string target, IPattern pattern)
         {
@@ -94,16 +107,19 @@ namespace dotSpace.Objects.Network
             this.GetProtocol()?.PerformRequest<PutResponse>(this.CreateEndpoint(), request);
         }
 
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Private Methods
+
         private string GetSessionId()
         {
             return Guid.NewGuid().ToString();
         }
-
         private string GetSource()
         {
             return this.GetLocalIPAddress();
         }
-
         private ProtocolBase GetProtocol()
         {
             if (this.protocols.ContainsKey(this.mode))
@@ -112,7 +128,8 @@ namespace dotSpace.Objects.Network
             }
 
             return null; // TODO: return response error
-        }
+        } 
 
+        #endregion
     }
 }

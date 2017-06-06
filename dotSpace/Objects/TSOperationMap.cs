@@ -9,16 +9,24 @@ using System.Collections.Generic;
 
 namespace dotSpace.Objects
 {
-    public class TSOperationMap
+    public sealed class TSOperationMap
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Fields
+
         private ServerNode serverNode;
         private Dictionary<Type, Func<BasicRequest, BasicResponse>> operationMap;
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
 
         public TSOperationMap(ServerNode serverNode)
         {
             this.serverNode = serverNode;
             this.operationMap = new Dictionary<Type, Func<BasicRequest, BasicResponse>>();
-            this.operationMap.Add(typeof(GetRequest), this.PerformGet);            
+            this.operationMap.Add(typeof(GetRequest), this.PerformGet);
             this.operationMap.Add(typeof(GetPRequest), this.PerformGetP);
             this.operationMap.Add(typeof(GetAllRequest), this.PerformGetAll);
             this.operationMap.Add(typeof(QueryRequest), this.PerformQuery);
@@ -26,6 +34,11 @@ namespace dotSpace.Objects
             this.operationMap.Add(typeof(QueryAllRequest), this.PerformQueryAll);
             this.operationMap.Add(typeof(PutRequest), this.PerformPut);
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
 
         public BasicResponse Execute(BasicRequest request)
         {
@@ -37,6 +50,11 @@ namespace dotSpace.Objects
 
             return new BasicResponse(request.Action, request.Source, request.Session, request.Target, StatusCode.METHOD_NOT_ALLOWED, StatusMessage.METHOD_NOT_ALLOWED);
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Private Methods
 
         private BasicResponse PerformGet(BasicRequest request)
         {
@@ -67,7 +85,7 @@ namespace dotSpace.Objects
             {
                 GetAllRequest getReq = (GetAllRequest)request;
                 IEnumerable<ITuple> tuples = ts.GetAll(new Pattern(getReq.Template));
-                return new GetAllResponse(request.Source, request.Session, request.Target, tuples?.Select(x=>x.Fields) ?? null, StatusCode.OK, StatusMessage.OK);
+                return new GetAllResponse(request.Source, request.Session, request.Target, tuples?.Select(x => x.Fields) ?? null, StatusCode.OK, StatusMessage.OK);
             }
             return new GetAllResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
@@ -114,6 +132,8 @@ namespace dotSpace.Objects
                 return new PutResponse(request.Source, request.Session, request.Target, StatusCode.OK, StatusMessage.OK);
             }
             return new PutResponse(request.Source, request.Session, request.Target, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
-        }
+        } 
+
+        #endregion
     }
 }

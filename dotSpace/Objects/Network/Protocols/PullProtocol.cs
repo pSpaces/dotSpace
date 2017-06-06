@@ -4,11 +4,19 @@ using System.Net;
 
 namespace dotSpace.Objects.Network.Protocols
 {
-    public class PullProtocol : ProtocolBase
+    public sealed class PullProtocol : ProtocolBase
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
+
         public PullProtocol(ServerNode server) : base(server)
         {
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
 
         public override void ProcessRequest(ServerSocket socket, BasicRequest request)
         {
@@ -16,6 +24,8 @@ namespace dotSpace.Objects.Network.Protocols
         public override T PerformRequest<T>(IPEndPoint endpoint, BasicRequest request)
         {
             return default(T);
-        }
+        } 
+
+        #endregion
     }
 }

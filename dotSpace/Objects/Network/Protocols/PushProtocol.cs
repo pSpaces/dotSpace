@@ -5,16 +5,29 @@ using System.Net;
 
 namespace dotSpace.Objects.Network.Protocols
 {
-    public class PushProtocol : ProtocolBase
+    public sealed class PushProtocol : ProtocolBase
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Fields
+
         private string address;
         private int port;
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
 
         public PushProtocol(ServerNode server, string address, int port) : base(server)
         {
             this.address = address;
             this.port = port;
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
 
         public override void ProcessRequest(ServerSocket socket, BasicRequest request)
         {
@@ -33,7 +46,9 @@ namespace dotSpace.Objects.Network.Protocols
             MessageBase message = socket.Receive<T>();
             socket.Close();
             return this.ValidateResponse<T>(message);
-        }
+        } 
+
+        #endregion
 
 
     }

@@ -6,16 +6,24 @@ using System.Net;
 namespace dotSpace.Objects.Network.Protocols
 {
 
-    public class ConnProtocol : ProtocolBase
+    public sealed class ConnProtocol : ProtocolBase
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
+
         public ConnProtocol(NodeBase server) : base(server)
         {
         }
 
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
+
         public override void ProcessRequest(ServerSocket socket, BasicRequest request)
         {
             request = this.ValidateRequest<BasicRequest>(request);
-            BasicResponse response = this.operationMap.Execute(request);            
+            BasicResponse response = this.operationMap.Execute(request);
             socket.Send(response);
             socket.Close();
         }
@@ -27,7 +35,9 @@ namespace dotSpace.Objects.Network.Protocols
             MessageBase message = socket.Receive<T>();
             socket.Close();
             return this.ValidateResponse<T>(message);
-        }
+        } 
+
+        #endregion
 
     }
 }

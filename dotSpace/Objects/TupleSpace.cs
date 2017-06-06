@@ -6,13 +6,27 @@ using System.Threading;
 
 namespace dotSpace.Objects
 {
-    public class TupleSpace : ITupleSpace
+    public sealed class TupleSpace : ITupleSpace
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Fields
+
         private readonly List<ITuple> elements;
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
+
         public TupleSpace()
         {
             this.elements = new List<ITuple>();
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
 
         public ITuple Get(IPattern pattern)
         {
@@ -113,7 +127,6 @@ namespace dotSpace.Objects
                 Monitor.PulseAll(this.elements);
             }
         }
-
         public bool Replace(IPattern pattern, params object[] values)
         {
             return this.Replace(pattern.Fields.Concat(values).ToArray());
@@ -134,12 +147,19 @@ namespace dotSpace.Objects
             lock (this.elements)
             {
                 t = this.Find(pattern);
-                Enumerable.Range(0, t.Size).Apply(x => t[x] = newValues[x] ?? t[x]);
+                if (t != null)
+                {
+                    Enumerable.Range(0, t.Size).Apply(x => t[x] = newValues[x] ?? t[x]);
+                }
                 Monitor.PulseAll(this.elements);
-                return true;
+                return t == null;
             }
-            return false;
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Private Methods
 
         private ITuple WaitUntilMatch(object[] pattern)
         {
@@ -176,7 +196,8 @@ namespace dotSpace.Objects
             }
 
             return result;
-        }
+        } 
 
+        #endregion
     }
 }

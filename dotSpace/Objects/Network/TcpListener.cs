@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace dotSpace.Objects.Network
 {
-    class TcpListener
+    public sealed class TcpListener
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -16,6 +16,7 @@ namespace dotSpace.Objects.Network
         private System.Net.Sockets.TcpListener listener;
         private bool listening;
         private Action<TcpClient> callBack;
+
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////

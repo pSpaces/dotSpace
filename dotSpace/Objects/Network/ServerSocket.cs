@@ -4,12 +4,21 @@ using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network
 {
-    public class ServerSocket : SocketBase
+    public sealed class ServerSocket : SocketBase
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
+
         public ServerSocket(TcpClient client) : base(client)
         {
 
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Protected Methods
+
         protected override MessageBase Decode<T>(string msg)
         {
             BasicRequest breq = msg.Deserialize<BasicRequest>();
@@ -25,6 +34,8 @@ namespace dotSpace.Objects.Network
             }
 
             return breq;
-        }
+        } 
+
+        #endregion
     }
 }

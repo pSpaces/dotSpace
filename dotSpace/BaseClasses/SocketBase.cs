@@ -6,12 +6,25 @@ namespace dotSpace.Objects.Network
 {
     public abstract class SocketBase
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Fields
+
         protected TcpClient client;
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
 
         public SocketBase(TcpClient client)
         {
             this.client = client;
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
 
         public MessageBase Receive<T>() where T : MessageBase
         {
@@ -53,10 +66,17 @@ namespace dotSpace.Objects.Network
             }
         }
 
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Protected Methods
+
         protected abstract MessageBase Decode<T>(string msg) where T : MessageBase;
         protected string Encode(MessageBase message)
         {
             return message.Serialize();
-        }
+        } 
+
+        #endregion
     }
 }

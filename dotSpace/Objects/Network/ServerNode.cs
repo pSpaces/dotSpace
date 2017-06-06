@@ -9,10 +9,11 @@ using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network
 {
-    public class ServerNode : NodeBase
+    public sealed class ServerNode : NodeBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
+
         private TcpListener listener;
         private Dictionary<string, ITupleSpace> spaces;
         private Dictionary<ConnectionMode, ProtocolBase> protocols;
@@ -118,7 +119,6 @@ namespace dotSpace.Objects.Network
         {
             this[target]?.Put(tuple);
         }
-
         public void StartListen()
         {
             this.listener.Start(this.OnClientConnect);
@@ -145,7 +145,7 @@ namespace dotSpace.Objects.Network
             ServerSocket socket = new ServerSocket(client);
             BasicRequest request = (BasicRequest)socket.Receive<BasicRequest>();
             this.GetProtocol(request)?.ProcessRequest(socket, request);
-            socket.Close();
+            socket.Close(); // TODO: Forcibly closing socket when done. Does it need to reply if the connectionmode is unsupported?
         }
         private ProtocolBase GetProtocol(BasicRequest request)
         {

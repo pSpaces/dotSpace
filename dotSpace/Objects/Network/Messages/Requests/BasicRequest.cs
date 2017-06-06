@@ -8,14 +8,23 @@ namespace dotSpace.Objects.Network.Messages.Requests
     [KnownType(typeof(MessageBase))]
     public class BasicRequest : MessageBase
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
+
         public BasicRequest(ConnectionMode mode, ActionType action, string source, string session, string target) : base(action, source, session, target)
         {
             this.Mode = mode;
 
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Properties
+
         public ConnectionMode Mode { get; set; }
         [DataMember(Name = "Mode")]
-        string ModeString
+        public string ModeString
         {
             get { return this.Mode.ToString(); }
             set
@@ -23,8 +32,9 @@ namespace dotSpace.Objects.Network.Messages.Requests
                 ConnectionMode mode;
                 this.Mode = Enum.TryParse(value, true, out mode) ? mode : ConnectionMode.NONE;
             }
-        }
+        } 
 
+        #endregion
 
     }
 }

@@ -5,9 +5,17 @@ namespace dotSpace.BaseClasses
 {
     public abstract class Agent
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Fields
+
         private Thread thread;
         protected string name;
         protected ITupleSpace ts;
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
 
         public Agent(string name, ITupleSpace ts)
         {
@@ -15,6 +23,11 @@ namespace dotSpace.BaseClasses
             this.name = name;
             this.ts = ts;
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // MyRegion
 
         public void Start()
         {
@@ -26,6 +39,8 @@ namespace dotSpace.BaseClasses
             this.thread.Join();
         }
 
-        public abstract void DoWork();
+        public abstract void DoWork();  
+
+        #endregion
     }
 }

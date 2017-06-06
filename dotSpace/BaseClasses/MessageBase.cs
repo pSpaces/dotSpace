@@ -2,25 +2,14 @@
 using System;
 using System.Runtime.Serialization;
 
-//Put requests have the following format
-//{ "mode": mode_code, "action": "PUT_REQUEST", "source" : source, "session": session, "target": target, "tuple" : tuple }
-
-//Get requests have the following format
-//{ "mode": mode_code, "action": request,       "source" : source, "session": session, "target": target, "template" : template }
-
-
-//Put responses
-//{ "action": "PUT_RESPONSE", "source" : source, "session": session, "target": target, "code" : code , "message": message }
-
-//Get responses
-//{ "action": response,       "source" : source, "session": session, "target": target, "result": result , "code" : code , "message": message }
-
-
 namespace dotSpace.Objects.Network
 {
     [DataContract]
     public abstract class MessageBase
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
+
         public MessageBase(ActionType action, string source, string session, string target)
         {
             this.Action = action;
@@ -28,6 +17,11 @@ namespace dotSpace.Objects.Network
             this.Session = session;
             this.Target = target;
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Properties
 
         [DataMember]
         public string Source { get; set; }
@@ -47,8 +41,8 @@ namespace dotSpace.Objects.Network
                 ActionType action;
                 this.Action = Enum.TryParse(value, true, out action) ? action : ActionType.NONE;
             }
-        }
+        } 
 
-
+        #endregion
     }
 }

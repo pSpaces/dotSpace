@@ -6,14 +6,24 @@ namespace dotSpace.Objects.Network.Messages.Requests
 {
     [DataContract]
     [KnownType(typeof(BasicRequest))]
-    public class GetPRequest : BasicRequest
+    public sealed class GetPRequest : BasicRequest
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructorss
+
         public GetPRequest(ConnectionMode mode, string source, string session, string target, object[] template) : base(mode, ActionType.GETP_REQUEST, source, session, target)
         {
             this.Template = template;
         }
 
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Properties
+
         [DataMember]
-        public object[] Template { get; set; }
+        public object[] Template { get; set; } 
+
+        #endregion
     }
 }

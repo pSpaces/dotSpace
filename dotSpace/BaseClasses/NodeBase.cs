@@ -8,14 +8,27 @@ namespace dotSpace.BaseClasses
 {
     public abstract class NodeBase : INode
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Fields
+
         protected string address;
         protected int port;
 
-        public NodeBase (string address, int port)
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
+
+        public NodeBase(string address, int port)
         {
             this.address = string.IsNullOrEmpty(address) ? this.GetLocalIPAddress() : address;
             this.port = port;
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
 
         public abstract ITuple Get(string target, IPattern pattern);
         public abstract ITuple Get(string target, params object[] pattern);
@@ -31,7 +44,6 @@ namespace dotSpace.BaseClasses
         public abstract IEnumerable<ITuple> QueryAll(string target, params object[] pattern);
         public abstract void Put(string target, ITuple tuple);
         public abstract void Put(string target, params object[] tuple);
-
         public IPEndPoint CreateEndpoint()
         {
             IPAddress ipAddress = IPAddress.Parse(this.address);
@@ -48,6 +60,8 @@ namespace dotSpace.BaseClasses
                 }
             }
             throw new Exception("Local IP Address Not Found!");
-        }
+        } 
+
+        #endregion
     }
 }
