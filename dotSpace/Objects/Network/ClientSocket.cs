@@ -22,11 +22,13 @@ namespace dotSpace.Objects.Network
             BasicResponse breq = msg.Deserialize<BasicResponse>();
             switch (breq.Action)
             {
-                case ActionType.PUT_RESPONSE: breq = msg.Deserialize<PutResponse>(); break;
                 case ActionType.GET_RESPONSE: breq = msg.Deserialize<GetResponse>(); break;
                 case ActionType.GETP_RESPONSE: breq = msg.Deserialize<GetPResponse>(); break;
+                case ActionType.GETALL_RESPONSE: breq = msg.Deserialize<GetAllResponse>(); break;
                 case ActionType.QUERY_RESPONSE: breq = msg.Deserialize<QueryResponse>(); break;
                 case ActionType.QUERYP_RESPONSE: breq = msg.Deserialize<QueryPResponse>(); break;
+                case ActionType.QUERYALL_RESPONSE: breq = msg.Deserialize<QueryAllResponse>(); break;
+                case ActionType.PUT_RESPONSE: breq = msg.Deserialize<PutResponse>(); break;
             }
 
             return breq;

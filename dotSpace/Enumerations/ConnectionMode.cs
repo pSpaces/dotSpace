@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace dotSpace.Enumerations
 {
+    [Flags]
     public enum ConnectionMode
     {
-        NONE,
-        CONN,
-        PUSH,
-        PULL
+        NONE = 1,
+        CONN = 2,
+        PUSH = 4,
+        PULL = 8
     }
 }

@@ -47,10 +47,15 @@
     <Compile Include="BaseClasses\NodeBase.cs" />
     <Compile Include="BaseClasses\ProtocolBase.cs" />
     <Compile Include="Enumerations\StatusCode.cs" />
+    <Compile Include="Interfaces\INode.cs" />
+    <Compile Include="Objects\Network\Messages\Requests\QueryAllRequest.cs" />
     <Compile Include="Objects\Network\Messages\Requests\GetPRequest.cs" />
+    <Compile Include="Objects\Network\Messages\Requests\GetAllRequest.cs" />
     <Compile Include="Objects\Network\Messages\Requests\QueryPRequest.cs" />
     <Compile Include="Objects\Network\Messages\Requests\QueryRequest.cs" />
+    <Compile Include="Objects\Network\Messages\Responses\QueryAllResponse.cs" />
     <Compile Include="Objects\Network\Messages\Responses\GetPResponse.cs" />
+    <Compile Include="Objects\Network\Messages\Responses\GetAllResponse.cs" />
     <Compile Include="Objects\Network\Messages\Responses\QueryPResponse.cs" />
     <Compile Include="Objects\Network\Messages\Responses\QueryResponse.cs" />
     <Compile Include="Objects\Network\Protocols\PullProtocol.cs" />
@@ -81,6 +86,7 @@
     <Compile Include="Objects\Tuple.cs" />
     <Compile Include="Objects\TupleSpace.cs" />
     <Compile Include="Objects\Json.cs" />
+    <Compile Include="Objects\Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

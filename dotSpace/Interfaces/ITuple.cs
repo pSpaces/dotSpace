@@ -4,6 +4,6 @@
     {
         int Size { get; }
 
-        object this[int idx] { get; }
+        object this[int idx] { get; set; }
     }
 }

@@ -7,6 +7,6 @@
         public static string BAD_RESPONSE = "Failed to receive response or received unknown message.";
         public static string NOT_FOUND = "The requested target was unknown or not available.";
         public static string METHOD_NOT_ALLOWED = "The requested operation was not allowed.";
-        public static string NOT_IMPLEMENTED = "The requested operation is not implemented";
+        public static string NOT_IMPLEMENTED = "The requested connectionmode is not implemented.";
     }
 }

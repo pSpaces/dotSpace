@@ -16,6 +16,6 @@ namespace dotSpace.Objects
 
         public int Size { get { return Fields.Length; } }
 
-        public object this[int idx] { get { return this.Fields[idx]; } }
+        public object this[int idx] { get { return this.Fields[idx]; } set { this.Fields[idx] = value; } }
     };
 }
