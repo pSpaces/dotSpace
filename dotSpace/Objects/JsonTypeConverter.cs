@@ -5,8 +5,16 @@ namespace dotSpace.Objects
 {
     public class JsonTypeConverter
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Fields
+
         private static Dictionary<string, Type> unboxedTypes;
         private static Dictionary<Type, string> boxedTypes;
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
 
         static JsonTypeConverter()
         {
@@ -20,6 +28,11 @@ namespace dotSpace.Objects
             AddType("decimal", typeof(decimal));
             AddType("long", typeof(long));
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
 
         public static object[] Box(object[] values)
         {
@@ -45,6 +58,11 @@ namespace dotSpace.Objects
             return values;
         }
 
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Private Methods
+
         private static void AddType(string unboxedType, Type boxedType)
         {
             unboxedTypes.Add(unboxedType, boxedType);
@@ -67,6 +85,8 @@ namespace dotSpace.Objects
                 return unboxedTypes[type.TypeName];
             }
             throw new Exception("Attempting to unbox unsupported type");
-        }
+        } 
+
+        #endregion
     }
 }

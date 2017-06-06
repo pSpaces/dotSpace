@@ -73,9 +73,6 @@ namespace dotSpace.Objects.Network
 
         protected abstract MessageBase Decode<T>(string msg) where T : MessageBase;
         protected abstract string Encode(MessageBase message);
-        //{
-        //    return message.Serialize();
-        //} 
 
         #endregion
     }
