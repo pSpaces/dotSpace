@@ -1,4 +1,5 @@
 ﻿using dotSpace.Enumerations;
+using dotSpace.Interfaces;
 using dotSpace.Objects.Network.Messages.Responses;
 using System.Net;
 using System.Net.Sockets;
@@ -39,7 +40,17 @@ namespace dotSpace.Objects.Network
             }
 
             return breq;
-        } 
+        }
+
+        protected override string Encode(MessageBase message)
+        {
+            if(message is IReadRequest)
+            {
+                IReadRequest readRequest = (IReadRequest)message;
+                readRequest.Template = JsonTypeConverter.Box(readRequest.Template);
+            }
+            return message.Serialize(typeof(Binding));
+        }
 
         #endregion
     }

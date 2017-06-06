@@ -1,4 +1,5 @@
 ﻿using dotSpace.Enumerations;
+using dotSpace.Interfaces;
 using dotSpace.Objects.Network.Messages.Requests;
 using System.Net.Sockets;
 
@@ -24,17 +25,27 @@ namespace dotSpace.Objects.Network
             BasicRequest breq = msg.Deserialize<BasicRequest>();
             switch (breq.Action)
             {
-                case ActionType.GET_REQUEST: breq = msg.Deserialize<GetRequest>(); break;
-                case ActionType.GETP_REQUEST: breq = msg.Deserialize<GetPRequest>(); break;
-                case ActionType.GETALL_REQUEST: breq = msg.Deserialize<GetAllRequest>(); break;
-                case ActionType.QUERY_REQUEST: breq = msg.Deserialize<QueryRequest>(); break;
-                case ActionType.QUERYP_REQUEST: breq = msg.Deserialize<QueryPRequest>(); break;
-                case ActionType.QUERYALL_REQUEST: breq = msg.Deserialize<QueryAllRequest>(); break;
+                case ActionType.GET_REQUEST: breq = msg.Deserialize<GetRequest>(typeof(Binding)); break;
+                case ActionType.GETP_REQUEST: breq = msg.Deserialize<GetPRequest>(typeof(Binding)); break;
+                case ActionType.GETALL_REQUEST: breq = msg.Deserialize<GetAllRequest>(typeof(Binding)); break;
+                case ActionType.QUERY_REQUEST: breq = msg.Deserialize<QueryRequest>(typeof(Binding)); break;
+                case ActionType.QUERYP_REQUEST: breq = msg.Deserialize<QueryPRequest>(typeof(Binding)); break;
+                case ActionType.QUERYALL_REQUEST: breq = msg.Deserialize<QueryAllRequest>(typeof(Binding)); break;
                 case ActionType.PUT_REQUEST: breq = msg.Deserialize<PutRequest>(); break;
+            }
+            if (breq is IReadRequest)
+            {
+                IReadRequest readRequest = (IReadRequest)breq;
+                readRequest.Template = JsonTypeConverter.Unbox(readRequest.Template);
             }
 
             return breq;
-        } 
+        }
+
+        protected override string Encode(MessageBase message)
+        {
+            return message.Serialize();
+        }
 
         #endregion
     }

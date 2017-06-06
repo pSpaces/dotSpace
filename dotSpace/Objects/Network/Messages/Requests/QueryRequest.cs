@@ -6,7 +6,7 @@ namespace dotSpace.Objects.Network.Messages.Requests
 {
     [DataContract]
     [KnownType(typeof(BasicRequest))]
-    public sealed class QueryRequest : BasicRequest
+    public sealed class QueryRequest : BasicRequest, IReadRequest
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors

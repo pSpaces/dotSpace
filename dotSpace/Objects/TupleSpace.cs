@@ -188,11 +188,15 @@ namespace dotSpace.Objects
             bool result = true;
             for (int idx = 0; idx < tuple.Length; idx++)
             {
-                if (pattern[idx] != null)
+                if (pattern[idx] is Type)
+                {
+                    result &= tuple[idx] is Type ? tuple[idx].GetType() == (Type)pattern[idx] : tuple[idx].GetType() == (Type)pattern[idx];
+                }
+                else
                 {
                     result &= tuple[idx].Equals(pattern[idx]);
-                    if (!result) return false;
                 }
+                if (!result) return false;
             }
 
             return result;

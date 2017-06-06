@@ -53,7 +53,7 @@ namespace dotSpace.Objects.Network
                 //BinaryFormatter formatter = new BinaryFormatter();
                 //formatter.Serialize(client.GetStream(), msg);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 this.client.Close();
             }
@@ -72,10 +72,10 @@ namespace dotSpace.Objects.Network
         #region // Protected Methods
 
         protected abstract MessageBase Decode<T>(string msg) where T : MessageBase;
-        protected string Encode(MessageBase message)
-        {
-            return message.Serialize();
-        } 
+        protected abstract string Encode(MessageBase message);
+        //{
+        //    return message.Serialize();
+        //} 
 
         #endregion
     }

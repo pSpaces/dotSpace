@@ -1,11 +1,12 @@
 ﻿using dotSpace.Enumerations;
+using dotSpace.Interfaces;
 using System.Runtime.Serialization;
 
 namespace dotSpace.Objects.Network.Messages.Requests
 {
     [DataContract]
     [KnownType(typeof(BasicRequest))]
-    public sealed class GetAllRequest : BasicRequest
+    public sealed class GetAllRequest : BasicRequest, IReadRequest
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
