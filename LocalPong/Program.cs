@@ -17,6 +17,7 @@ namespace LocalPong
             pongGame.AddPlayer(new AIPlayer(2, "AI2", width, height, ts));
             pongGame.Run();
             Console.ReadKey();
+            pongGame.Stop();
         }
     }
 }

@@ -21,27 +21,41 @@ namespace Pong
 
         protected override void DoWork()
         {
+            // Wait until we can start
             this.ts.Query("start");
             int leftPlayerId = 1;
             int rightPlayerId = 2;
+            
+            // Read the player names
             ITuple leftplayer = this.ts.Query(leftPlayerId, typeof(string));
             ITuple rightplayer = this.ts.Query(rightPlayerId, typeof(string));
+
+            // Keep iterating while the state is 'running'
             while (this.ts.QueryP("running", true) != null)
             {
+                // Get the position so we can update it
                 // "pong", position:(x,y), normalized direction(x,y), speed: z
                 ITuple pong = this.ts.Get("pong", typeof(double), typeof(double), typeof(double), typeof(double), typeof(double));
+                
+                // Calculate new position based on the direction
                 Vector position = new Vector((double)pong[1], (double)pong[2]);
                 Vector direction = new Vector((double)pong[3], (double)pong[4]);
                 Vector newPosition = position + direction * (double)pong[5];
 
+                // Check if the pong is beyond top and bottom walls
+                // if is has hit the walls, then change the direction
                 if (newPosition.Y < 0 || newPosition.Y >= this.height)
                 {
                     direction = this.ChangeDirection(direction, false);
                     newPosition = position + direction * (double)pong[5];
                 }
+                // Check if the poing has reached the left most wall
                 if (newPosition.X <= 0)
                 {
+                    // Read the latest position of the player
                     ITuple playerPosition = this.ts.Query(leftPlayerId, typeof(double), typeof(double));
+                    // Check if the pong hit the player pad, then change the position and direction
+                    // otherwise reward the other player
                     if ((int)(double)playerPosition[2] == (int)newPosition.Y )
                     {
                         direction = this.ChangeDirection(direction, true);
@@ -53,9 +67,13 @@ namespace Pong
                         continue;
                     }
                 }
+                // Check if the poing has reached the right most wall
                 if (newPosition.X >= this.width)
                 {
+                    // Read the latest position of the player
                     ITuple playerPosition = this.ts.Query(rightPlayerId, typeof(double), typeof(double));
+                    // Check if the pong hit the player pad, then change the position and direction
+                    // otherwise reward the other player
                     if ((int)(double)playerPosition[2] == (int)newPosition.Y)
                     {
                         direction = this.ChangeDirection(direction, true);
@@ -68,6 +86,7 @@ namespace Pong
                     }
                 }
 
+                // Update the pong information based on potential changes
                 double pongY = Math.Max(newPosition.Y, 0d);
                 pongY = Math.Min(pongY, (double)(this.height - 1));
                 pong[1] = newPosition.X;

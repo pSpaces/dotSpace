@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace dotSpace.Objects
 {
-    public sealed class TSOperationMap
+    public sealed class OperationMap
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -22,7 +22,7 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public TSOperationMap(ServerNode serverNode)
+        public OperationMap(ServerNode serverNode)
         {
             this.serverNode = serverNode;
             this.operationMap = new Dictionary<Type, Func<BasicRequest, BasicResponse>>();

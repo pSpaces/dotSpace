@@ -7,7 +7,7 @@ namespace Pong
 {
     public class View : AgentBase
     {
-        public char[,] screenBuffer;
+        private char[,] screenBuffer;
         private readonly int width;
         private readonly int height;
         private string playerLeft;
@@ -23,18 +23,22 @@ namespace Pong
 
         protected override void DoWork()
         {
+            // Wait until we can start
             this.ts.Query("start");
+            // Read the player names
             ITuple leftplayer = this.ts.Query(1, typeof(string));
             ITuple rightplayer = this.ts.Query(2, typeof(string));
             this.playerLeft = (string)leftplayer[1];
             this.playerRight = (string)rightplayer[1];
+
+            // Keep iterating while the state is 'running'
             while (this.ts.Query("running", true) != null)
             {
                 this.SetPongPosition();
                 this.SetPlayerPosition(1);
                 this.SetPlayerPosition(2);
                 this.Show();
-                Thread.Sleep(1);
+                Thread.Sleep(40); 
             }
         }
 
@@ -48,7 +52,7 @@ namespace Pong
 
         private void SetPlayerPosition(int playerId)
         {
-            ITuple playerPosition  = this.ts.Query(playerId, typeof(double), typeof(double));
+            ITuple playerPosition = this.ts.Query(playerId, typeof(double), typeof(double));
             int x = (int)(double)playerPosition[1];
             int y = (int)(double)playerPosition[2];
             screenBuffer[x, y] = '|';

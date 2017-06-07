@@ -13,7 +13,7 @@ namespace dotSpace.BaseClasses
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        protected TSOperationMap operationMap;
+        protected OperationMap operationMap;
         protected NodeBase node;
 
         #endregion
@@ -26,7 +26,7 @@ namespace dotSpace.BaseClasses
             this.node = node;
             if (this.node is ServerNode)
             {
-                this.operationMap = new TSOperationMap((ServerNode)this.node);
+                this.operationMap = new OperationMap((ServerNode)this.node);
             }
         }
 

@@ -38,28 +38,14 @@ namespace dotSpace.Objects.Network
                 case ActionType.QUERYALL_RESPONSE: breq = msg.Deserialize<QueryAllResponse>(); break;
                 case ActionType.PUT_RESPONSE: breq = msg.Deserialize<PutResponse>(); break;
             }
-            if (breq is IResult)
-            {
-                IResult response = (IResult)breq;
-                response.Result = JsonTypeConverter.Unbox(response.Result);
-            }
+            JsonTypeConverter.Unbox(breq);
 
             return breq;
         }
 
         protected override string Encode(MessageBase message)
         {
-            if(message is IReadRequest)
-            {
-                IReadRequest readRequest = (IReadRequest)message;
-                readRequest.Template = JsonTypeConverter.Box(readRequest.Template);
-            }
-
-            if (message is IWriteRequest)
-            {
-                IWriteRequest writeRequest = (IWriteRequest)message;
-                writeRequest.Tuple = JsonTypeConverter.Box(writeRequest.Tuple);
-            }
+            JsonTypeConverter.Box(message);
             return message.Serialize(typeof(PatternBinding));
         }
 

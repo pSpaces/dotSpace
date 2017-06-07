@@ -21,7 +21,6 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Properties
 
-        [DataMember]
         public string TypeName { get; set; } 
 
         #endregion

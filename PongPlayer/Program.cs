@@ -23,6 +23,7 @@ namespace PongPlayer
             pongGame.SetPlayer(playerId, "AI" + playerId);
             pongGame.Run();
             Console.ReadKey();
+            pongGame.Stop();
         }
     }
 }

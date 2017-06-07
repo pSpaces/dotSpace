@@ -16,6 +16,7 @@ namespace PongServer
             Game pongGame = new Game(width, height, server["pong"]);
             pongGame.Run();
             Console.ReadKey();
+            pongGame.Stop();
         }
     }
 }

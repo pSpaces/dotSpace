@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 
 namespace dotSpace.Objects
 {
-    [DataContract(Namespace = "")]
     public sealed class Tuple : ITuple
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,7 +18,6 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Properties
 
-        [DataMember]
         public object[] Fields { get; set; }
 
         public int Size { get { return Fields.Length; } }

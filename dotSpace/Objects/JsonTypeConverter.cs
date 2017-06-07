@@ -1,6 +1,7 @@
-﻿using System;
+﻿using dotSpace.Interfaces;
+using dotSpace.Objects.Network;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace dotSpace.Objects
 {
@@ -36,7 +37,50 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public static object[] Box(object[] values)
+        public static void Box(MessageBase message)
+        {
+            if (message is IResult)
+            {
+                IResult response = (IResult)message;
+                response.Result = Box(response.Result);
+            }
+            if (message is IReadRequest)
+            {
+                IReadRequest readRequest = (IReadRequest)message;
+                readRequest.Template = Box(readRequest.Template);
+            }
+
+            if (message is IWriteRequest)
+            {
+                IWriteRequest writeRequest = (IWriteRequest)message;
+                writeRequest.Tuple = Box(writeRequest.Tuple);
+            }
+        }
+
+        public static void Unbox(MessageBase message)
+        {
+            if (message is IResult)
+            {
+                IResult response = (IResult)message;
+                response.Result = Unbox(response.Result);
+            }
+            if (message is IReadRequest)
+            {
+                IReadRequest readRequest = (IReadRequest)message;
+                readRequest.Template = Unbox(readRequest.Template);
+            }
+            if (message is IWriteRequest)
+            {
+                IWriteRequest writeRequest = (IWriteRequest)message;
+                writeRequest.Tuple = Unbox(writeRequest.Tuple);
+            }
+        }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Private Methods
+        private static object[] Box(object[] values)
         {
             if (values == null)
                 return null;
@@ -54,7 +98,7 @@ namespace dotSpace.Objects
             return values;
         }
 
-        public static object[] Unbox(object[] values)
+        private static object[] Unbox(object[] values)
         {
             if (values == null)
                 return null;
@@ -73,11 +117,6 @@ namespace dotSpace.Objects
 
             return unboxedValues.ToArray();
         }
-
-        #endregion
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        #region // Private Methods
 
         private static void AddType(string unboxedType, Type boxedType)
         {

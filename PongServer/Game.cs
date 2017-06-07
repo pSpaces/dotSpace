@@ -1,6 +1,5 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Interfaces;
-using Pong;
 
 namespace PongServer
 {

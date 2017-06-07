@@ -88,15 +88,12 @@
     <Compile Include="Objects\Network\TcpListener.cs" />
     <Compile Include="Objects\Pattern.cs" />
     <Compile Include="Objects\StatusMessage.cs" />
-    <Compile Include="Objects\TSOperationMap.cs" />
+    <Compile Include="Objects\OperationMap.cs" />
     <Compile Include="Objects\Tuple.cs" />
     <Compile Include="Objects\Space.cs" />
     <Compile Include="Objects\Json.cs" />
     <Compile Include="Objects\Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Notes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
