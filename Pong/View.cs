@@ -69,6 +69,7 @@ namespace Pong
 
         public void Show()
         {
+            Console.ForegroundColor = ConsoleColor.White;
             for (int y = 0; y < this.height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -83,18 +84,10 @@ namespace Pong
             {
                 for (int x = 0; x < width; x++)
                 {
-
-                    if (x == 0 || x == this.width - 1)
-                    {
-                        screenBuffer[x, y] = '#';
-                    }
-                    else
-                    {
-                        screenBuffer[x, y] = ' ';
-                    }
+                    screenBuffer[x, y] = ' ';
                     if (y == 0 || y == this.height - 1)
                     {
-                        screenBuffer[x, y] = '#';
+                        screenBuffer[x, y] = '_';
                     }
                 }
             }
