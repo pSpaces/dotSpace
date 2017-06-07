@@ -2,21 +2,24 @@
 
 namespace dotSpace.Objects
 {
-    [DataContract]
-    public class Binding
+    public class PatternBinding
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Binding(string type)
+        public PatternBinding()
+        {
+        }
+
+        public PatternBinding(string type)
         {
             this.TypeName = type;
         }
 
         #endregion
+
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Properties
-
 
         [DataMember]
         public string TypeName { get; set; } 

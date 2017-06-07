@@ -1,20 +1,20 @@
 ﻿using dotSpace.Enumerations;
 using System;
-using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
 
 namespace dotSpace.Objects.Network.Messages.Requests
 {
-    [DataContract]
-    [KnownType(typeof(MessageBase))]
     public class BasicRequest : MessageBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
+        public BasicRequest()
+        {
+        }
 
         public BasicRequest(ConnectionMode mode, ActionType action, string source, string session, string target) : base(action, source, session, target)
         {
-            this.Mode = mode;
-
+            this.Connectionmode = mode;
         }
 
         #endregion
@@ -22,17 +22,18 @@ namespace dotSpace.Objects.Network.Messages.Requests
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Properties
 
-        public ConnectionMode Mode { get; set; }
-        [DataMember(Name = "Mode")]
-        public string ModeString
+        [ScriptIgnore]
+        public ConnectionMode Connectionmode { get; set; }
+
+        public string Mode
         {
-            get { return this.Mode.ToString(); }
+            get { return this.Connectionmode.ToString(); }
             set
             {
                 ConnectionMode mode;
-                this.Mode = Enum.TryParse(value, true, out mode) ? mode : ConnectionMode.NONE;
+                this.Connectionmode = Enum.TryParse(value, true, out mode) ? mode : ConnectionMode.NONE;
             }
-        } 
+        }
 
         #endregion
 

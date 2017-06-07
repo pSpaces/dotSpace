@@ -39,7 +39,7 @@ namespace dotSpace.BaseClasses
             this.thread.Join();
         }
 
-        public abstract void DoWork();  
+        protected abstract void DoWork();  
 
         #endregion
     }

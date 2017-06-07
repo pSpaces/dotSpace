@@ -28,7 +28,7 @@ namespace dotSpace.Objects.Network
         protected override MessageBase Decode<T>(string msg)
         {
             BasicResponse breq = msg.Deserialize<BasicResponse>();
-            switch (breq.Action)
+            switch (breq.Actiontype)
             {
                 case ActionType.GET_RESPONSE: breq = msg.Deserialize<GetResponse>(); break;
                 case ActionType.GETP_RESPONSE: breq = msg.Deserialize<GetPResponse>(); break;
@@ -49,7 +49,7 @@ namespace dotSpace.Objects.Network
                 IReadRequest readRequest = (IReadRequest)message;
                 readRequest.Template = JsonTypeConverter.Box(readRequest.Template);
             }
-            return message.Serialize(typeof(Binding));
+            return message.Serialize(typeof(PatternBinding));
         }
 
         #endregion

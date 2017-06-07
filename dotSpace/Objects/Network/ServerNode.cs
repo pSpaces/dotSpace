@@ -149,9 +149,9 @@ namespace dotSpace.Objects.Network
         }
         private ProtocolBase GetProtocol(BasicRequest request)
         {
-            if (this.protocols.ContainsKey(request.Mode))
+            if (this.protocols.ContainsKey(request.Connectionmode))
             {
-                return this.protocols[request.Mode];
+                return this.protocols[request.Connectionmode];
             }
 
             return null; // TODO: return response error

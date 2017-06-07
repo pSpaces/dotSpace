@@ -48,7 +48,7 @@ namespace dotSpace.Objects
                 return this.operationMap[requestType](request);
             }
 
-            return new BasicResponse(request.Action, request.Source, request.Session, request.Target, StatusCode.METHOD_NOT_ALLOWED, StatusMessage.METHOD_NOT_ALLOWED);
+            return new BasicResponse(request.Actiontype, request.Source, request.Session, request.Target, StatusCode.METHOD_NOT_ALLOWED, StatusMessage.METHOD_NOT_ALLOWED);
         }
 
         #endregion

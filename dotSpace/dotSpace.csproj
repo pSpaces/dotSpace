@@ -49,7 +49,8 @@
     <Compile Include="Enumerations\StatusCode.cs" />
     <Compile Include="Interfaces\INode.cs" />
     <Compile Include="Interfaces\IReadRequest.cs" />
-    <Compile Include="Objects\Binding.cs" />
+    <Compile Include="Objects\PatternValue.cs" />
+    <Compile Include="Objects\PatternBinding.cs" />
     <Compile Include="Objects\JsonTypeConverter.cs" />
     <Compile Include="Objects\Network\Messages\Requests\QueryAllRequest.cs" />
     <Compile Include="Objects\Network\Messages\Requests\GetPRequest.cs" />

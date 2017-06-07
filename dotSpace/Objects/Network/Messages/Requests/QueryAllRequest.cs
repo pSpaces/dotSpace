@@ -1,15 +1,16 @@
 ﻿using dotSpace.Enumerations;
 using dotSpace.Interfaces;
-using System.Runtime.Serialization;
 
 namespace dotSpace.Objects.Network.Messages.Requests
 {
-    [DataContract]
-    [KnownType(typeof(BasicRequest))]
     public sealed class QueryAllRequest : BasicRequest, IReadRequest
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
+
+        public QueryAllRequest()
+        {
+        }
 
         public QueryAllRequest(ConnectionMode mode, string source, string session, string target, object[] template) : base(mode, ActionType.QUERYALL_REQUEST, source, session, target)
         {
@@ -21,8 +22,7 @@ namespace dotSpace.Objects.Network.Messages.Requests
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Properties
 
-        [DataMember]
-        public object[] Template { get; set; } 
+        public object[] Template { get; set; }
 
         #endregion
     }

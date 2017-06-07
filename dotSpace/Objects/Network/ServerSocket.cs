@@ -23,14 +23,14 @@ namespace dotSpace.Objects.Network
         protected override MessageBase Decode<T>(string msg)
         {
             BasicRequest breq = msg.Deserialize<BasicRequest>();
-            switch (breq.Action)
+            switch (breq.Actiontype)
             {
-                case ActionType.GET_REQUEST: breq = msg.Deserialize<GetRequest>(typeof(Binding)); break;
-                case ActionType.GETP_REQUEST: breq = msg.Deserialize<GetPRequest>(typeof(Binding)); break;
-                case ActionType.GETALL_REQUEST: breq = msg.Deserialize<GetAllRequest>(typeof(Binding)); break;
-                case ActionType.QUERY_REQUEST: breq = msg.Deserialize<QueryRequest>(typeof(Binding)); break;
-                case ActionType.QUERYP_REQUEST: breq = msg.Deserialize<QueryPRequest>(typeof(Binding)); break;
-                case ActionType.QUERYALL_REQUEST: breq = msg.Deserialize<QueryAllRequest>(typeof(Binding)); break;
+                case ActionType.GET_REQUEST: breq = msg.Deserialize<GetRequest>(typeof(PatternBinding)); break;
+                case ActionType.GETP_REQUEST: breq = msg.Deserialize<GetPRequest>(typeof(PatternBinding)); break;
+                case ActionType.GETALL_REQUEST: breq = msg.Deserialize<GetAllRequest>(typeof(PatternBinding)); break;
+                case ActionType.QUERY_REQUEST: breq = msg.Deserialize<QueryRequest>(typeof(PatternBinding)); break;
+                case ActionType.QUERYP_REQUEST: breq = msg.Deserialize<QueryPRequest>(typeof(PatternBinding)); break;
+                case ActionType.QUERYALL_REQUEST: breq = msg.Deserialize<QueryAllRequest>(typeof(PatternBinding)); break;
                 case ActionType.PUT_REQUEST: breq = msg.Deserialize<PutRequest>(); break;
             }
             if (breq is IReadRequest)
