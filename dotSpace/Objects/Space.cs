@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace dotSpace.Objects
 {
-    public sealed class TupleSpace : ITupleSpace
+    public sealed class Space : ISpace
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -18,7 +18,7 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public TupleSpace()
+        public Space()
         {
             this.elements = new List<ITuple>();
         }

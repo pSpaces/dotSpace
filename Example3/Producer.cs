@@ -4,11 +4,11 @@ using System;
 
 namespace Example3
 {
-    public class Producer : Agent
+    public class Producer : AgentBase
     {
 
         // This constructor records the name of the agent
-        public Producer(string name, ITupleSpace ts) : base(name, ts)
+        public Producer(string name, ISpace ts) : base(name, ts)
         {
         }
 

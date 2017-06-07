@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Example3
 {
-    public class FoodConsumer : Agent
+    public class FoodConsumer : AgentBase
     {
         private int itemCnt;
         private List<ITuple> groceries;
 
-        public FoodConsumer(string name, ITupleSpace ts) : base(name, ts)
+        public FoodConsumer(string name, ISpace ts) : base(name, ts)
         {
             this.itemCnt = 0;
             this.groceries = new List<ITuple>();

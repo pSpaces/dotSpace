@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Pong
 {
-    public class View : Agent
+    public class View : AgentBase
     {
         public char[,] screenBuffer;
         private readonly int width;
@@ -13,7 +13,7 @@ namespace Pong
         private string playerLeft;
         private string playerRight;
 
-        public View(int width, int height, ITupleSpace ts) : base("view", ts)
+        public View(int width, int height, ISpace ts) : base("view", ts)
         {
             this.width = width;
             this.height = height;
@@ -23,15 +23,16 @@ namespace Pong
 
         protected override void DoWork()
         {
-            ITuple leftplayer = this.ts.Query(Player.Left, typeof(string));
-            ITuple rightplayer = this.ts.Query(Player.Right, typeof(string));
+            this.ts.Query("start");
+            ITuple leftplayer = this.ts.Query(1, typeof(string));
+            ITuple rightplayer = this.ts.Query(2, typeof(string));
             this.playerLeft = (string)leftplayer[1];
             this.playerRight = (string)rightplayer[1];
             while (this.ts.Query("running", true) != null)
             {
                 this.SetPongPosition();
-                this.SetPlayerPosition(Player.Left);
-                this.SetPlayerPosition(Player.Right);
+                this.SetPlayerPosition(1);
+                this.SetPlayerPosition(2);
                 this.Show();
                 Thread.Sleep(1);
             }
@@ -45,7 +46,7 @@ namespace Pong
             screenBuffer[x, y] = 'o';
         }
 
-        private void SetPlayerPosition(Player playerId)
+        private void SetPlayerPosition(int playerId)
         {
             ITuple playerPosition  = this.ts.Query(playerId, typeof(double), typeof(double));
             int x = (int)(double)playerPosition[1];

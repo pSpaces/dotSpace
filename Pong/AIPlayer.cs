@@ -7,12 +7,13 @@ namespace Pong
 {
     public class AIPlayer : PlayerBase
     {
-        public AIPlayer(Player playerId, string playername, int width, int height, ITupleSpace ts) : base(playerId, playername, width, height, ts)
+        public AIPlayer(int playerId, string playername, int width, int height, ISpace ts) : base(playerId, playername, width, height, ts)
         {
         }
 
         protected override void DoWork()
         {
+            this.ts.Query("start");
             while (this.ts.QueryP("running", true) != null)
             {
                 ITuple playerPosition = this.ts.Get(this.PlayerId, typeof(double), typeof(double));

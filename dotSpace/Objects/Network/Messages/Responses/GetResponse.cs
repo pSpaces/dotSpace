@@ -1,8 +1,9 @@
 ﻿using dotSpace.Enumerations;
+using dotSpace.Interfaces;
 
 namespace dotSpace.Objects.Network.Messages.Responses
 {
-    public sealed class GetResponse : BasicResponse
+    public sealed class GetResponse : BasicResponse, IResult
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors

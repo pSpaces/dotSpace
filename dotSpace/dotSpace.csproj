@@ -48,6 +48,8 @@
     <Compile Include="BaseClasses\ProtocolBase.cs" />
     <Compile Include="Enumerations\StatusCode.cs" />
     <Compile Include="Interfaces\INode.cs" />
+    <Compile Include="Interfaces\IResult.cs" />
+    <Compile Include="Interfaces\IWriteRequest.cs" />
     <Compile Include="Interfaces\IReadRequest.cs" />
     <Compile Include="Objects\PatternValue.cs" />
     <Compile Include="Objects\PatternBinding.cs" />
@@ -72,7 +74,7 @@
     <Compile Include="Interfaces\IFields.cs" />
     <Compile Include="Interfaces\IPattern.cs" />
     <Compile Include="Interfaces\ITuple.cs" />
-    <Compile Include="Interfaces\ITupleSpace.cs" />
+    <Compile Include="Interfaces\ISpace.cs" />
     <Compile Include="BaseClasses\MessageBase.cs" />
     <Compile Include="Objects\Network\Protocols\ConnProtocol.cs" />
     <Compile Include="Objects\Network\Messages\Requests\GetRequest.cs" />
@@ -88,7 +90,7 @@
     <Compile Include="Objects\StatusMessage.cs" />
     <Compile Include="Objects\TSOperationMap.cs" />
     <Compile Include="Objects\Tuple.cs" />
-    <Compile Include="Objects\TupleSpace.cs" />
+    <Compile Include="Objects\Space.cs" />
     <Compile Include="Objects\Json.cs" />
     <Compile Include="Objects\Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,14 +9,13 @@ namespace LocalPong
     {
         static void Main(string[] args)
         {
-            ITupleSpace ts = new TupleSpace();
+            ISpace ts = new Space();
             int width = 80;
             int height = 25;
-            Game pongGame = new Game(80, 25, ts);
-            pongGame.AddPlayer(new AIPlayer(Player.Left, "AI1", width, height, ts));
-            pongGame.AddPlayer(new AIPlayer(Player.Right, "AI2", width, height, ts));
+            Game pongGame = new Game(width, height, ts);
+            pongGame.AddPlayer(new AIPlayer(1, "AI1", width, height, ts));
+            pongGame.AddPlayer(new AIPlayer(2, "AI2", width, height, ts));
             pongGame.Run();
-
             Console.ReadKey();
         }
     }

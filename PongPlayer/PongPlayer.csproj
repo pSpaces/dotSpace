@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B40E29E5-8FC8-4F63-A98F-2CE97CA58C90}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{57A5CA55-3E36-4758-8DE9-66FC95AC5E21}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Pong</RootNamespace>
-    <AssemblyName>Pong</AssemblyName>
+    <RootNamespace>PongPlayer</RootNamespace>
+    <AssemblyName>PongPlayer</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -38,20 +41,23 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AIPlayer.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="BaseClasses\PlayerBase.cs" />
-    <Compile Include="Pong.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\dotSpace\dotSpace.csproj">
       <Project>{ea07d9c8-e59a-4c8f-bd98-1ec1eecd3351}</Project>
       <Name>dotSpace</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Pong\Pong.csproj">
+      <Project>{b40e29e5-8fc8-4f63-a98f-2ce97ca58c90}</Project>
+      <Name>Pong</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

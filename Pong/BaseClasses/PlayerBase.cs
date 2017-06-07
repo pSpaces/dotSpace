@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Pong.BaseClasses
 {
-    public abstract class PlayerBase : Agent
+    public abstract class PlayerBase : AgentBase
     {
         protected Random rng;
         protected int width;
@@ -13,7 +13,7 @@ namespace Pong.BaseClasses
         protected double initialX;
         protected double initialY;
 
-        public PlayerBase(Player playerId, string playerName, int width, int height, ITupleSpace ts) : base(playerName, ts)
+        public PlayerBase(int playerId, string playerName, int width, int height, ISpace ts) : base(playerName, ts)
         {
             this.width = width;
             this.height = height;
@@ -22,12 +22,12 @@ namespace Pong.BaseClasses
             this.Name = playerName;
             this.ts.Put(playerId, playerName);
             this.ts.Put(playerName, 0);
-            this.initialX = this.PlayerId == Player.Left ? 0d : (double)(width - 1d);
+            this.initialX = this.PlayerId == 1 ? 0d : (double)(width - 1d);
             this.initialY = (double)(height / 2d);
             this.ts.Put(this.PlayerId, this.initialX, this.initialY);
         }
 
-        public Player PlayerId { get; set; }
+        public int PlayerId { get; set; }
         public string Name { get; set; }
 
         protected void Serve(Vector position)
@@ -37,7 +37,7 @@ namespace Pong.BaseClasses
 
         private double GetServeDirection()
         {
-            return PlayerId == Player.Left ? 1d : -1d;
+            return PlayerId == 1 ? 1d : -1d;
         }
     }
 }

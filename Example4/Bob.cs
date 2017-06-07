@@ -5,9 +5,9 @@ using System;
 
 namespace Example4
 {
-    public class Bob : Agent
+    public class Bob : AgentBase
     {
-        public Bob(string name, ITupleSpace ts) : base(name, ts)
+        public Bob(string name, ISpace ts) : base(name, ts)
         {
         }
 

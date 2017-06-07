@@ -15,7 +15,7 @@ namespace dotSpace.Objects.Network
         #region // Fields
 
         private TcpListener listener;
-        private Dictionary<string, ITupleSpace> spaces;
+        private Dictionary<string, ISpace> spaces;
         private Dictionary<ConnectionMode, ProtocolBase> protocols;
 
         #endregion
@@ -26,7 +26,7 @@ namespace dotSpace.Objects.Network
         public ServerNode(ConnectionMode mode, int port, string address = "", bool listenOnStart = true) : base(address, port)
         {
             this.listener = new TcpListener(this.address, this.port);
-            this.spaces = new Dictionary<string, ITupleSpace>();
+            this.spaces = new Dictionary<string, ISpace>();
             this.protocols = new Dictionary<ConnectionMode, ProtocolBase>();
             mode.HasFlag(ConnectionMode.CONN).Then(() => this.protocols.Add(ConnectionMode.CONN, new ConnProtocol(this)));
             mode.HasFlag(ConnectionMode.PUSH).Then(() => this.protocols.Add(ConnectionMode.PUSH, new PushProtocol(this, string.Empty, 0)));
@@ -46,7 +46,7 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Properties
 
-        public ITupleSpace this[string indexer]
+        public ISpace this[string indexer]
         {
             get
             {
@@ -127,7 +127,7 @@ namespace dotSpace.Objects.Network
         {
             this.listener.Stop();
         }
-        public void AddSpace(string identifier, ITupleSpace tuplespace)
+        public void AddSpace(string identifier, ISpace tuplespace)
         {
             if (!this.spaces.ContainsKey(identifier))
             {

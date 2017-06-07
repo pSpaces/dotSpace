@@ -1,8 +1,9 @@
 ﻿using dotSpace.Enumerations;
+using dotSpace.Interfaces;
 
 namespace dotSpace.Objects.Network.Messages.Responses
 {
-    public sealed class QueryPResponse : BasicResponse
+    public sealed class QueryPResponse : BasicResponse, IResult
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
@@ -13,7 +14,7 @@ namespace dotSpace.Objects.Network.Messages.Responses
 
         public QueryPResponse(string source, string session, string target, object[] result, StatusCode code, string message) : base(ActionType.QUERYP_RESPONSE, source, session, target, code, message)
         {
-            this.Result = result;
+            this.Result = result != null ? (object[])result.Clone() : null;
         }
 
         #endregion

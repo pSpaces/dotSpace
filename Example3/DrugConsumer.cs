@@ -5,10 +5,10 @@ using System;
 
 namespace Example3
 {
-    public class DrugConsumer : Agent
+    public class DrugConsumer : AgentBase
     {
 
-        public DrugConsumer(string name, ITupleSpace ts) : base(name, ts)
+        public DrugConsumer(string name, ISpace ts) : base(name, ts)
         {
         }
 

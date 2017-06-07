@@ -11,8 +11,9 @@ namespace dotSpace.Objects
         {
         }
 
-        public PatternValue(object value)
+        public PatternValue(string typename, object value)
         {
+            this.TypeName = typename;
             this.Value = value;
         }
 
@@ -21,8 +22,8 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Properties
 
+        public object TypeName { get; set; }
 
-        [DataMember]
         public object Value { get; set; }
 
         #endregion

@@ -6,13 +6,13 @@ using System.Windows;
 
 namespace Pong
 {
-    public class Pong : Agent
+    public class Pong : AgentBase
     {
         private Random rng;
         private int width;
         private int height;
 
-        public Pong(ITupleSpace ts, int width, int height) : base(string.Empty, ts)
+        public Pong(ISpace ts, int width, int height) : base(string.Empty, ts)
         {
             this.width = width;
             this.height = height;
@@ -21,8 +21,11 @@ namespace Pong
 
         protected override void DoWork()
         {
-            ITuple leftplayer = this.ts.Query(Player.Left, typeof(string));
-            ITuple rightplayer = this.ts.Query(Player.Right, typeof(string));
+            this.ts.Query("start");
+            int leftPlayerId = 1;
+            int rightPlayerId = 2;
+            ITuple leftplayer = this.ts.Query(leftPlayerId, typeof(string));
+            ITuple rightplayer = this.ts.Query(rightPlayerId, typeof(string));
             while (this.ts.QueryP("running", true) != null)
             {
                 // "pong", position:(x,y), normalized direction(x,y), speed: z
@@ -38,7 +41,7 @@ namespace Pong
                 }
                 if (newPosition.X <= 0)
                 {
-                    ITuple playerPosition = this.ts.Query(Player.Left, typeof(double), typeof(double));
+                    ITuple playerPosition = this.ts.Query(leftPlayerId, typeof(double), typeof(double));
                     if ((int)(double)playerPosition[2] == (int)newPosition.Y )
                     {
                         direction = this.ChangeDirection(direction, true);
@@ -52,7 +55,7 @@ namespace Pong
                 }
                 if (newPosition.X >= this.width)
                 {
-                    ITuple playerPosition = this.ts.Query(Player.Right, typeof(double), typeof(double));
+                    ITuple playerPosition = this.ts.Query(rightPlayerId, typeof(double), typeof(double));
                     if ((int)(double)playerPosition[2] == (int)newPosition.Y)
                     {
                         direction = this.ChangeDirection(direction, true);
@@ -72,7 +75,7 @@ namespace Pong
                 pong[3] = direction.X;
                 pong[4] = direction.Y;
                 this.ts.Put(pong);
-                Thread.Sleep(80);
+                Thread.Sleep(100);
             }
         }
 

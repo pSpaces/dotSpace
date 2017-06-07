@@ -3,21 +3,21 @@ using System.Threading;
 
 namespace dotSpace.BaseClasses
 {
-    public abstract class Agent
+    public abstract class AgentBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
         private Thread thread;
         protected string name;
-        protected ITupleSpace ts;
+        protected ISpace ts;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Agent(string name, ITupleSpace ts)
+        public AgentBase(string name, ISpace ts)
         {
             this.thread = new Thread(this.DoWork);
             this.name = name;
@@ -27,7 +27,7 @@ namespace dotSpace.BaseClasses
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
-        #region // MyRegion
+        #region // Public Methods
 
         public void Start()
         {

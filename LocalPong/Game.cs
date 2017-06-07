@@ -1,14 +1,13 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Interfaces;
+using Pong;
 using Pong.BaseClasses;
 using System.Collections.Generic;
 
-namespace Pong
+namespace LocalPong
 {
     public class Game
     {
-        private char[,] court;
-
         private List<PlayerBase> players;
         private AgentBase pong;
         private View view;
@@ -22,8 +21,7 @@ namespace Pong
             this.width = width;
             this.height = height;
             this.players = new List<PlayerBase>();
-            this.court = new char[width, height];
-            this.pong = new Pong(ts, width, height);
+            this.pong = new Pong.Pong(ts, width, height);
             this.view = new View(width, height, ts);
         }
 
@@ -42,6 +40,7 @@ namespace Pong
             {
                 player.Start();
             }
+            this.ts.Put("start");
         }
 
         public void Stop()

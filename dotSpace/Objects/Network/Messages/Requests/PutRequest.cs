@@ -1,8 +1,9 @@
 ﻿using dotSpace.Enumerations;
+using dotSpace.Interfaces;
 
 namespace dotSpace.Objects.Network.Messages.Requests
 {
-    public sealed class PutRequest : BasicRequest
+    public sealed class PutRequest : BasicRequest, IWriteRequest
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors

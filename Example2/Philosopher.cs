@@ -4,13 +4,13 @@ using System;
 
 namespace Example2
 {
-    public class Philosopher : Agent
+    public class Philosopher : AgentBase
     {
         private int seatIndex;
         private int leftId;
         private int rightId;
 
-        public Philosopher(string name, int seatIndex, int max, ITupleSpace ts) : base(name, ts)
+        public Philosopher(string name, int seatIndex, int max, ISpace ts) : base(name, ts)
         {
             this.seatIndex = seatIndex;
             this.leftId = seatIndex;

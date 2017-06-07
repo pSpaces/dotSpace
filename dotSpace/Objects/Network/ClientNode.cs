@@ -37,6 +37,10 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        public ISpace GetRemoteSpace(string target)
+        {
+            return new SpaceWrapper(target, this);
+        }
         public override ITuple Get(string target, IPattern pattern)
         {
             return this.Get(target, pattern.Fields);
@@ -128,7 +132,93 @@ namespace dotSpace.Objects.Network
             }
 
             return null; // TODO: return response error
-        } 
+        }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Private Classes
+
+        private class SpaceWrapper : ISpace
+        {
+            private string target;
+            private NodeBase node;
+
+            public SpaceWrapper(string target, NodeBase node)
+            {
+                this.target = target;
+                this.node = node;
+            }
+            public ITuple Get(params object[] values)
+            {
+                return this.node.Get(this.target, values);
+            }
+
+            public ITuple Get(IPattern pattern)
+            {
+                return this.node.Get(this.target, pattern);
+            }
+
+            public IEnumerable<ITuple> GetAll(params object[] values)
+            {
+                return this.node.GetAll(this.target, values);
+            }
+
+            public IEnumerable<ITuple> GetAll(IPattern pattern)
+            {
+                return this.node.GetAll(this.target, pattern);
+            }
+
+            public ITuple GetP(params object[] values)
+            {
+                return this.node.GetP(this.target, values);
+            }
+
+            public ITuple GetP(IPattern pattern)
+            {
+                return this.node.GetP(this.target, pattern);
+            }
+
+            public void Put(params object[] values)
+            {
+                this.node.Put(this.target, values);
+            }
+
+            public void Put(ITuple tuple)
+            {
+                this.node.Put(this.target, tuple);
+            }
+
+            public ITuple Query(params object[] values)
+            {
+                return this.node.Query(this.target, values); 
+            }
+
+            public ITuple Query(IPattern pattern)
+            {
+                return this.node.Query(this.target, pattern); 
+            }
+
+            public IEnumerable<ITuple> QueryAll(params object[] values)
+            {
+                return this.node.QueryAll(this.target, values); 
+            }
+
+            public IEnumerable<ITuple> QueryAll(IPattern pattern)
+            {
+                return this.node.QueryAll(this.target, pattern); 
+            }
+
+            public ITuple QueryP(params object[] values)
+            {
+                return this.node.QueryP(this.target, values); 
+            }
+
+            public ITuple QueryP(IPattern pattern)
+            {
+                return this.node.QueryP(this.target, pattern); 
+            }
+        }
 
         #endregion
     }

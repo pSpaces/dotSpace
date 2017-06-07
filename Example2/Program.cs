@@ -8,8 +8,8 @@ namespace Example2
     {
         static void Main(string[] args)
         {
-            TupleSpace ts = new TupleSpace();
-            List<Agent> agents = new List<Agent>();
+            Space ts = new Space();
+            List<AgentBase> agents = new List<AgentBase>();
             ts.Put("FORK", 1);
             ts.Put("FORK", 2);
             ts.Put("FORK", 3);

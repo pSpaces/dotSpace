@@ -2,7 +2,7 @@
 
 namespace dotSpace.Interfaces
 {
-    public interface ITupleSpace
+    public interface ISpace
     {
         ITuple Get(IPattern pattern);
         ITuple Get(params object[] pattern);

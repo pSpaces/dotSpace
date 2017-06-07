@@ -28,6 +28,7 @@ namespace dotSpace.Objects
             AddType("boolean", typeof(bool));
             AddType("decimal", typeof(decimal));
             AddType("long", typeof(long));
+            AddType("enum", typeof(Enum));
         }
 
         #endregion
@@ -37,6 +38,8 @@ namespace dotSpace.Objects
 
         public static object[] Box(object[] values)
         {
+            if (values == null)
+                return null;
             for (int idx = 0; idx < values.Length; idx++)
             {
                 if (values[idx] is Type)
@@ -45,7 +48,7 @@ namespace dotSpace.Objects
                 }
                 else
                 {
-                    values[idx] = new PatternValue(values[idx]);
+                    values[idx] = BoxType(values[idx].GetType(), values[idx]);
                 }
             }
             return values;
@@ -53,15 +56,18 @@ namespace dotSpace.Objects
 
         public static object[] Unbox(object[] values)
         {
-
+            if (values == null)
+                return null;
             List<object> unboxedValues = new List<object>();
             foreach (Dictionary<string, object> kv in values)
             {
-                KeyValuePair<string, object> kvp = kv.FirstOrDefault();
-                switch (kvp.Key)
+                if (kv.Count == 1)
                 {
-                    case "TypeName": unboxedValues.Add(UnboxType((string)kvp.Value)); break;
-                    case "Value": unboxedValues.Add(kvp.Value); break;
+                    unboxedValues.Add(UnboxType((string)kv["TypeName"]));
+                }
+                else if (kv.Count == 2)
+                {
+                    unboxedValues.Add(UnboxType((string)kv["TypeName"], kv["Value"]));
                 }
             }
 
@@ -95,7 +101,26 @@ namespace dotSpace.Objects
                 return unboxedTypes[typename];
             }
             throw new Exception("Attempting to unbox unsupported type");
-        } 
+        }
+
+        private static PatternValue BoxType(Type type, object value)
+        {
+            if (boxedTypes.ContainsKey(type))
+            {
+                return new PatternValue(boxedTypes[type], value);
+            }
+            throw new Exception("Attempting to box unsupported type");
+        }
+
+        private static object UnboxType(string typename, object value)
+        {
+            if (unboxedTypes.ContainsKey(typename))
+            {
+                return Convert.ChangeType(value, unboxedTypes[typename]);
+            }
+            throw new Exception("Attempting to unbox unsupported type");
+        }
+
 
         #endregion
     }

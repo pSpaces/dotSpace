@@ -8,8 +8,8 @@ namespace Example3
     {
         static void Main(string[] args)
         {
-            TupleSpace ts = new TupleSpace();
-            List<Agent> agents = new List<Agent>();
+            Space ts = new Space();
+            List<AgentBase> agents = new List<AgentBase>();
 
             // We create Alice and Bob as Producer/Consumer agents
             // The constructor of agents takes the name of the agent as argument

@@ -6,10 +6,10 @@ using System;
 namespace Example3
 {
 
-    public class AnyConsumer : Agent
+    public class AnyConsumer : AgentBase
     {
 
-        public AnyConsumer(string name, ITupleSpace ts) : base(name, ts)
+        public AnyConsumer(string name, ISpace ts) : base(name, ts)
         {
         }
 

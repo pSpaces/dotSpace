@@ -38,12 +38,23 @@ namespace dotSpace.Objects.Network
                 IReadRequest readRequest = (IReadRequest)breq;
                 readRequest.Template = JsonTypeConverter.Unbox(readRequest.Template);
             }
+            if (breq is IWriteRequest)
+            {
+                IWriteRequest writeRequest = (IWriteRequest)breq;
+                writeRequest.Tuple = JsonTypeConverter.Unbox(writeRequest.Tuple);
+            }
 
             return breq;
         }
 
         protected override string Encode(MessageBase message)
         {
+            if (message is IResult)
+            {
+                IResult response = (IResult)message;
+                response.Result = JsonTypeConverter.Box(response.Result);
+            }
+
             return message.Serialize();
         }
 
