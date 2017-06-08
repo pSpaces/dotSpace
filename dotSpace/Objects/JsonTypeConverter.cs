@@ -84,18 +84,19 @@ namespace dotSpace.Objects
         {
             if (values == null)
                 return null;
+            object[] newValues = new object[values.Length];
             for (int idx = 0; idx < values.Length; idx++)
             {
                 if (values[idx] is Type)
                 {
-                    values[idx] = BoxType((Type)values[idx]);
+                    newValues[idx] = BoxType((Type)values[idx]);
                 }
                 else
                 {
-                    values[idx] = BoxType(values[idx].GetType(), values[idx]);
+                    newValues[idx] = BoxType(values[idx].GetType(), values[idx]);
                 }
             }
-            return values;
+            return newValues;
         }
 
         private static object[] Unbox(object[] values)

@@ -2,7 +2,7 @@
 using dotSpace.Interfaces;
 using System;
 
-namespace Example2
+namespace Example6
 {
     public class Philosopher : AgentBase
     {
