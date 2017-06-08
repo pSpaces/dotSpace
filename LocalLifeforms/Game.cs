@@ -31,7 +31,7 @@ namespace LocalLifeforms
         {
             int x = (this.rng.Next() % (this.width - 2)) + 1;
             int y = (this.rng.Next() % (this.height - 2)) + 1;
-            this.ts.Put("spawn", genom, genom, genom, life, food, x, y, 0);
+            this.ts.Put("spawn", genom, genom, genom, life, food, x, y, 0, 12);
         }
 
         public void Run()

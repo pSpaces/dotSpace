@@ -17,6 +17,8 @@ namespace Lifeforms
         private int maxGenerations;
         private int maxLife;
         private int avgLife;
+        private int numberFoods;
+        private int maxVisualRange;
 
         public View(int width, int height, ISpace ts) : base("view", ts)
         {
@@ -43,17 +45,19 @@ namespace Lifeforms
 
         private void ShowLifeforms()
         {
-            IEnumerable<ITuple> lifeforms = this.ts.QueryAll("lifeform", typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int));
+            IEnumerable<ITuple> lifeforms = this.ts.QueryAll("lifeform", typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
             this.maxGenerations = 0;
             this.avgLife = 0;
+            this.maxVisualRange = 0;
             foreach (ITuple lifeform in lifeforms)
             {
                 long genom = (long)lifeform[1];
                 int x = (int)lifeform[5];
                 int y = (int)lifeform[6];
-                this.screenBuffer[x, y] = (char)((genom % 27) + 96);
+                this.screenBuffer[x, y] = '¤'; // (char)((genom % 27) + 96);
                 this.maxGenerations = Math.Max(this.maxGenerations, (int)lifeform[7]);
                 this.maxLife = Math.Max(this.maxLife, (int)lifeform[4]);
+                this.maxVisualRange = Math.Max(this.maxVisualRange, (int)lifeform[8]);
                 this.avgLife += (int)lifeform[4];
             }
             this.numberLifeforms = lifeforms.Count();
@@ -72,11 +76,12 @@ namespace Lifeforms
                 int y = (int)food[4];
                 this.screenBuffer[x, y] = '@';
             }
+            this.numberFoods = foods.Count();
         }
 
         private string ShowInfo()
         {
-            return string.Format(" Number lifeforms:{0} - Max generations count: {1}\n Max life: {2} - Average life: {3}", this.numberLifeforms, this.maxGenerations, this.maxLife, this.avgLife);
+            return string.Format(" Number lifeforms: {0,-4} - Max generations count: {1,-4} - Number foods: {2,-4}\n Max life: {3,-4} - Average life: {4,-4} - Max visual range: {5,-4}", this.numberLifeforms, this.maxGenerations, this.numberFoods, this.maxLife, this.avgLife, this.maxVisualRange);
         }
 
         private void SetForegroundColor(char c)

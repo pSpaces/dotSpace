@@ -25,6 +25,7 @@ namespace Lifeforms
             this.NewFood();
             this.NewFood();
             this.NewFood();
+            this.NewFood();
             // Keep iterating while the state is 'running'
             while (this.ts.QueryP("running", true) != null)
             {
@@ -39,10 +40,9 @@ namespace Lifeforms
                     int timeleft = (int)food[1] - 1;
                     if (timeleft > 0)
                     {
-                        food[1] = timeleft;
-                        this.ts.Put(food);
+                        this.ts.Put("food",food[1], timeleft, food[3], food[4]);
                     }
-                    else if ((this.rng.Next() % 100) != 31)
+                    else 
                     {
                         this.NewFood();
                     }
@@ -57,14 +57,18 @@ namespace Lifeforms
 
         private void NewFood()
         {
-            int amount = (int)(this.rng.NextDouble() * 100);
-            int timeleft = (int)(this.rng.NextDouble() * 500);
-            int x = (this.rng.Next() % (this.width - 2)) + 1;
-            int y = (this.rng.Next() % (this.height - 2)) + 1;
-            this.ts.Put("food", amount, timeleft, x, y);
-            if ((this.rng.Next() % 100) == 31)
+            int rnd = this.rng.Next() % 100;
+            if (rnd > 1)
             {
-                this.NewFood();
+                int amount = (this.rng.Next() % 250)+50;
+                int timeleft = this.rng.Next() % 500;
+                int x = (this.rng.Next() % (this.width - 2)) + 1;
+                int y = (this.rng.Next() % (this.height - 2)) + 1;
+                this.ts.Put("food", amount, timeleft, x, y);
+                if (rnd > 97)
+                {
+                    this.NewFood();
+                }
             }
         }
 
