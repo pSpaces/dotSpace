@@ -18,7 +18,7 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public PushProtocol(ServerNode server, string address, int port) : base(server)
+        public PushProtocol(Node server, string address, int port) : base(server)
         {
             this.address = address;
             this.port = port;
@@ -29,7 +29,7 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public override void ProcessRequest(ServerSocket socket, BasicRequest request)
+        public override void ProcessRequest(NodeSocket socket, BasicRequest request)
         {
             request = this.ValidateRequest<BasicRequest>(request);
             BasicResponse response = this.operationMap.Execute(request);
@@ -41,7 +41,7 @@ namespace dotSpace.Objects.Network.Protocols
         {
 
             TcpListener listener = new TcpListener(this.address, this.port);
-            ClientSocket socket = new ClientSocket(endpoint);
+            TargetSocket socket = new TargetSocket(endpoint);
             socket.Send(request);
             MessageBase message = socket.Receive<T>();
             socket.Close();

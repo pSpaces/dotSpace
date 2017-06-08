@@ -9,7 +9,7 @@ using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network
 {
-    public sealed class ServerNode : NodeBase
+    public sealed class Node : NodeBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -23,7 +23,7 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public ServerNode(ConnectionMode mode, int port, string address = "", bool listenOnStart = true) : base(address, port)
+        public Node(ConnectionMode mode, int port, string address = "", bool listenOnStart = true) : base(address, port)
         {
             this.listener = new TcpListener(this.address, this.port);
             this.spaces = new Dictionary<string, ISpace>();
@@ -142,7 +142,7 @@ namespace dotSpace.Objects.Network
 
         private void OnClientConnect(TcpClient client)
         {
-            ServerSocket socket = new ServerSocket(client);
+            NodeSocket socket = new NodeSocket(client);
             BasicRequest request = (BasicRequest)socket.Receive<BasicRequest>();
             this.GetProtocol(request)?.ProcessRequest(socket, request);
             socket.Close(); // TODO: Forcibly closing socket when done. Does it need to reply if the connectionmode is unsupported?

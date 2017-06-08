@@ -9,7 +9,7 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public PullProtocol(ServerNode server) : base(server)
+        public PullProtocol(Node server) : base(server)
         {
         }
 
@@ -18,7 +18,7 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public override void ProcessRequest(ServerSocket socket, BasicRequest request)
+        public override void ProcessRequest(NodeSocket socket, BasicRequest request)
         {
         }
         public override T PerformRequest<T>(IPEndPoint endpoint, BasicRequest request)

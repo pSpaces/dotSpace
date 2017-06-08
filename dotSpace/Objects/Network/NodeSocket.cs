@@ -5,12 +5,12 @@ using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network
 {
-    public sealed class ServerSocket : SocketBase
+    public sealed class NodeSocket : SocketBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public ServerSocket(TcpClient client) : base(client)
+        public NodeSocket(TcpClient client) : base(client)
         {
 
         }

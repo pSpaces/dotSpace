@@ -24,9 +24,9 @@ namespace dotSpace.BaseClasses
         public ProtocolBase(NodeBase node)
         {
             this.node = node;
-            if (this.node is ServerNode)
+            if (this.node is Node)
             {
-                this.operationMap = new OperationMap((ServerNode)this.node);
+                this.operationMap = new OperationMap((Node)this.node);
             }
         }
 
@@ -35,7 +35,7 @@ namespace dotSpace.BaseClasses
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public abstract void ProcessRequest(ServerSocket socket, BasicRequest request);
+        public abstract void ProcessRequest(NodeSocket socket, BasicRequest request);
         public abstract T PerformRequest<T>(IPEndPoint endpoint, BasicRequest request) where T : BasicResponse;
 
         #endregion

@@ -6,16 +6,16 @@ using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network
 {
-    public sealed class ClientSocket : SocketBase
+    public sealed class TargetSocket : SocketBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public ClientSocket(TcpClient client) : base(client)
+        public TargetSocket(TcpClient client) : base(client)
         {
         } 
 
-        public ClientSocket(IPEndPoint endpoint) : base(new TcpClient())
+        public TargetSocket(IPEndPoint endpoint) : base(new TcpClient())
         {
             this.client.Connect(endpoint);
         }

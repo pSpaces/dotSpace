@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace dotSpace.Objects.Network
 {
-    public sealed class ClientNode : NodeBase
+    public sealed class Target : NodeBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -23,7 +23,7 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public ClientNode(ConnectionMode mode, string address, int port) : base(address, port)
+        public Target(ConnectionMode mode, string address, int port) : base(address, port)
         {
             this.mode = mode;
             this.protocols = new Dictionary<ConnectionMode, ProtocolBase>();

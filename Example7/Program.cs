@@ -15,19 +15,19 @@ namespace Example7
             {
                 if (args[0] == "producer")
                 {
-                    ServerNode server = new ServerNode(ConnectionMode.CONN, 123, "127.0.0.1");
-                    server.AddSpace("fridge", new Space());
-                    AgentBase alice = new Producer("Alice", server["fridge"]);
+                    Node node = new Node(ConnectionMode.CONN, 123, "127.0.0.1");
+                    node.AddSpace("fridge", new Space());
+                    AgentBase alice = new Producer("Alice", node["fridge"]);
                     alice.Start();
                     return;
                 }
                 else if (args[0] == "consumer")
                 {
-                    ClientNode client = new ClientNode(ConnectionMode.CONN, "127.0.0.1", 123);
+                    Target target = new Target(ConnectionMode.CONN, "127.0.0.1", 123);
                     List<AgentBase> agents = new List<AgentBase>();
-                    agents.Add(new FoodConsumer("Bob", client.GetRemoteSpace("fridge")));
-                    agents.Add(new FoodConsumer("Charlie", client.GetRemoteSpace("fridge")));
-                    agents.Add(new DrugConsumer("Dave", client.GetRemoteSpace("fridge")));
+                    agents.Add(new FoodConsumer("Bob", target.GetRemoteSpace("fridge")));
+                    agents.Add(new FoodConsumer("Charlie", target.GetRemoteSpace("fridge")));
+                    agents.Add(new DrugConsumer("Dave", target.GetRemoteSpace("fridge")));
                     agents.ForEach(a => a.Start());
                     return;
                 }

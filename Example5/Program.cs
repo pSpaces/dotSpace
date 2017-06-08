@@ -11,14 +11,14 @@ namespace Example5
     {
         static void Main(string[] args)
         {
-            ServerNode server = new ServerNode(ConnectionMode.CONN, 123, "127.0.0.1");
-            server.AddSpace("dtu", new Space());
-            server.Put("dtu", "Hello world!");
+            Node node = new Node(ConnectionMode.CONN, 123, "127.0.0.1");
+            node.AddSpace("dtu", new Space());
+            node.Put("dtu", "Hello world!");
 
-            ClientNode client = new ClientNode(ConnectionMode.CONN, "127.0.0.1", 123);
-            AgentBase student = new Student("sxxxxxx", client.GetRemoteSpace("dtu"));
+            Target target = new Target(ConnectionMode.CONN, "127.0.0.1", 123);
+            AgentBase student = new Student("sxxxxxx", target.GetRemoteSpace("dtu"));
             student.Start();
-            ITuple tuple = server.Get("dtu",typeof(string), typeof(string));
+            ITuple tuple = node.Get("dtu",typeof(string), typeof(string));
             Console.WriteLine(string.Format("{0} is attending course {1}", tuple[0], tuple[1]));
             Console.Read();
         }

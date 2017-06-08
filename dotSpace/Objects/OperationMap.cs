@@ -14,7 +14,7 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        private ServerNode serverNode;
+        private Node serverNode;
         private Dictionary<Type, Func<BasicRequest, BasicResponse>> operationMap;
 
         #endregion
@@ -22,7 +22,7 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public OperationMap(ServerNode serverNode)
+        public OperationMap(Node serverNode)
         {
             this.serverNode = serverNode;
             this.operationMap = new Dictionary<Type, Func<BasicRequest, BasicResponse>>();
