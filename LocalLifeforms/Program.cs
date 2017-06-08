@@ -17,6 +17,9 @@ namespace LocalLifeforms
             lifeforms.AddLifeform(7, 250, 25);
             lifeforms.AddLifeform(11, 250, 25);
             lifeforms.AddLifeform(13, 250, 25);
+            lifeforms.AddLifeform(17, 50, 25);
+            lifeforms.AddLifeform(19, 175, 25);
+            lifeforms.AddLifeform(21, 225, 25);
             lifeforms.Run();
             Console.ReadKey();
             lifeforms.Stop();

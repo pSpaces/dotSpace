@@ -25,7 +25,7 @@ namespace Test
             while (this.ts.QueryP("running", true) != null)
             {
                 // <spawn, genom, p1genom, p2genom, life, food, x, y>
-                ITuple spawningLifeform = this.ts.Get("spawn", typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+                ITuple spawningLifeform = this.ts.Get("spawn", typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
                 long genom = (long)spawningLifeform[1];
                 long p1genom = (long)spawningLifeform[2];
                 long p2genom = (long)spawningLifeform[3];
@@ -35,7 +35,9 @@ namespace Test
                 int y = (int)spawningLifeform[7];
                 int generation = (int)spawningLifeform[8];
                 int visualRange = (int)spawningLifeform[9];
-                Lifeform lifeform = new Lifeform(genom, p1genom, p2genom, life, food, x, y, generation, visualRange, this.width, this.height, this.ts);
+                int maxNrChildren  = (int)spawningLifeform[10];
+                int speed = (int)spawningLifeform[11];
+                Lifeform lifeform = new Lifeform(genom, p1genom, p2genom, life, food, x, y, generation, visualRange, maxNrChildren, speed, this.width, this.height, this.ts);
                 lifeform.Start();
                 Thread.Sleep(100);
             }

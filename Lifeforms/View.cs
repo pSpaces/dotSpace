@@ -19,7 +19,11 @@ namespace Lifeforms
         private int avgLife;
         private int numberFoods;
         private int maxVisualRange;
-
+        private int avgVisualRange;
+        private int maxNrChildren;
+        private int avgNrChildren;
+        private int maxSpeed;
+        private int avgSpeed;
         public View(int width, int height, ISpace ts) : base("view", ts)
         {
             this.width = width;
@@ -45,10 +49,16 @@ namespace Lifeforms
 
         private void ShowLifeforms()
         {
-            IEnumerable<ITuple> lifeforms = this.ts.QueryAll("lifeform", typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+            IEnumerable<ITuple> lifeforms = this.ts.QueryAll("lifeform", typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
             this.maxGenerations = 0;
+            this.maxLife = 0;
             this.avgLife = 0;
             this.maxVisualRange = 0;
+            this.avgVisualRange = 0;
+            this.maxNrChildren = 0;
+            this.avgNrChildren = 0;
+            this.maxSpeed = 0;
+            this.avgSpeed = 0;
             foreach (ITuple lifeform in lifeforms)
             {
                 long genom = (long)lifeform[1];
@@ -57,13 +67,21 @@ namespace Lifeforms
                 this.screenBuffer[x, y] = '¤'; // (char)((genom % 27) + 96);
                 this.maxGenerations = Math.Max(this.maxGenerations, (int)lifeform[7]);
                 this.maxLife = Math.Max(this.maxLife, (int)lifeform[4]);
-                this.maxVisualRange = Math.Max(this.maxVisualRange, (int)lifeform[8]);
                 this.avgLife += (int)lifeform[4];
+                this.maxVisualRange = Math.Max(this.maxVisualRange, (int)lifeform[8]);
+                this.avgVisualRange += (int)lifeform[8];
+                this.maxNrChildren = Math.Max(this.maxNrChildren, (int)lifeform[9]);
+                this.avgNrChildren += (int)lifeform[9];
+                this.maxSpeed = Math.Max(this.maxSpeed, (int)lifeform[10]);
+                this.avgSpeed += (int)lifeform[10];
             }
             this.numberLifeforms = lifeforms.Count();
             if (this.numberLifeforms > 0)
             {
                 this.avgLife = this.avgLife / this.numberLifeforms;
+                this.avgVisualRange = this.avgVisualRange / this.numberLifeforms;
+                this.avgNrChildren = this.avgNrChildren / this.numberLifeforms;
+                this.avgSpeed = this.avgSpeed / this.numberLifeforms;
             }
         }
 
@@ -81,7 +99,11 @@ namespace Lifeforms
 
         private string ShowInfo()
         {
-            return string.Format(" Number lifeforms: {0,-4} - Max generations count: {1,-4} - Number foods: {2,-4}\n Max life: {3,-4} - Average life: {4,-4} - Max visual range: {5,-4}", this.numberLifeforms, this.maxGenerations, this.numberFoods, this.maxLife, this.avgLife, this.maxVisualRange);
+            return string.Format(" Number lifeforms: {0,-4} - Max generations count: {1,-4} - Number foods: {2,-4}\n" +
+                                 " Max life: {3,-4} - Average life: {4,-4}\n" +
+                                 " Max visual range: {5,-4} - Average visual range: {6,-4}\n" +
+                                 " Max number of children: {7,-4} - Average number of children: {8,-4}\n" +
+                                 " Max speed: {9,-4} - Average Speed: {10,-4}", this.numberLifeforms, this.maxGenerations, this.numberFoods, this.maxLife, this.avgLife, this.maxVisualRange, this.avgVisualRange, this.maxNrChildren, this.avgNrChildren, this.maxSpeed, this.avgSpeed);
         }
 
         private void SetForegroundColor(char c)
@@ -105,12 +127,12 @@ namespace Lifeforms
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Console.SetCursorPosition(x, y + 1);
+                    Console.SetCursorPosition(x, y);
                     this.SetForegroundColor(screenBuffer[x, y]);
                     Console.Write(screenBuffer[x, y]);
                 }
             }
-            Console.SetCursorPosition(0, this.height+1);
+            Console.SetCursorPosition(0, this.height);
             Console.Write(this.ShowInfo());
             for (int y = 0; y < this.height; y++)
             {
