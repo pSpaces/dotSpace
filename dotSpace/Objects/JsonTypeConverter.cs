@@ -44,6 +44,16 @@ namespace dotSpace.Objects
                 IResult response = (IResult)message;
                 response.Result = Box(response.Result);
             }
+            if(message is IEnumerableResult)
+            {
+                IEnumerableResult response = (IEnumerableResult)message;
+                List<object[]> results = new List<object[]>();
+                foreach(object[] result in response.Result)
+                {
+                    results.Add(Box(result));
+                }
+                response.Result = results;
+            }
             if (message is IReadRequest)
             {
                 IReadRequest readRequest = (IReadRequest)message;
@@ -63,6 +73,16 @@ namespace dotSpace.Objects
             {
                 IResult response = (IResult)message;
                 response.Result = Unbox(response.Result);
+            }
+            if (message is IEnumerableResult)
+            {
+                IEnumerableResult response = (IEnumerableResult)message;
+                List<object[]> results = new List<object[]>();
+                foreach (object[] result in response.Result)
+                {
+                    results.Add(Unbox(result));
+                }
+                response.Result = results;
             }
             if (message is IReadRequest)
             {

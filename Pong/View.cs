@@ -12,6 +12,7 @@ namespace Pong
         private readonly int height;
         private string playerLeft;
         private string playerRight;
+        private ConsoleColor currentColor;
 
         public View(int width, int height, ISpace ts) : base("view", ts)
         {
@@ -67,7 +68,23 @@ namespace Pong
             return string.Format("{0}: {1} - {2}: {3}", playerLeft, scoreA, playerRight, scoreB);
         }
 
-        public void Show()
+        private void SetForegroundColor(char c)
+        {
+            ConsoleColor color;
+
+            if (c == 'o') color = ConsoleColor.Red;
+            else if (c == '_') color = ConsoleColor.White;
+            else if (c == '|') color = ConsoleColor.Green;
+            else color = ConsoleColor.White;
+
+            if (currentColor != color)
+            {
+                Console.ForegroundColor = color;
+                currentColor = color;
+            }
+        }
+
+        private void Show()
         {
             Console.ForegroundColor = ConsoleColor.White;
             for (int y = 0; y < this.height; y++)
@@ -75,6 +92,7 @@ namespace Pong
                 for (int x = 0; x < width; x++)
                 {
                     Console.SetCursorPosition(x, y);
+                    this.SetForegroundColor(screenBuffer[x, y]);
                     Console.Write(screenBuffer[x, y]);
                 }
             }
