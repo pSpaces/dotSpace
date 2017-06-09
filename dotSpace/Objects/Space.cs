@@ -11,7 +11,9 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        private readonly List<ITuple> elements;
+        private readonly Dictionary<ulong, List<ITuple>> buckets;
+        private readonly Dictionary<ulong, ReaderWriterLockSlim> bucketLocks;
+        private readonly object bucketAccess;
 
         #endregion
 
@@ -20,7 +22,9 @@ namespace dotSpace.Objects
 
         public Space()
         {
-            this.elements = new List<ITuple>();
+            this.buckets = new Dictionary<ulong, List<ITuple>>();
+            this.bucketLocks = new Dictionary<ulong, ReaderWriterLockSlim>();
+            this.bucketAccess = new object();
         }
 
         #endregion
@@ -32,16 +36,22 @@ namespace dotSpace.Objects
         {
             return this.Get(pattern.Fields);
         }
-        public ITuple Get(params object[] values)
+        public ITuple Get(params object[] pattern)
         {
-            ITuple t = null;
-            lock (this.elements)
-            {
-                t = this.WaitUntilMatch(values);
-                this.elements.Remove(t);
-                Monitor.PulseAll(this.elements);
-            }
-            return t;
+            ulong hash = this.ComputeHash(pattern);
+            Monitor.Enter(this.bucketAccess);
+            List<ITuple> bucket = this.GetBucket(hash);
+            ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
+            Monitor.PulseAll(this.bucketAccess);
+            Monitor.Exit(this.bucketAccess);
+
+            ITuple t = this.WaitUntilMatch(bucket, bucketLock, pattern);
+            // Guard against duplication from retrieval
+            bool successs = true;
+            bucketLock.EnterWriteLock();
+            successs = bucket.Remove(t);
+            bucketLock.ExitWriteLock();
+            return successs ? t : null;
         }
         public ITuple GetP(IPattern pattern)
         {
@@ -49,27 +59,44 @@ namespace dotSpace.Objects
         }
         public ITuple GetP(params object[] pattern)
         {
-            ITuple t = null;
-            lock (this.elements)
+            ulong hash = this.ComputeHash(pattern);
+            Monitor.Enter(this.bucketAccess);
+            List<ITuple> bucket = this.GetBucket(hash);
+            ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
+            Monitor.PulseAll(this.bucketAccess);
+            Monitor.Exit(this.bucketAccess);
+
+            ITuple t = this.Find(bucket, bucketLock, pattern);
+            // Guard against duplication from retrieval
+            bool success = true;
+            if (t != null)
             {
-                t = this.Find(pattern);
-                this.elements.Remove(t);
-                Monitor.PulseAll(this.elements);
+                bucketLock.EnterWriteLock();
+                success = bucket.Remove(t);
+                bucketLock.ExitWriteLock();
             }
-            return t;
+            return success ? t : null;
         }
         public IEnumerable<ITuple> GetAll(IPattern pattern)
         {
             return this.GetAll(pattern.Fields);
         }
-        public IEnumerable<ITuple> GetAll(params object[] values)
+        public IEnumerable<ITuple> GetAll(params object[] pattern)
         {
-            IEnumerable<ITuple> t = null;
-            lock (this.elements)
+            ulong hash = this.ComputeHash(pattern);
+            Monitor.Enter(this.bucketAccess);
+            List<ITuple> bucket = this.GetBucket(hash);
+            ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
+            Monitor.PulseAll(this.bucketAccess);
+            Monitor.Exit(this.bucketAccess);
+
+            IEnumerable<ITuple> t = this.FindAll(bucket, bucketLock, pattern);
+
+            if (t != null)
             {
-                t = this.FindAll(values);
-                t.Apply(x => this.elements.Remove(x));
-                Monitor.PulseAll(this.elements);
+                bucketLock.EnterWriteLock();
+                t.Apply(x => bucket.Remove(x));
+                bucketLock.ExitWriteLock();
             }
             return t;
         }
@@ -79,13 +106,14 @@ namespace dotSpace.Objects
         }
         public ITuple Query(params object[] pattern)
         {
-            ITuple t = null;
-            lock (this.elements)
-            {
-                t = this.WaitUntilMatch(pattern);
-                Monitor.PulseAll(this.elements);
-            }
-            return t;
+            ulong hash = this.ComputeHash(pattern);
+            Monitor.Enter(this.bucketAccess);
+            List<ITuple> bucket = this.GetBucket(hash);
+            ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
+            Monitor.PulseAll(this.bucketAccess);
+            Monitor.Exit(this.bucketAccess);
+
+            return this.WaitUntilMatch(bucket, bucketLock, pattern);
         }
         public ITuple QueryP(IPattern pattern)
         {
@@ -93,67 +121,45 @@ namespace dotSpace.Objects
         }
         public ITuple QueryP(params object[] pattern)
         {
-            ITuple t = null;
-            lock (this.elements)
-            {
-                t = this.Find(pattern);
-                Monitor.PulseAll(this.elements);
-            }
-            return t;
+            ulong hash = this.ComputeHash(pattern);
+            Monitor.Enter(this.bucketAccess);
+            List<ITuple> bucket = this.GetBucket(hash);
+            ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
+            Monitor.PulseAll(this.bucketAccess);
+            Monitor.Exit(this.bucketAccess);
+            return this.Find(bucket, bucketLock, pattern);
         }
         public IEnumerable<ITuple> QueryAll(IPattern pattern)
         {
             return this.QueryAll(pattern.Fields);
         }
-        public IEnumerable<ITuple> QueryAll(params object[] values)
+        public IEnumerable<ITuple> QueryAll(params object[] pattern)
         {
-            IEnumerable<ITuple> t = null;
-            lock (this.elements)
-            {
-                t = this.FindAll(values);
-                Monitor.PulseAll(this.elements);
-            }
-            return t;
+            ulong hash = this.ComputeHash(pattern);
+            Monitor.Enter(this.bucketAccess);
+            List<ITuple> bucket = this.GetBucket(hash);
+            ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
+            Monitor.PulseAll(this.bucketAccess);
+            Monitor.Exit(this.bucketAccess);
+            return this.FindAll(bucket, bucketLock, pattern);
         }
         public void Put(ITuple t)
         {
             this.Put(t.Fields);
         }
-        public void Put(params object[] tuple)
+        public void Put(params object[] values)
         {
-            lock (this.elements)
-            {
-                this.elements.Add(new Tuple(tuple));
-                Monitor.PulseAll(this.elements);
-            }
-        }
-        public bool Replace(IPattern pattern, params object[] values)
-        {
-            return this.Replace(pattern.Fields.Concat(values).ToArray());
-        }
-        public bool Replace(IPattern pattern, IPattern values)
-        {
-            return this.Replace(pattern.Fields.Concat(values.Fields).ToArray());
-        }
-        public bool Replace(params object[] values)
-        {
-            if (values.Length % 2 != 0)
-            {
-                throw new Exception("Cannot specify uneven number of pattern/value arguments");
-            }
-            object[] pattern = values.Take(values.Length / 2).ToArray();
-            object[] newValues = values.Skip(values.Length / 2).Take(values.Length / 2).ToArray();
-            ITuple t = null;
-            lock (this.elements)
-            {
-                t = this.Find(pattern);
-                if (t != null)
-                {
-                    Enumerable.Range(0, t.Size).Apply(x => t[x] = newValues[x] ?? t[x]);
-                }
-                Monitor.PulseAll(this.elements);
-                return t == null;
-            }
+            ulong hash = this.ComputeHash(values);
+            Monitor.Enter(this.bucketAccess);
+            List<ITuple> bucket = this.GetBucket(hash);
+            ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
+            Monitor.PulseAll(this.bucketAccess);
+            Monitor.Exit(this.bucketAccess);
+
+            bucketLock.EnterWriteLock();
+            bucket.Add(new Tuple(values));
+            this.Awake(bucket);
+            bucketLock.ExitWriteLock();
         }
 
         #endregion
@@ -161,23 +167,40 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Private Methods
 
-        private ITuple WaitUntilMatch(object[] pattern)
+        private ulong ComputeHash(object[] values)
+        {
+            ulong result = 31;
+            foreach (object value in values)
+            {
+                Type t = (value is Type) ? (Type)value : value.GetType();
+                result = result * 31 + (ulong)t.GetHashCode();
+            }
+            return result;
+        }
+
+        private ITuple WaitUntilMatch(List<ITuple> bucket, ReaderWriterLockSlim bucketLock, object[] pattern)
         {
             ITuple t;
-            while (((t = this.Find(pattern)) == null))
+            while (((t = this.Find(bucket, bucketLock, pattern)) == null))
             {
-                Monitor.PulseAll(this.elements);
-                Monitor.Wait(this.elements);
+                this.Wait(bucket);
             }
             return t;
         }
-        private ITuple Find(object[] pattern)
+        private ITuple Find(List<ITuple> bucket, ReaderWriterLockSlim bucketLock, object[] pattern)
         {
-            return this.elements.Where(x => this.Match(pattern, x.Fields)).FirstOrDefault();
+            bucketLock.EnterReadLock();
+            ITuple t = bucket.Where(x => this.Match(pattern, x.Fields)).FirstOrDefault();
+            bucketLock.ExitReadLock();
+            return t;
+
         }
-        private IEnumerable<ITuple> FindAll(object[] pattern)
+        private IEnumerable<ITuple> FindAll(List<ITuple> bucket, ReaderWriterLockSlim bucketLock, object[] pattern)
         {
-            return this.elements.Where(x => this.Match(pattern, x.Fields)).ToList();
+            bucketLock.EnterReadLock();
+            IEnumerable<ITuple> t = bucket.Where(x => this.Match(pattern, x.Fields)).ToList();
+            bucketLock.ExitReadLock();
+            return t;
         }
         private bool Match(object[] pattern, object[] tuple)
         {
@@ -200,7 +223,38 @@ namespace dotSpace.Objects
             }
 
             return result;
-        } 
+        }
+
+        private List<ITuple> GetBucket(ulong hash)
+        {
+            if (!this.buckets.ContainsKey(hash))
+            {
+                this.buckets.Add(hash, new List<ITuple>());
+            }
+            return this.buckets[hash];
+        }
+
+        private ReaderWriterLockSlim GetBucketLock(ulong hash)
+        {
+            if (!this.bucketLocks.ContainsKey(hash))
+            {
+                this.bucketLocks.Add(hash, new ReaderWriterLockSlim());
+            }
+            return this.bucketLocks[hash];
+        }
+        private void Wait(object _lock)
+        {
+            Monitor.Enter(_lock);
+            Monitor.PulseAll(_lock);
+            Monitor.Wait(_lock);
+            Monitor.Exit(_lock);
+        }
+        private void Awake(object _lock)
+        {
+            Monitor.Enter(_lock);
+            Monitor.PulseAll(_lock);
+            Monitor.Exit(_lock);
+        }
 
         #endregion
     }

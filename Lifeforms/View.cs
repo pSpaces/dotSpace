@@ -49,7 +49,7 @@ namespace Lifeforms
 
         private void ShowLifeforms()
         {
-            IEnumerable<ITuple> lifeforms = this.ts.QueryAll("lifeform", typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+            IEnumerable<ITuple> lifeforms = this.ts.QueryAll("lifeform", typeof(string), typeof(int), typeof(int)); 
             this.maxGenerations = 0;
             this.maxLife = 0;
             this.avgLife = 0;
@@ -61,20 +61,24 @@ namespace Lifeforms
             this.avgSpeed = 0;
             foreach (ITuple lifeform in lifeforms)
             {
-                long genom = (long)lifeform[1];
-                int x = (int)lifeform[5];
-                int y = (int)lifeform[6];
-                this.screenBuffer[x, y] = '¤'; // (char)((genom % 27) + 96);
-                this.maxGenerations = Math.Max(this.maxGenerations, (int)lifeform[7]);
-                this.maxLife = Math.Max(this.maxLife, (int)lifeform[4]);
-                this.avgLife += (int)lifeform[4];
-                this.maxVisualRange = Math.Max(this.maxVisualRange, (int)lifeform[8]);
-                this.avgVisualRange += (int)lifeform[8];
-                this.maxNrChildren = Math.Max(this.maxNrChildren, (int)lifeform[9]);
-                this.avgNrChildren += (int)lifeform[9];
-                this.maxSpeed = Math.Max(this.maxSpeed, (int)lifeform[10]);
-                this.avgSpeed += (int)lifeform[10];
+                int x = (int)lifeform[2];
+                int y = (int)lifeform[3];
+                this.screenBuffer[x, y] = '¤';
             }
+            IEnumerable<ITuple> lifeformProperties = this.ts.QueryAll("lifeformProperties", typeof(string), typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+            foreach (ITuple lifeformProperty in lifeformProperties)
+            {
+                this.maxLife = Math.Max(this.maxLife, (int)lifeformProperty[5]);
+                this.avgLife += (int)lifeformProperty[5];
+                this.maxGenerations = Math.Max(this.maxGenerations, (int)lifeformProperty[6]);
+                this.maxVisualRange = Math.Max(this.maxVisualRange, (int)lifeformProperty[7]);
+                this.avgVisualRange += (int)lifeformProperty[7];
+                this.maxNrChildren = Math.Max(this.maxNrChildren, (int)lifeformProperty[8]);
+                this.avgNrChildren += (int)lifeformProperty[8];
+                this.maxSpeed = Math.Max(this.maxSpeed, (int)lifeformProperty[9]);
+                this.avgSpeed += (int)lifeformProperty[9];
+            }
+
             this.numberLifeforms = lifeforms.Count();
             if (this.numberLifeforms > 0)
             {
