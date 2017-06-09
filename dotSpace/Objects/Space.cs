@@ -177,7 +177,6 @@ namespace dotSpace.Objects
             }
             return result;
         }
-
         private ITuple WaitUntilMatch(List<ITuple> bucket, ReaderWriterLockSlim bucketLock, object[] pattern)
         {
             ITuple t;
@@ -224,7 +223,6 @@ namespace dotSpace.Objects
 
             return result;
         }
-
         private List<ITuple> GetBucket(ulong hash)
         {
             if (!this.buckets.ContainsKey(hash))
@@ -233,7 +231,6 @@ namespace dotSpace.Objects
             }
             return this.buckets[hash];
         }
-
         private ReaderWriterLockSlim GetBucketLock(ulong hash)
         {
             if (!this.bucketLocks.ContainsKey(hash))

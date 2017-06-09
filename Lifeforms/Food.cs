@@ -65,7 +65,7 @@ namespace Lifeforms
                 int x = (this.rng.Next() % (this.width - 2)) + 1;
                 int y = (this.rng.Next() % (this.height - 2)) + 1;
                 this.ts.Put("food", amount, timeleft, x, y);
-                if (rnd > 97)
+                if (rnd > 98)
                 {
                     this.NewFood();
                 }

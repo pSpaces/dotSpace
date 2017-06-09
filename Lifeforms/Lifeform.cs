@@ -14,7 +14,14 @@ namespace Lifeforms
         private Random rng;
 
         private string id;
+        private int roamX;
+        private int roamY;
         private int nrChildren;
+        private int maxSpeedgain;
+        private int breedingCost;
+        private int maxFood;
+        private ITuple targetMate;
+        private ITuple targetFood;
 
         public Lifeform(long genom, long p1genom, long p2genom, int life, int food, int x, int y, int generation, int visualRange, int maxNrChildren, int speed, int width, int height, ISpace ts) : base(genom.ToString(), ts)
         {
@@ -32,9 +39,14 @@ namespace Lifeforms
             this.height = height;
             this.Generation = generation;
             this.VisualRange = visualRange;
-            this.nrChildren = 0;
             this.MaxNrChildren = maxNrChildren;
-            this.Speed = speed;
+            this.Speed = Math.Min(this.maxSpeedgain, speed);
+            this.nrChildren = 0;
+            this.maxSpeedgain = 25;
+            this.breedingCost = 50;
+            this.maxFood = this.breedingCost * 2;
+            this.targetMate = null;
+            this.targetFood = null;
         }
 
         private long Genom { get; set; }
@@ -47,12 +59,8 @@ namespace Lifeforms
         private int Y { get; set; }
         private int Generation { get; set; }
         private int VisualRange { get; set; }
-        private int BreedingCost { get { return 50; } }
         private int MaxNrChildren { get; set; }
         private int Speed { get; set; }
-        private int MaxSpeedgain { get { return 25; } }
-        private int RoamX { get; set; }
-        private int RoamY { get; set; }
 
         protected override void DoWork()
         {
@@ -60,15 +68,13 @@ namespace Lifeforms
             this.ts.Query("start");
             this.ts.Put("lifeform", this.id, this.X, this.Y);
             this.ts.Put("lifeformProperties", this.id, this.Genom, this.P1Genom, this.P2Genom, this.InitialLife, this.Generation, this.VisualRange, this.MaxNrChildren, this.Speed);
-            ITuple targetMate = null;
-            ITuple targetFood = null;
-            this.RoamX = (this.rng.Next() % (this.width - 3)) + 1;
-            this.RoamY = (this.rng.Next() % (this.height - 3)) + 1;
+            this.roamX = (this.rng.Next() % (this.width - 3)) + 1;
+            this.roamY = (this.rng.Next() % (this.height - 3)) + 1;
             // Keep iterating while the state is 'running'
             while (this.ts.QueryP("running", true) != null && this.Life > 0)
             {
                 // if the lifeform has more food than the cost to breed, then find a mate
-                if (this.Food > this.BreedingCost && nrChildren < this.MaxNrChildren)
+                if (this.Food > this.breedingCost && nrChildren < this.MaxNrChildren)
                 {
                     // is the mate close by?
                     if (targetMate != null && this.IsNearby((int)targetMate[2], (int)targetMate[3]))
@@ -87,8 +93,8 @@ namespace Lifeforms
                         // if we found one, then move towards it
                         if (targetMate != null)
                         {
-                            targetMate = this.ts.QueryP("lifeform", (string)targetMate[1], typeof(int), typeof(int));
-                            if (targetMate != null)
+                            // update the mate's location
+                            if ((targetMate = this.ts.QueryP("lifeform", (string)targetMate[1], typeof(int), typeof(int))) != null)
                             {
                                 this.Move((int)targetMate[2], (int)targetMate[3]);
                             }
@@ -125,10 +131,11 @@ namespace Lifeforms
                         }
                     }
                 }
+
                 this.Food = Math.Max(this.Food - 1, 0);
                 if (this.Food == 0)
                 {
-                    this.Life -= 6;
+                    this.Life -= 3;
                 }
                 Thread.Sleep(50 - this.Speed);
             }
@@ -137,12 +144,12 @@ namespace Lifeforms
         }
         private void Roam()
         {
-            if (this.X == this.RoamX && this.Y == this.RoamY)
+            if (this.X == this.roamX && this.Y == this.roamY)
             {
-                this.RoamX = (this.rng.Next() % (this.width - 3)) + 1;
-                this.RoamY = (this.rng.Next() % (this.height - 3)) + 1;
+                this.roamX = (this.rng.Next() % (this.width - 3)) + 1;
+                this.roamY = (this.rng.Next() % (this.height - 3)) + 1;
             }
-            this.Move(this.RoamX, this.RoamY);
+            this.Move(this.roamX, this.roamY);
         }
         private bool IsNearby(int x, int y)
         {
@@ -150,15 +157,28 @@ namespace Lifeforms
         }
         private void Eat(ITuple food)
         {
-            if (this.ts.GetP("food", food[1], typeof(int), food[3], food[4]) != null)
+            if ((food = this.ts.GetP("food", food[1], typeof(int), food[3], food[4])) != null)
             {
                 int amount = (int)food[1];
-                this.Food += amount;
-                if (this.nrChildren < this.MaxNrChildren)
+                int foodDiff = this.maxFood - this.Food;
+                if (foodDiff > 0)
                 {
-                    this.Life = Math.Min(this.Life + this.InitialLife / 4, this.InitialLife);
+                    int eat = Math.Min(foodDiff, amount);
+                    this.Food += eat;
+                    amount -= eat;
+                    if (this.nrChildren < this.MaxNrChildren)
+                    {
+                        this.Life = Math.Min(this.Life + this.InitialLife / 4, this.InitialLife);
+                    }
+                    if (amount > 0)
+                    {
+                        this.ts.Put("food", amount, (int)food[2], (int)food[3], (int)food[4]);
+                    }
+                    else
+                    {
+                        this.ts.Put("foodEaten");
+                    }
                 }
-                this.ts.Put("foodEaten");
             }
         }
         private ITuple FindMate()
@@ -284,7 +304,7 @@ namespace Lifeforms
                     x = x == this.width ? this.X - 1 : X;
                     y = y == this.width ? this.Y - 1 : Y;
 
-                    this.Food -= this.BreedingCost;
+                    this.Food -= this.breedingCost;
                     long otherGenom = (long)mateProperties[2];
                     int otherInitialLife = (int)mateProperties[5];
                     int otherGeneration = (int)mateProperties[6];

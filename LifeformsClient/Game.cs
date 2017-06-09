@@ -9,7 +9,6 @@ namespace LifeformsClient
     public class Game
     {
         private Random rng;
-        private View view;
         private AgentBase lifeformDispatcher;
         private ISpace ts;
         private int height;
@@ -21,7 +20,6 @@ namespace LifeformsClient
             this.ts = ts;
             this.width = width;
             this.height = height;
-            this.view = new View(width, height, ts);
             this.lifeformDispatcher = new LifeformDispatcher(this.width, this.height, this.ts);
         }
 
@@ -37,7 +35,6 @@ namespace LifeformsClient
         public void Run()
         {
             this.ts.Put("running", true);
-            this.view.Start();
             this.lifeformDispatcher.Start();
             this.ts.Put("start");
         }

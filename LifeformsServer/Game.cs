@@ -9,6 +9,8 @@ namespace LifeformsServer
     {
         private Random rng;
         private AgentBase food;
+        private View view;
+
         private ISpace ts;
         private int height;
         private int width;
@@ -19,6 +21,7 @@ namespace LifeformsServer
             this.ts = ts;
             this.width = width;
             this.height = height;
+            this.view = new View(width, height, ts);
             this.food = new Food(ts, width, height);
         }
 
@@ -26,6 +29,7 @@ namespace LifeformsServer
         {
             this.ts.Put("running", true);
             this.food.Start();
+            this.view.Start();
             this.ts.Put("start");
         }
 
