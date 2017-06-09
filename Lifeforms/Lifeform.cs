@@ -27,6 +27,12 @@ namespace Lifeforms
         {
             this.id = Guid.NewGuid().ToString();
             this.rng = new Random(Environment.TickCount);
+            this.nrChildren = 0;
+            this.maxSpeedgain = 40;
+            this.breedingCost = 50;
+            this.maxFood = this.breedingCost * 2;
+            this.targetMate = null;
+            this.targetFood = null;
             this.Genom = genom;
             this.P1Genom = p1genom;
             this.P2Genom = p2genom;
@@ -41,12 +47,6 @@ namespace Lifeforms
             this.VisualRange = visualRange;
             this.MaxNrChildren = maxNrChildren;
             this.Speed = Math.Min(this.maxSpeedgain, speed);
-            this.nrChildren = 0;
-            this.maxSpeedgain = 25;
-            this.breedingCost = 50;
-            this.maxFood = this.breedingCost * 2;
-            this.targetMate = null;
-            this.targetFood = null;
         }
 
         private long Genom { get; set; }
@@ -135,7 +135,7 @@ namespace Lifeforms
                 this.Food = Math.Max(this.Food - 1, 0);
                 if (this.Food == 0)
                 {
-                    this.Life -= 3;
+                    this.Life--;
                 }
                 Thread.Sleep(50 - this.Speed);
             }
@@ -166,10 +166,7 @@ namespace Lifeforms
                     int eat = Math.Min(foodDiff, amount);
                     this.Food += eat;
                     amount -= eat;
-                    if (this.nrChildren < this.MaxNrChildren)
-                    {
-                        this.Life = Math.Min(this.Life + this.InitialLife / 4, this.InitialLife);
-                    }
+
                     if (amount > 0)
                     {
                         this.ts.Put("food", amount, (int)food[2], (int)food[3], (int)food[4]);
@@ -184,7 +181,7 @@ namespace Lifeforms
         private ITuple FindMate()
         {
             IEnumerable<ITuple> targetmates = this.ts.QueryAll("lifeform", typeof(string), typeof(int), typeof(int));
-            targetmates = targetmates.Where(lf => this.CanSee((int)lf[2], (int)lf[3]) && this.CanBreed(lf));
+            targetmates = targetmates.Where(lf => this.CanSee((int)lf[2], (int)lf[3]) && this.CanBreed(lf)).ToList();
             if (targetmates.Count() > 0)
             {
                 return targetmates.ElementAt(rng.Next() % targetmates.Count());
@@ -304,6 +301,7 @@ namespace Lifeforms
                     x = x == this.width ? this.X - 1 : X;
                     y = y == this.width ? this.Y - 1 : Y;
 
+                    this.Life -= this.InitialLife / this.MaxNrChildren;
                     this.Food -= this.breedingCost;
                     long otherGenom = (long)mateProperties[2];
                     int otherInitialLife = (int)mateProperties[5];
@@ -316,18 +314,18 @@ namespace Lifeforms
                     genom = (genom * 31) + otherGenom;
 
                     int initiallife = (this.InitialLife + otherInitialLife) / 2;
-                    initiallife += (this.rng.Next() % initiallife) - (initiallife / 2);
+                    initiallife += (this.rng.Next() % (initiallife / 2)) - (initiallife / 4);
 
                     int food = 0;
-                    int generation = Math.Max(this.Generation, otherGeneration);
+                    int generation = Math.Max(this.Generation, otherGeneration) + 1;
 
                     int visualRange = (this.VisualRange + otherVisualRange) / 2;
-                    visualRange += (this.rng.Next() % visualRange) - (visualRange / 2);
+                    visualRange += (this.rng.Next() % visualRange) - ((visualRange - 1) / 2);
 
                     int maxNrChildren = ((this.MaxNrChildren + othermaxNrChildren) / 2) + (this.rng.Next() % 5) - 2;
                     int speed = Math.Max(this.Speed, otherSpeed) + (this.rng.Next() % 5) - 2;
 
-                    this.ts.Put("spawn", genom, this.Genom, otherGenom, initiallife, food, x, y, generation + 1, visualRange, maxNrChildren, speed);
+                    this.ts.Put("spawn", genom, this.Genom, otherGenom, initiallife, food, x, y, generation, visualRange, maxNrChildren, speed);
                     this.nrChildren++;
                 }
             }

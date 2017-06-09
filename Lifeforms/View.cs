@@ -3,6 +3,7 @@ using dotSpace.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace Lifeforms
@@ -15,15 +16,19 @@ namespace Lifeforms
         private ConsoleColor currentColor;
         private int numberLifeforms;
         private int maxGenerations;
+        private int numberFoods;
         private int maxLife;
         private int avgLife;
-        private int numberFoods;
+        private int minLife;
         private int maxVisualRange;
         private int avgVisualRange;
+        private int minVisualRange;
         private int maxNrChildren;
         private int avgNrChildren;
+        private int minNrChildren;
         private int maxSpeed;
         private int avgSpeed;
+        private int minSpeed;
         public View(int width, int height, ISpace ts) : base("view", ts)
         {
             this.width = width;
@@ -49,16 +54,20 @@ namespace Lifeforms
 
         private void ShowLifeforms()
         {
-            IEnumerable<ITuple> lifeforms = this.ts.QueryAll("lifeform", typeof(string), typeof(int), typeof(int)); 
+            IEnumerable<ITuple> lifeforms = this.ts.QueryAll("lifeform", typeof(string), typeof(int), typeof(int));
             this.maxGenerations = 0;
             this.maxLife = 0;
             this.avgLife = 0;
+            this.minLife = 10000;
             this.maxVisualRange = 0;
             this.avgVisualRange = 0;
+            this.minVisualRange = 10000;
             this.maxNrChildren = 0;
             this.avgNrChildren = 0;
+            this.minNrChildren = 10000;
             this.maxSpeed = 0;
             this.avgSpeed = 0;
+            this.minSpeed = 10000;
             foreach (ITuple lifeform in lifeforms)
             {
                 int x = (int)lifeform[2];
@@ -70,13 +79,17 @@ namespace Lifeforms
             {
                 this.maxLife = Math.Max(this.maxLife, (int)lifeformProperty[5]);
                 this.avgLife += (int)lifeformProperty[5];
+                this.minLife = Math.Min(this.minLife, (int)lifeformProperty[5]);
                 this.maxGenerations = Math.Max(this.maxGenerations, (int)lifeformProperty[6]);
                 this.maxVisualRange = Math.Max(this.maxVisualRange, (int)lifeformProperty[7]);
                 this.avgVisualRange += (int)lifeformProperty[7];
+                this.minVisualRange = Math.Min(this.minVisualRange, (int)lifeformProperty[7]);
                 this.maxNrChildren = Math.Max(this.maxNrChildren, (int)lifeformProperty[8]);
                 this.avgNrChildren += (int)lifeformProperty[8];
+                this.minNrChildren = Math.Min(this.minNrChildren, (int)lifeformProperty[8]);
                 this.maxSpeed = Math.Max(this.maxSpeed, (int)lifeformProperty[9]);
                 this.avgSpeed += (int)lifeformProperty[9];
+                this.minSpeed = Math.Min(this.minSpeed, (int)lifeformProperty[9]);
             }
 
             this.numberLifeforms = lifeforms.Count();
@@ -103,11 +116,33 @@ namespace Lifeforms
 
         private string ShowInfo()
         {
-            return string.Format(" Number lifeforms: {0,-4} - Max generations count: {1,-4} - Number foods: {2,-4}\n" +
-                                 " Max life: {3,-4} - Average life: {4,-4}\n" +
-                                 " Max visual range: {5,-4} - Average visual range: {6,-4}\n" +
-                                 " Max number of children: {7,-4} - Average number of children: {8,-4}\n" +
-                                 " Max speed: {9,-4} - Average Speed: {10,-4}", this.numberLifeforms, this.maxGenerations, this.numberFoods, this.maxLife, this.avgLife, this.maxVisualRange, this.avgVisualRange, this.maxNrChildren, this.avgNrChildren, this.maxSpeed, this.avgSpeed);
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.LeftAlign(string.Format("Number lifeforms: {0,-5} ", this.numberLifeforms),
+                string.Format("Max generations count: {0,-5} ", this.maxGenerations),
+                string.Format("Number foods: {0,-5}", this.numberFoods)));
+
+            sb.Append(this.LeftAlign(string.Format("Max life: {0,-5} ", this.maxLife),
+                string.Format("Average life: {0,-4} ", this.avgLife),
+                string.Format("Min life: {0,-5}", this.minLife)));
+
+            sb.Append(this.LeftAlign(string.Format("Max visual range: {0,-5} ", this.maxVisualRange),
+                string.Format("Average visual range: {0,-5} ", this.avgVisualRange),
+                string.Format("Min visual range: {0,-5}", this.minVisualRange)));
+
+            sb.Append(this.LeftAlign(string.Format("Max number of children: {0,-5}", this.maxNrChildren),
+                string.Format("Average number of children: {0,-5} ", this.avgNrChildren),
+                string.Format("Min number of children: {0,-5}", this.minNrChildren)));
+
+            sb.Append(this.LeftAlign(string.Format("Max speed: {0,-5} ", this.maxSpeed),
+                string.Format("Average Speed: {0,-5} ", this.avgSpeed),
+                string.Format("Min speed: {0,-5}", this.minSpeed)));
+            return sb.ToString();
+        }
+
+        private string LeftAlign(string text1, string text2, string text3)
+
+        {
+            return string.Format("{0,-35} {1,-35} {2,-35}\n", text1, text2, text3);
         }
 
         private void SetForegroundColor(char c)
