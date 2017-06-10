@@ -10,21 +10,23 @@ using System.Collections.Generic;
 
 namespace dotSpace.Objects.Network
 {
-    public sealed class Target : NodeBase
+    public sealed class Gate : RepositoryBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
         private ConnectionMode mode;
         private Dictionary<ConnectionMode, ProtocolBase> protocols;
+        private IEncoder encoder;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Target(ConnectionMode mode, string address, int port) : base(address, port)
+        public Gate(ConnectionMode mode, string address, int port) : base(address, port)
         {
+            this.encoder = new GateEncoder();
             this.mode = mode;
             this.protocols = new Dictionary<ConnectionMode, ProtocolBase>();
             this.protocols.Add(ConnectionMode.CONN, new ConnProtocol(this));
@@ -37,7 +39,7 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public ISpace GetRemoteSpace(string target)
+        public ISpace GetSpace(string target)
         {
             return new SpaceWrapper(target, this);
         }
@@ -48,7 +50,7 @@ namespace dotSpace.Objects.Network
         public override ITuple Get(string target, params object[] pattern)
         {
             GetRequest request = new GetRequest(this.mode, this.GetSource(), this.GetSessionId(), target, pattern);
-            GetResponse response = this.GetProtocol()?.PerformRequest<GetResponse>(this.CreateEndpoint(), request);
+            GetResponse response = this.GetProtocol()?.PerformRequest<GetResponse>(this.CreateEndpoint(), this.encoder, request);
             return response.Result == null ? null : new Tuple(response.Result);
         }
         public override ITuple GetP(string target, IPattern pattern)
@@ -58,7 +60,7 @@ namespace dotSpace.Objects.Network
         public override ITuple GetP(string target, params object[] pattern)
         {
             GetPRequest request = new GetPRequest(this.mode, this.GetSource(), this.GetSessionId(), target, pattern);
-            GetPResponse response = this.GetProtocol()?.PerformRequest<GetPResponse>(this.CreateEndpoint(), request);
+            GetPResponse response = this.GetProtocol()?.PerformRequest<GetPResponse>(this.CreateEndpoint(), this.encoder, request);
             return response.Result == null ? null : new Tuple(response.Result);
         }
         public override IEnumerable<ITuple> GetAll(string target, IPattern pattern)
@@ -68,7 +70,7 @@ namespace dotSpace.Objects.Network
         public override IEnumerable<ITuple> GetAll(string target, params object[] pattern)
         {
             GetAllRequest request = new GetAllRequest(this.mode, this.GetSource(), this.GetSessionId(), target, pattern);
-            GetAllResponse response = this.GetProtocol()?.PerformRequest<GetAllResponse>(this.CreateEndpoint(), request);
+            GetAllResponse response = this.GetProtocol()?.PerformRequest<GetAllResponse>(this.CreateEndpoint(), this.encoder, request);
             return response.Result == null ? null : response.Result.Select(x => new Tuple(x));
         }
         public override ITuple Query(string target, IPattern pattern)
@@ -78,7 +80,7 @@ namespace dotSpace.Objects.Network
         public override ITuple Query(string target, params object[] pattern)
         {
             QueryRequest request = new QueryRequest(this.mode, this.GetSource(), this.GetSessionId(), target, pattern);
-            QueryResponse response = this.GetProtocol()?.PerformRequest<QueryResponse>(this.CreateEndpoint(), request);
+            QueryResponse response = this.GetProtocol()?.PerformRequest<QueryResponse>(this.CreateEndpoint(), this.encoder, request);
             return response.Result == null ? null : new Tuple(response.Result);
         }
         public override ITuple QueryP(string target, IPattern pattern)
@@ -88,7 +90,7 @@ namespace dotSpace.Objects.Network
         public override ITuple QueryP(string target, params object[] pattern)
         {
             QueryPRequest request = new QueryPRequest(this.mode, this.GetSource(), this.GetSessionId(), target, pattern);
-            QueryPResponse response = this.GetProtocol()?.PerformRequest<QueryPResponse>(this.CreateEndpoint(), request);
+            QueryPResponse response = this.GetProtocol()?.PerformRequest<QueryPResponse>(this.CreateEndpoint(), this.encoder, request);
             return response.Result == null ? null : new Tuple(response.Result);
         }
         public override IEnumerable<ITuple> QueryAll(string target, IPattern pattern)
@@ -98,7 +100,7 @@ namespace dotSpace.Objects.Network
         public override IEnumerable<ITuple> QueryAll(string target, params object[] pattern)
         {
             QueryAllRequest request = new QueryAllRequest(this.mode, this.GetSource(), this.GetSessionId(), target, pattern);
-            QueryAllResponse response = this.GetProtocol()?.PerformRequest<QueryAllResponse>(this.CreateEndpoint(), request);
+            QueryAllResponse response = this.GetProtocol()?.PerformRequest<QueryAllResponse>(this.CreateEndpoint(), this.encoder, request);
             return response.Result == null ? null : response.Result.Select(x => new Tuple(x));
         }
         public override void Put(string target, ITuple tuple)
@@ -108,7 +110,7 @@ namespace dotSpace.Objects.Network
         public override void Put(string target, params object[] tuple)
         {
             PutRequest request = new PutRequest(this.mode, this.GetSource(), this.GetSessionId(), target, tuple);
-            this.GetProtocol()?.PerformRequest<PutResponse>(this.CreateEndpoint(), request);
+            this.GetProtocol()?.PerformRequest<PutResponse>(this.CreateEndpoint(), this.encoder, request);
         }
 
         #endregion
@@ -142,81 +144,81 @@ namespace dotSpace.Objects.Network
         private class SpaceWrapper : ISpace
         {
             private string target;
-            private NodeBase node;
+            private RepositoryBase repository;
 
-            public SpaceWrapper(string target, NodeBase node)
+            public SpaceWrapper(string target, RepositoryBase repository)
             {
                 this.target = target;
-                this.node = node;
+                this.repository = repository;
             }
             public ITuple Get(params object[] values)
             {
-                return this.node.Get(this.target, values);
+                return this.repository.Get(this.target, values);
             }
 
             public ITuple Get(IPattern pattern)
             {
-                return this.node.Get(this.target, pattern);
+                return this.repository.Get(this.target, pattern);
             }
 
             public IEnumerable<ITuple> GetAll(params object[] values)
             {
-                return this.node.GetAll(this.target, values);
+                return this.repository.GetAll(this.target, values);
             }
 
             public IEnumerable<ITuple> GetAll(IPattern pattern)
             {
-                return this.node.GetAll(this.target, pattern);
+                return this.repository.GetAll(this.target, pattern);
             }
 
             public ITuple GetP(params object[] values)
             {
-                return this.node.GetP(this.target, values);
+                return this.repository.GetP(this.target, values);
             }
 
             public ITuple GetP(IPattern pattern)
             {
-                return this.node.GetP(this.target, pattern);
+                return this.repository.GetP(this.target, pattern);
             }
 
             public void Put(params object[] values)
             {
-                this.node.Put(this.target, values);
+                this.repository.Put(this.target, values);
             }
 
             public void Put(ITuple tuple)
             {
-                this.node.Put(this.target, tuple);
+                this.repository.Put(this.target, tuple);
             }
 
             public ITuple Query(params object[] values)
             {
-                return this.node.Query(this.target, values); 
+                return this.repository.Query(this.target, values); 
             }
 
             public ITuple Query(IPattern pattern)
             {
-                return this.node.Query(this.target, pattern); 
+                return this.repository.Query(this.target, pattern); 
             }
 
             public IEnumerable<ITuple> QueryAll(params object[] values)
             {
-                return this.node.QueryAll(this.target, values); 
+                return this.repository.QueryAll(this.target, values); 
             }
 
             public IEnumerable<ITuple> QueryAll(IPattern pattern)
             {
-                return this.node.QueryAll(this.target, pattern); 
+                return this.repository.QueryAll(this.target, pattern); 
             }
 
             public ITuple QueryP(params object[] values)
             {
-                return this.node.QueryP(this.target, values); 
+                return this.repository.QueryP(this.target, values); 
             }
 
             public ITuple QueryP(IPattern pattern)
             {
-                return this.node.QueryP(this.target, pattern); 
+                return this.repository.QueryP(this.target, pattern); 
             }
         }
 

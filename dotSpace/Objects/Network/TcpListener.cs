@@ -57,7 +57,7 @@ namespace dotSpace.Objects.Network
 
         private void Listen()
         {
-            this.listener.Start(21);
+            this.listener.Start(121);
             Console.WriteLine("Current endpoint: {0}:{1}", this.ipAddress.ToString(), this.port);
             Console.WriteLine("Begin listening...");
             try

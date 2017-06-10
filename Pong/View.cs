@@ -39,7 +39,7 @@ namespace Pong
                 this.SetPlayerPosition(1);
                 this.SetPlayerPosition(2);
                 this.Show();
-                Thread.Sleep(40); 
+                Thread.Sleep(25);
             }
         }
 

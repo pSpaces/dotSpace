@@ -16,17 +16,17 @@ namespace Example8
                 string arg = args[0].ToString();
                 if (arg == "alice")
                 {
-                    Node node = new Node(ConnectionMode.CONN, 123, "127.0.0.1");
-                    node.AddSpace("fridge", new Space());
-                    AgentBase alice = new Alice("Alice", node["fridge"]);
+                    SpaceRepository repository = new SpaceRepository(ConnectionMode.CONN, 123, "127.0.0.1");
+                    repository.AddSpace("fridge", new Space());
+                    AgentBase alice = new Alice("Alice", repository["fridge"]);
                     alice.Start();
                     return;
                 }
                 else if (arg == "b+c")
                 {
-                    Target target = new Target(ConnectionMode.CONN, "127.0.0.1", 123);
-                    AgentBase bob = new Bob("Bob", target.GetRemoteSpace("fridge"));
-                    AgentBase charlie = new Charlie("Charlie", target.GetRemoteSpace("fridge"));
+                    Gate gate = new Gate(ConnectionMode.CONN, "127.0.0.1", 123);
+                    AgentBase bob = new Bob("Bob", gate.GetSpace("fridge"));
+                    AgentBase charlie = new Charlie("Charlie", gate.GetSpace("fridge"));
                     bob.Start();
                     charlie.Start();
                     return;

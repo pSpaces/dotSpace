@@ -14,7 +14,7 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        private Node serverNode;
+        private SpaceRepository repository;
         private Dictionary<Type, Func<BasicRequest, BasicResponse>> operationMap;
 
         #endregion
@@ -22,9 +22,9 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public OperationMap(Node serverNode)
+        public OperationMap(SpaceRepository repository)
         {
-            this.serverNode = serverNode;
+            this.repository = repository;
             this.operationMap = new Dictionary<Type, Func<BasicRequest, BasicResponse>>();
             this.operationMap.Add(typeof(GetRequest), this.PerformGet);
             this.operationMap.Add(typeof(GetPRequest), this.PerformGetP);
@@ -58,7 +58,7 @@ namespace dotSpace.Objects
 
         private BasicResponse PerformGet(BasicRequest request)
         {
-            ISpace ts = this.serverNode[request.Target];
+            ISpace ts = this.repository[request.Target];
             if (ts != null)
             {
                 GetRequest getReq = (GetRequest)request;
@@ -69,7 +69,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformGetP(BasicRequest request)
         {
-            ISpace ts = this.serverNode[request.Target];
+            ISpace ts = this.repository[request.Target];
             if (ts != null)
             {
                 GetPRequest getReq = (GetPRequest)request;
@@ -80,7 +80,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformGetAll(BasicRequest request)
         {
-            ISpace ts = this.serverNode[request.Target];
+            ISpace ts = this.repository[request.Target];
             if (ts != null)
             {
                 GetAllRequest getReq = (GetAllRequest)request;
@@ -91,7 +91,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformQuery(BasicRequest request)
         {
-            ISpace ts = this.serverNode[request.Target];
+            ISpace ts = this.repository[request.Target];
             if (ts != null)
             {
                 QueryRequest getReq = (QueryRequest)request;
@@ -102,7 +102,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformQueryP(BasicRequest request)
         {
-            ISpace ts = this.serverNode[request.Target];
+            ISpace ts = this.repository[request.Target];
             if (ts != null)
             {
                 QueryPRequest getReq = (QueryPRequest)request;
@@ -113,7 +113,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformQueryAll(BasicRequest request)
         {
-            ISpace ts = this.serverNode[request.Target];
+            ISpace ts = this.repository[request.Target];
             if (ts != null)
             {
                 QueryAllRequest getReq = (QueryAllRequest)request;
@@ -124,7 +124,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformPut(BasicRequest request)
         {
-            ISpace ts = this.serverNode[request.Target];
+            ISpace ts = this.repository[request.Target];
             if (ts != null)
             {
                 PutRequest putReq = (PutRequest)request;

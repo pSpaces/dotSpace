@@ -1,24 +1,27 @@
-﻿using System;
+﻿using dotSpace.Interfaces;
+using System;
 using System.IO;
 using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network
 {
-    public abstract class SocketBase
+    public sealed class Socket
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        protected TcpClient client;
+        private IEncoder encoder;
+        private TcpClient client;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public SocketBase(TcpClient client)
+        public Socket(TcpClient client, IEncoder encoder)
         {
             this.client = client;
+            this.encoder = encoder;
         }
 
         #endregion
@@ -30,11 +33,9 @@ namespace dotSpace.Objects.Network
         {
             try
             {
-                //BinaryFormatter formatter = new BinaryFormatter();
-                //string msg = (string)formatter.Deserialize(client.GetStream());
                 StreamReader sr = new StreamReader(this.client.GetStream());
                 string msg = sr.ReadLine();
-                return this.Decode<T>(msg);
+                return this.encoder.Decode<T>(msg);
             }
             catch (Exception)
             {
@@ -46,12 +47,10 @@ namespace dotSpace.Objects.Network
         {
             try
             {
-                string msg = this.Encode(message);
+                string msg = this.encoder.Encode(message);
                 StreamWriter sw = new StreamWriter(this.client.GetStream());
                 sw.WriteLine(msg);
                 sw.Flush();
-                //BinaryFormatter formatter = new BinaryFormatter();
-                //formatter.Serialize(client.GetStream(), msg);
             }
             catch (Exception e)
             {
@@ -65,14 +64,6 @@ namespace dotSpace.Objects.Network
                 this.client.Close();
             }
         }
-
-        #endregion
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        #region // Protected Methods
-
-        protected abstract MessageBase Decode<T>(string msg) where T : MessageBase;
-        protected abstract string Encode(MessageBase message);
 
         #endregion
     }

@@ -1,4 +1,5 @@
 ﻿using dotSpace.Enumerations;
+using dotSpace.Interfaces;
 using dotSpace.Objects;
 using dotSpace.Objects.Network;
 using dotSpace.Objects.Network.Messages.Requests;
@@ -14,19 +15,19 @@ namespace dotSpace.BaseClasses
         #region // Fields
 
         protected OperationMap operationMap;
-        protected NodeBase node;
+        protected RepositoryBase repository;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public ProtocolBase(NodeBase node)
+        public ProtocolBase(RepositoryBase repository)
         {
-            this.node = node;
-            if (this.node is Node)
+            this.repository = repository;
+            if (this.repository is SpaceRepository)
             {
-                this.operationMap = new OperationMap((Node)this.node);
+                this.operationMap = new OperationMap((SpaceRepository)this.repository);
             }
         }
 
@@ -35,8 +36,8 @@ namespace dotSpace.BaseClasses
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public abstract void ProcessRequest(NodeSocket socket, BasicRequest request);
-        public abstract T PerformRequest<T>(IPEndPoint endpoint, BasicRequest request) where T : BasicResponse;
+        public abstract void ProcessRequest(Socket socket, BasicRequest request);
+        public abstract T PerformRequest<T>(IPEndPoint endpoint, IEncoder encoder, BasicRequest request) where T : BasicResponse;
 
         #endregion
 

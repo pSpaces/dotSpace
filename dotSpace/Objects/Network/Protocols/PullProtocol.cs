@@ -1,4 +1,5 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.Interfaces;
 using dotSpace.Objects.Network.Messages.Requests;
 using System.Net;
 
@@ -9,7 +10,7 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public PullProtocol(Node server) : base(server)
+        public PullProtocol(SpaceRepository repository) : base(repository)
         {
         }
 
@@ -18,10 +19,10 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public override void ProcessRequest(NodeSocket socket, BasicRequest request)
+        public override void ProcessRequest(Socket socket, BasicRequest request)
         {
         }
-        public override T PerformRequest<T>(IPEndPoint endpoint, BasicRequest request)
+        public override T PerformRequest<T>(IPEndPoint endpoint,IEncoder encoder, BasicRequest request)
         {
             return default(T);
         } 

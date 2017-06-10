@@ -1,25 +1,28 @@
-﻿using dotSpace.Objects.Network;
+﻿using dotSpace.Interfaces;
+using dotSpace.Objects.Network;
 using System;
 using System.Web.Script.Serialization;
 
-namespace dotSpace.Objects
+namespace dotSpace.BaseClasses
 {
-    public static class Json
+    public abstract class EncoderBase : IEncoder
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public static T Deserialize<T>(this string json, params Type[] types)
+        public T Deserialize<T>(string json, params Type[] types)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             return serializer.Deserialize<T>(json);
         }
-
-        public static string Serialize(this MessageBase message, params Type[] types)
+        public string Serialize(MessageBase message, params Type[] types)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             return serializer.Serialize(message);
         } 
+
+        public abstract MessageBase Decode<T>(string msg) where T : MessageBase;
+        public abstract string Encode(MessageBase message);
 
         #endregion
     }

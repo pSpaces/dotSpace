@@ -48,7 +48,7 @@ namespace Lifeforms
                 this.ShowLifeforms();
                 this.ShowFood();
                 this.Show();
-                //Thread.Sleep(10);
+                Thread.Sleep(10);
             }
         }
 

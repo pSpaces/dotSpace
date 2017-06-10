@@ -6,7 +6,7 @@ using System.Net.Sockets;
 
 namespace dotSpace.BaseClasses
 {
-    public abstract class NodeBase : INode
+    public abstract class RepositoryBase : IRepository
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -19,7 +19,7 @@ namespace dotSpace.BaseClasses
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public NodeBase(string address, int port)
+        public RepositoryBase(string address, int port)
         {
             this.address = string.IsNullOrEmpty(address) ? this.GetLocalIPAddress() : address;
             this.port = port;

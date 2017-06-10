@@ -9,7 +9,7 @@ using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network
 {
-    public sealed class Node : NodeBase
+    public sealed class SpaceRepository : RepositoryBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -17,14 +17,15 @@ namespace dotSpace.Objects.Network
         private TcpListener listener;
         private Dictionary<string, ISpace> spaces;
         private Dictionary<ConnectionMode, ProtocolBase> protocols;
-
+        private IEncoder encoder;
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Node(ConnectionMode mode, int port, string address = "", bool listenOnStart = true) : base(address, port)
+        public SpaceRepository(ConnectionMode mode, int port, string address = "", bool listenOnStart = true) : base(address, port)
         {
+            this.encoder = new RepositoryEncoder();
             this.listener = new TcpListener(this.address, this.port);
             this.spaces = new Dictionary<string, ISpace>();
             this.protocols = new Dictionary<ConnectionMode, ProtocolBase>();
@@ -142,14 +143,14 @@ namespace dotSpace.Objects.Network
 
         private void OnClientConnect(TcpClient client)
         {
-            NodeSocket socket = new NodeSocket(client);
+            Socket socket = new Socket(client, this.encoder);
             BasicRequest request = (BasicRequest)socket.Receive<BasicRequest>();
             this.GetProtocol(request)?.ProcessRequest(socket, request);
             socket.Close(); // TODO: Forcibly closing socket when done. Does it need to reply if the connectionmode is unsupported?
         }
         private ProtocolBase GetProtocol(BasicRequest request)
         {
-            if (this.protocols.ContainsKey(request.Connectionmode))
+            if (request != null && this.protocols.ContainsKey(request.Connectionmode))
             {
                 return this.protocols[request.Connectionmode];
             }

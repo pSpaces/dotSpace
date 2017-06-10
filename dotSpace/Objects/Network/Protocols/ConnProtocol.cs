@@ -1,7 +1,9 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.Interfaces;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
 using System.Net;
+using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network.Protocols
 {
@@ -11,7 +13,7 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public ConnProtocol(NodeBase server) : base(server)
+        public ConnProtocol(RepositoryBase repository) : base(repository)
         {
         }
 
@@ -20,7 +22,7 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public override void ProcessRequest(NodeSocket socket, BasicRequest request)
+        public override void ProcessRequest(Socket socket, BasicRequest request)
         {
             request = this.ValidateRequest<BasicRequest>(request);
             BasicResponse response = this.operationMap.Execute(request);
@@ -28,9 +30,11 @@ namespace dotSpace.Objects.Network.Protocols
             socket.Close();
         }
 
-        public override T PerformRequest<T>(IPEndPoint endpoint, BasicRequest request)
+        public override T PerformRequest<T>(IPEndPoint endpoint, IEncoder encoder, BasicRequest request)
         {
-            TargetSocket socket = new TargetSocket(endpoint);
+            TcpClient client = new TcpClient();
+            client.Connect(endpoint);
+            Socket socket = new Socket(client, encoder);
             socket.Send(request);
             MessageBase message = socket.Receive<T>();
             socket.Close();

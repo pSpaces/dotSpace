@@ -42,7 +42,6 @@ namespace dotSpace.Objects
             Monitor.Enter(this.bucketAccess);
             List<ITuple> bucket = this.GetBucket(hash);
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
-            Monitor.PulseAll(this.bucketAccess);
             Monitor.Exit(this.bucketAccess);
 
             ITuple t = this.WaitUntilMatch(bucket, bucketLock, pattern);
@@ -63,7 +62,6 @@ namespace dotSpace.Objects
             Monitor.Enter(this.bucketAccess);
             List<ITuple> bucket = this.GetBucket(hash);
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
-            Monitor.PulseAll(this.bucketAccess);
             Monitor.Exit(this.bucketAccess);
 
             ITuple t = this.Find(bucket, bucketLock, pattern);
@@ -87,7 +85,6 @@ namespace dotSpace.Objects
             Monitor.Enter(this.bucketAccess);
             List<ITuple> bucket = this.GetBucket(hash);
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
-            Monitor.PulseAll(this.bucketAccess);
             Monitor.Exit(this.bucketAccess);
 
             IEnumerable<ITuple> t = this.FindAll(bucket, bucketLock, pattern);
@@ -110,7 +107,6 @@ namespace dotSpace.Objects
             Monitor.Enter(this.bucketAccess);
             List<ITuple> bucket = this.GetBucket(hash);
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
-            Monitor.PulseAll(this.bucketAccess);
             Monitor.Exit(this.bucketAccess);
 
             return this.WaitUntilMatch(bucket, bucketLock, pattern);
@@ -125,7 +121,6 @@ namespace dotSpace.Objects
             Monitor.Enter(this.bucketAccess);
             List<ITuple> bucket = this.GetBucket(hash);
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
-            Monitor.PulseAll(this.bucketAccess);
             Monitor.Exit(this.bucketAccess);
             return this.Find(bucket, bucketLock, pattern);
         }
@@ -139,7 +134,6 @@ namespace dotSpace.Objects
             Monitor.Enter(this.bucketAccess);
             List<ITuple> bucket = this.GetBucket(hash);
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
-            Monitor.PulseAll(this.bucketAccess);
             Monitor.Exit(this.bucketAccess);
             return this.FindAll(bucket, bucketLock, pattern);
         }
@@ -153,13 +147,12 @@ namespace dotSpace.Objects
             Monitor.Enter(this.bucketAccess);
             List<ITuple> bucket = this.GetBucket(hash);
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
-            Monitor.PulseAll(this.bucketAccess);
             Monitor.Exit(this.bucketAccess);
 
             bucketLock.EnterWriteLock();
             bucket.Add(new Tuple(values));
-            this.Awake(bucket);
             bucketLock.ExitWriteLock();
+            this.Awake(bucket);
         }
 
         #endregion
@@ -192,7 +185,6 @@ namespace dotSpace.Objects
             ITuple t = bucket.Where(x => this.Match(pattern, x.Fields)).FirstOrDefault();
             bucketLock.ExitReadLock();
             return t;
-
         }
         private IEnumerable<ITuple> FindAll(List<ITuple> bucket, ReaderWriterLockSlim bucketLock, object[] pattern)
         {
@@ -242,7 +234,6 @@ namespace dotSpace.Objects
         private void Wait(object _lock)
         {
             Monitor.Enter(_lock);
-            Monitor.PulseAll(_lock);
             Monitor.Wait(_lock);
             Monitor.Exit(_lock);
         }

@@ -2,7 +2,7 @@
 
 namespace dotSpace.Interfaces
 {
-    public interface INode
+    public interface IRepository
     {
         ITuple Get(string target, IPattern pattern);
         ITuple Get(string target, params object[] pattern);
