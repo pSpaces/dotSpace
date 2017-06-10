@@ -145,12 +145,17 @@ namespace dotSpace.Objects.Network
         {
             Socket socket = new Socket(client, this.encoder);
             BasicRequest request = (BasicRequest)socket.Receive<BasicRequest>();
-            this.GetProtocol(request)?.ProcessRequest(socket, request);
-            socket.Close(); // TODO: Forcibly closing socket when done. Does it need to reply if the connectionmode is unsupported?
+            if (request != null)
+            {
+                this.GetProtocol(request).ProcessRequest(socket, request);
+                return;
+            }
+            // Forcibly closing socket on unknown request. We do not know the protocol so we cannot reply.
+            socket.Close(); 
         }
         private ProtocolBase GetProtocol(BasicRequest request)
         {
-            if (request != null && this.protocols.ContainsKey(request.Connectionmode))
+            if (this.protocols.ContainsKey(request.Connectionmode))
             {
                 return this.protocols[request.Connectionmode];
             }

@@ -49,7 +49,7 @@
     <Compile Include="BaseClasses\ProtocolBase.cs" />
     <Compile Include="Enumerations\StatusCode.cs" />
     <Compile Include="Interfaces\IEncoder.cs" />
-    <Compile Include="Interfaces\INode.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IEnumerableResult.cs" />
     <Compile Include="Interfaces\IResult.cs" />
     <Compile Include="Interfaces\IWriteRequest.cs" />
