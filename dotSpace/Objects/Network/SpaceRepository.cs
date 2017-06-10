@@ -45,80 +45,71 @@ namespace dotSpace.Objects.Network
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
-        #region // Public Properties
-
-        public ISpace this[string indexer]
-        {
-            get
-            {
-                if (this.spaces.ContainsKey(indexer))
-                {
-                    return this.spaces[indexer];
-                }
-                return null;
-            }
-        }
-
-        #endregion
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        public override ISpace GetSpace(string target)
+        {
+            if (this.spaces.ContainsKey(target))
+            {
+                return this.spaces[target];
+            }
+            return null;
+        }
         public override ITuple Get(string target, IPattern pattern)
         {
-            return this[target]?.Get(pattern);
+            return this.GetSpace(target)?.Get(pattern);
         }
         public override ITuple Get(string target, params object[] pattern)
         {
-            return this[target]?.Get(pattern);
+            return this.GetSpace(target)?.Get(pattern);
         }
         public override ITuple GetP(string target, IPattern pattern)
         {
-            return this[target]?.GetP(pattern);
+            return this.GetSpace(target)?.GetP(pattern);
         }
         public override ITuple GetP(string target, params object[] pattern)
         {
-            return this[target]?.GetP(pattern);
+            return this.GetSpace(target)?.GetP(pattern);
         }
         public override IEnumerable<ITuple> GetAll(string target, IPattern pattern)
         {
-            return this[target]?.GetAll(pattern);
+            return this.GetSpace(target)?.GetAll(pattern);
         }
         public override IEnumerable<ITuple> GetAll(string target, params object[] pattern)
         {
-            return this[target]?.GetAll(pattern);
+            return this.GetSpace(target)?.GetAll(pattern);
         }
         public override ITuple Query(string target, IPattern pattern)
         {
-            return this[target]?.Query(pattern);
+            return this.GetSpace(target)?.Query(pattern);
         }
         public override ITuple Query(string target, params object[] pattern)
         {
-            return this[target]?.Query(pattern);
+            return this.GetSpace(target)?.Query(pattern);
         }
         public override ITuple QueryP(string target, IPattern pattern)
         {
-            return this[target]?.QueryP(pattern);
+            return this.GetSpace(target)?.QueryP(pattern);
         }
         public override ITuple QueryP(string target, params object[] pattern)
         {
-            return this[target]?.QueryP(pattern);
+            return this.GetSpace(target)?.QueryP(pattern);
         }
         public override IEnumerable<ITuple> QueryAll(string target, IPattern pattern)
         {
-            return this[target]?.QueryAll(pattern);
+            return this.GetSpace(target)?.QueryAll(pattern);
         }
         public override IEnumerable<ITuple> QueryAll(string target, params object[] pattern)
         {
-            return this[target]?.QueryAll(pattern);
+            return this.GetSpace(target)?.QueryAll(pattern);
         }
         public override void Put(string target, ITuple tuple)
         {
-            this[target]?.Put(tuple);
+            this.GetSpace(target)?.Put(tuple);
         }
         public override void Put(string target, params object[] tuple)
         {
-            this[target]?.Put(tuple);
+            this.GetSpace(target)?.Put(tuple);
         }
         public void StartListen()
         {

@@ -13,7 +13,7 @@ namespace PongServer
             repository.AddSpace("pong", new Space());
             int width = 80;
             int height = 25;
-            Game pongGame = new Game(width, height, repository["pong"]);
+            Game pongGame = new Game(width, height, repository.GetSpace("pong"));
             pongGame.Run();
             Console.ReadKey();
             pongGame.Stop();

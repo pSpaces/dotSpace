@@ -14,7 +14,7 @@ namespace LifeformsServer
             repository.AddSpace("lifeforms", new Space());
             int width = 80;
             int height = 25;
-            Game lifeforms = new Game(width, height, repository["lifeforms"]);
+            Game lifeforms = new Game(width, height, repository.GetSpace("lifeforms"));
             lifeforms.Run();
             Console.ReadKey();
             lifeforms.Stop();

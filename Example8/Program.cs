@@ -18,7 +18,7 @@ namespace Example8
                 {
                     SpaceRepository repository = new SpaceRepository(ConnectionMode.CONN, 123, "127.0.0.1");
                     repository.AddSpace("fridge", new Space());
-                    AgentBase alice = new Alice("Alice", repository["fridge"]);
+                    AgentBase alice = new Alice("Alice", repository.GetSpace("fridge"));
                     alice.Start();
                     return;
                 }

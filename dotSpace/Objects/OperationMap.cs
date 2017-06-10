@@ -58,7 +58,7 @@ namespace dotSpace.Objects
 
         private BasicResponse PerformGet(BasicRequest request)
         {
-            ISpace ts = this.repository[request.Target];
+            ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
             {
                 GetRequest getReq = (GetRequest)request;
@@ -69,7 +69,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformGetP(BasicRequest request)
         {
-            ISpace ts = this.repository[request.Target];
+            ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
             {
                 GetPRequest getReq = (GetPRequest)request;
@@ -80,7 +80,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformGetAll(BasicRequest request)
         {
-            ISpace ts = this.repository[request.Target];
+            ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
             {
                 GetAllRequest getReq = (GetAllRequest)request;
@@ -91,7 +91,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformQuery(BasicRequest request)
         {
-            ISpace ts = this.repository[request.Target];
+            ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
             {
                 QueryRequest getReq = (QueryRequest)request;
@@ -102,7 +102,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformQueryP(BasicRequest request)
         {
-            ISpace ts = this.repository[request.Target];
+            ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
             {
                 QueryPRequest getReq = (QueryPRequest)request;
@@ -113,7 +113,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformQueryAll(BasicRequest request)
         {
-            ISpace ts = this.repository[request.Target];
+            ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
             {
                 QueryAllRequest getReq = (QueryAllRequest)request;
@@ -124,7 +124,7 @@ namespace dotSpace.Objects
         }
         private BasicResponse PerformPut(BasicRequest request)
         {
-            ISpace ts = this.repository[request.Target];
+            ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
             {
                 PutRequest putReq = (PutRequest)request;

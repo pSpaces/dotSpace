@@ -29,7 +29,7 @@ namespace dotSpace.BaseClasses
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
-
+        public abstract ISpace GetSpace(string target);
         public abstract ITuple Get(string target, IPattern pattern);
         public abstract ITuple Get(string target, params object[] pattern);
         public abstract ITuple GetP(string target, IPattern pattern);

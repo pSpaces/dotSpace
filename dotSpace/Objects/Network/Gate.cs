@@ -39,7 +39,7 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public ISpace GetSpace(string target)
+        public override ISpace GetSpace(string target)
         {
             return new SpaceWrapper(target, this);
         }
