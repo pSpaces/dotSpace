@@ -24,7 +24,7 @@ namespace Example7
                 while (true)
                 {
                     // The get operation returns a tuple, that we save into t
-                    t = this.ts.Get(what);
+                    t = this.Get(what);
                     // Note how the fields of the tuple t are accessed
                     Console.WriteLine(this.name + " shopping " + t[1] + " units of " + t[0] + "...");
                 }

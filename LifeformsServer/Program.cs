@@ -10,7 +10,8 @@ namespace LifeformsServer
     {
         static void Main(string[] args)
         {
-            SpaceRepository repository = new SpaceRepository(ConnectionMode.CONN, 123, "127.0.0.1");
+            SpaceRepository repository = new SpaceRepository();
+            repository.AddGate("tcp://127.0.0.1:123?KEEP");
             repository.AddSpace("lifeforms", new Space());
             int width = 80;
             int height = 25;

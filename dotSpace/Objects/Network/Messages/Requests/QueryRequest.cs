@@ -12,7 +12,7 @@ namespace dotSpace.Objects.Network.Messages.Requests
         {
         }
 
-        public QueryRequest(ConnectionMode mode, string source, string session, string target, object[] template) : base(mode, ActionType.QUERY_REQUEST, source, session, target)
+        public QueryRequest(string source, string session, string target, object[] template) : base( ActionType.QUERY_REQUEST, source, session, target)
         {
             this.Template = template;
         }

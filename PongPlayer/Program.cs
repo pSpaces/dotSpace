@@ -16,10 +16,11 @@ namespace PongPlayer
                 return;
             }
             int playerId = int.Parse(args[0]);
-            Gate gate = new Gate(ConnectionMode.CONN, "127.0.0.1", 123);
+
+            RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/pong?KEEP");
             int width = 80;
             int height = 25;
-            Game pongGame = new Game(width, height, gate.GetSpace("pong"));
+            Game pongGame = new Game(width, height, remotespace);
             pongGame.SetPlayer(playerId, "AI" + playerId);
             pongGame.Run();
             Console.ReadKey();

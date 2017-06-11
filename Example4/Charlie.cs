@@ -18,11 +18,11 @@ namespace Example4
             ITuple t;
             try
             {
-                if (this.ts.QueryP(go) != null)
+                if (this.QueryP(go) != null)
                 {
                     while (true)
                     {
-                        t = this.ts.Get(what);
+                        t = this.Get(what);
                         Console.WriteLine(name + " shopping " + t[1] + " units of " + t[0] + "...");
                     }
                 }

@@ -7,7 +7,7 @@ namespace dotSpace.Interfaces
     {
         T Deserialize<T>(string json, params Type[] types);
         string Serialize(MessageBase message, params Type[] types);
-        MessageBase Decode<T>(string msg) where T : MessageBase;
+        MessageBase Decode(string msg);
         string Encode(MessageBase message);
     }
 }

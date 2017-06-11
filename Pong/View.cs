@@ -25,15 +25,15 @@ namespace Pong
         protected override void DoWork()
         {
             // Wait until we can start
-            this.ts.Query("start");
+            this.Query("start");
             // Read the player names
-            ITuple leftplayer = this.ts.Query(1, typeof(string));
-            ITuple rightplayer = this.ts.Query(2, typeof(string));
+            ITuple leftplayer = this.Query(1, typeof(string));
+            ITuple rightplayer = this.Query(2, typeof(string));
             this.playerLeft = (string)leftplayer[1];
             this.playerRight = (string)rightplayer[1];
 
             // Keep iterating while the state is 'running'
-            while (this.ts.Query("running", true) != null)
+            while (this.Query("running", true) != null)
             {
                 this.SetPongPosition();
                 this.SetPlayerPosition(1);
@@ -45,7 +45,7 @@ namespace Pong
 
         private void SetPongPosition()
         {
-            ITuple pong = this.ts.Query("pong", typeof(double), typeof(double), typeof(double), typeof(double), typeof(double));
+            ITuple pong = this.Query("pong", typeof(double), typeof(double), typeof(double), typeof(double), typeof(double));
             int x = (int)(double)pong[1];
             int y = (int)(double)pong[2];
             screenBuffer[x, y] = 'o';
@@ -53,7 +53,7 @@ namespace Pong
 
         private void SetPlayerPosition(int playerId)
         {
-            ITuple playerPosition = this.ts.Query(playerId, typeof(double), typeof(double));
+            ITuple playerPosition = this.Query(playerId, typeof(double), typeof(double));
             int x = (int)(double)playerPosition[1];
             int y = (int)(double)playerPosition[2];
             screenBuffer[x, y] = '|';
@@ -61,9 +61,9 @@ namespace Pong
 
         private string ShowPlayerScores()
         {
-            ITuple playerAScore = this.ts.Query(this.playerLeft, typeof(int));
+            ITuple playerAScore = this.Query(this.playerLeft, typeof(int));
             int scoreA = (int)playerAScore[1];
-            ITuple playerBScore = this.ts.Query(this.playerRight, typeof(int));
+            ITuple playerBScore = this.Query(this.playerRight, typeof(int));
             int scoreB = (int)playerBScore[1];
             return string.Format("{0}: {1} - {2}: {3}", playerLeft, scoreA, playerRight, scoreB);
         }

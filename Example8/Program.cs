@@ -16,7 +16,8 @@ namespace Example8
                 string arg = args[0].ToString();
                 if (arg == "alice")
                 {
-                    SpaceRepository repository = new SpaceRepository(ConnectionMode.CONN, 123, "127.0.0.1");
+                    SpaceRepository repository = new SpaceRepository();
+                    repository.AddGate("tcp://127.0.0.1:123?CONN");
                     repository.AddSpace("fridge", new Space());
                     AgentBase alice = new Alice("Alice", repository.GetSpace("fridge"));
                     alice.Start();
@@ -24,9 +25,9 @@ namespace Example8
                 }
                 else if (arg == "b+c")
                 {
-                    Gate gate = new Gate(ConnectionMode.CONN, "127.0.0.1", 123);
-                    AgentBase bob = new Bob("Bob", gate.GetSpace("fridge"));
-                    AgentBase charlie = new Charlie("Charlie", gate.GetSpace("fridge"));
+                    RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/fridge?CONN");
+                    AgentBase bob = new Bob("Bob", remotespace);
+                    AgentBase charlie = new Charlie("Charlie", remotespace);
                     bob.Start();
                     charlie.Start();
                     return;

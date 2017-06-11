@@ -35,15 +35,16 @@ namespace Lifeforms
             this.height = height;
             this.screenBuffer = new char[this.width, this.height];
             Console.CursorVisible = false;
+            Console.SetWindowSize(Console.BufferWidth, this.height + 6);
         }
 
         protected override void DoWork()
         {
             // Wait until we can start
-            this.ts.Query("start");
+            this.Query("start");
 
             // Keep iterating while the state is 'running'
-            while (this.ts.Query("running", true) != null)
+            while (this.Query("running", true) != null)
             {
                 this.ShowLifeforms();
                 this.ShowFood();
@@ -54,7 +55,7 @@ namespace Lifeforms
 
         private void ShowLifeforms()
         {
-            IEnumerable<ITuple> lifeforms = this.ts.QueryAll("lifeform", typeof(string), typeof(int), typeof(int));
+            IEnumerable<ITuple> lifeforms = this.QueryAll("lifeform", typeof(string), typeof(int), typeof(int));
             this.maxGenerations = 0;
             this.maxLife = 0;
             this.avgLife = 0;
@@ -74,7 +75,7 @@ namespace Lifeforms
                 int y = (int)lifeform[3];
                 this.screenBuffer[x, y] = '¤';
             }
-            IEnumerable<ITuple> lifeformProperties = this.ts.QueryAll("lifeformProperties", typeof(string), typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+            IEnumerable<ITuple> lifeformProperties = this.QueryAll("lifeformProperties", typeof(string), typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
             foreach (ITuple lifeformProperty in lifeformProperties)
             {
                 this.maxLife = Math.Max(this.maxLife, (int)lifeformProperty[5]);
@@ -104,7 +105,7 @@ namespace Lifeforms
 
         private void ShowFood()
         {
-            IEnumerable<ITuple> foods = this.ts.QueryAll("food", typeof(int), typeof(int), typeof(int), typeof(int));
+            IEnumerable<ITuple> foods = this.QueryAll("food", typeof(int), typeof(int), typeof(int), typeof(int));
             foreach (ITuple food in foods)
             {
                 int x = (int)food[3];

@@ -15,7 +15,8 @@ namespace Example6
             {
                 if (args[0] == "table")
                 {
-                    SpaceRepository repository = new SpaceRepository(ConnectionMode.CONN, 123, "127.0.0.1");
+                    SpaceRepository repository = new SpaceRepository();
+                    repository.AddGate("tcp://127.0.0.1:123?CONN");
                     repository.AddSpace("DiningTable", new Space());
                     repository.Put("DiningTable", "FORK", 1);
                     repository.Put("DiningTable", "FORK", 2);
@@ -26,13 +27,13 @@ namespace Example6
                 }
                 else if (args[0] == "philosopher")
                 {
-                    Gate gate = new Gate(ConnectionMode.CONN, "127.0.0.1", 123);
+                    RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/DiningTable?CONN");
                     List<AgentBase> agents = new List<AgentBase>();
-                    agents.Add(new Philosopher("Alice", 1, 5, gate.GetSpace("DiningTable")));
-                    agents.Add(new Philosopher("Charlie", 2, 5, gate.GetSpace("DiningTable")));
-                    agents.Add(new Philosopher("Bob", 3, 5, gate.GetSpace("DiningTable")));
-                    agents.Add(new Philosopher("Dave", 4, 5, gate.GetSpace("DiningTable")));
-                    agents.Add(new Philosopher("Homer", 5, 5, gate.GetSpace("DiningTable")));
+                    agents.Add(new Philosopher("Alice", 1, 5, remotespace));
+                    agents.Add(new Philosopher("Charlie", 2, 5, remotespace));
+                    agents.Add(new Philosopher("Bob", 3, 5, remotespace));
+                    agents.Add(new Philosopher("Dave", 4, 5, remotespace));
+                    agents.Add(new Philosopher("Homer", 5, 5, remotespace));
                     agents.ForEach(a => a.Start());
                     return;
                 }

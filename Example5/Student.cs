@@ -12,9 +12,9 @@ namespace Example5
 
         protected override void DoWork()
         {
-            ITuple tuple = this.ts.Get(typeof(string));
+            ITuple tuple = this.Get(typeof(string));
             Console.WriteLine(tuple[0]);
-            this.ts.Put(this.name, "02148");
+            this.Put(this.name, "02148");
         }
     }
 }

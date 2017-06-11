@@ -1,4 +1,6 @@
-﻿
+﻿using dotSpace.BaseClasses;
+using dotSpace.Enumerations;
+using dotSpace.Interfaces;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -6,26 +8,28 @@ using System.Threading;
 
 namespace dotSpace.Objects.Network
 {
-    public sealed class TcpListener
+    public sealed class TcpGate : GateBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
         private readonly int port;
         private IPAddress ipAddress;
-        private System.Net.Sockets.TcpListener listener;
+        private TcpListener listener;
         private bool listening;
-        private Action<TcpClient> callBack;
+        private Action<ISocket, ConnectionMode> callBack;
+        private ConnectionMode mode;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public TcpListener(string address, int port)
+        public TcpGate(GateInfo gateInfo)
         {
-            this.port = port;
-            this.ipAddress = IPAddress.Parse(address);
+            this.port = gateInfo.Port;
+            this.ipAddress = IPAddress.Parse(gateInfo.Host);
+            this.mode = gateInfo.Mode;
             this.listener = new System.Net.Sockets.TcpListener(ipAddress, this.port);
         }
 
@@ -34,7 +38,7 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public void Start(Action<TcpClient> callback)
+        public override void Start(Action<ISocket, ConnectionMode> callback)
         {
             if (!this.listening)
             {
@@ -65,7 +69,8 @@ namespace dotSpace.Objects.Network
                 while (this.listening)
                 {
                     TcpClient client = listener.AcceptTcpClient();
-                    new Thread((x) => { this.callBack((TcpClient)x); }).Start(client);
+                    TcpSocket socket = new TcpSocket(client);
+                    new Thread(() => { this.callBack(socket, this.mode); }).Start();
                 }
             }
             catch (Exception e)

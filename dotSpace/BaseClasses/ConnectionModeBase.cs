@@ -9,26 +9,23 @@ using System.Net;
 
 namespace dotSpace.BaseClasses
 {
-    public abstract class ProtocolBase
+    public abstract class ConnectionModeBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        protected OperationMap operationMap;
-        protected RepositoryBase repository;
+        protected ISocket socket;
+        protected IEncoder encoder;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public ProtocolBase(RepositoryBase repository)
+        public ConnectionModeBase(ISocket socket, IEncoder encoder)
         {
-            this.repository = repository;
-            if (this.repository is SpaceRepository)
-            {
-                this.operationMap = new OperationMap((SpaceRepository)this.repository);
-            }
+            this.socket = socket;
+            this.encoder = encoder;
         }
 
         #endregion
@@ -36,32 +33,32 @@ namespace dotSpace.BaseClasses
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public abstract void ProcessRequest(Socket socket, BasicRequest request);
-        public abstract T PerformRequest<T>(IPEndPoint endpoint, IEncoder encoder, BasicRequest request) where T : BasicResponse;
+        public abstract void ProcessRequest(OperationMap operationMap);
+        public abstract T PerformRequest<T>(BasicRequest request) where T : BasicResponse;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Protected Methods
 
-        protected T ValidateResponse<T>(MessageBase message) where T : BasicResponse
+        protected BasicResponse ValidateResponse(MessageBase message)
         {
             if (message is BasicResponse)
             {
                 BasicResponse response = (BasicResponse)message;
                 if (response.Code == StatusCode.OK)
                 {
-                    return message as T;
+                    return (BasicResponse)message;
                 }
                 throw new Exception(string.Format("{0} - {1}", response.Code, response.Message));
             }
             throw new Exception(string.Format("{0} - {1}", StatusCode.BAD_RESPONSE, StatusMessage.BAD_RESPONSE));
         }
-        protected T ValidateRequest<T>(MessageBase message) where T : BasicRequest
+        protected BasicRequest ValidateRequest(MessageBase message)
         {
             if (message is BasicRequest)
             {
-                return message as T;
+                return (BasicRequest)message;
             }
             throw new Exception(string.Format("{0} - {1}", StatusCode.BAD_REQUEST, StatusMessage.BAD_REQUEST));
         } 

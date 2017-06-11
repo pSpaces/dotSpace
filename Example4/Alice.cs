@@ -17,13 +17,13 @@ namespace Example4
             {
                 Console.WriteLine(name + " adding items to the grocery list...");
                 Console.WriteLine(name + " adding one bottle(s) of milk");
-                this.ts.Put("milk", 1);
+                this.Put("milk", 1);
                 Console.WriteLine(name + " adding one piece of soap");
-                this.ts.Put("soap", 2);
+                this.Put("soap", 2);
                 Console.WriteLine(name + " adding three piecess of butter");
-                this.ts.Put("butter", 3);
+                this.Put("butter", 3);
                 Console.WriteLine(name + " go!");
-                this.ts.Put("shop!");
+                this.Put("shop!");
             }
             catch (Exception e)
             {

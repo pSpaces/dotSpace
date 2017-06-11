@@ -1,11 +1,8 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Enumerations;
 using dotSpace.Interfaces;
-using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Protocols;
-using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network
 {
@@ -14,32 +11,22 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        private TcpListener listener;
         private Dictionary<string, ISpace> spaces;
-        private Dictionary<ConnectionMode, ProtocolBase> protocols;
+        private OperationMap operationMap;
+        private List<IGate> gates;
         private IEncoder encoder;
+
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public SpaceRepository(ConnectionMode mode, int port, string address = "", bool listenOnStart = true) : base(address, port)
+        public SpaceRepository() : base()
         {
-            this.encoder = new RepositoryEncoder();
-            this.listener = new TcpListener(this.address, this.port);
+            this.encoder = new ResponseEncoder();
             this.spaces = new Dictionary<string, ISpace>();
-            this.protocols = new Dictionary<ConnectionMode, ProtocolBase>();
-            mode.HasFlag(ConnectionMode.CONN).Then(() => this.protocols.Add(ConnectionMode.CONN, new ConnProtocol(this)));
-            mode.HasFlag(ConnectionMode.PUSH).Then(() => this.protocols.Add(ConnectionMode.PUSH, new PushProtocol(this, string.Empty, 0)));
-            mode.HasFlag(ConnectionMode.PULL).Then(() => this.protocols.Add(ConnectionMode.PULL, new PullProtocol(this)));
-            if (this.protocols.Count == 0)
-            {
-                throw new Exception("Cannot start server without valid connectionschemes");
-            }
-            if (listenOnStart)
-            {
-                this.StartListen();
-            }
+            this.gates = new List<IGate>();
+            this.operationMap = new OperationMap(this);
         }
 
         #endregion
@@ -47,6 +34,28 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        public void AddGate(string uri)
+        {
+            GateInfo gateInfo = new GateInfo(uri);
+            IGate gate = null;
+            switch (gateInfo.Protocol)
+            {
+                case "tcp": gate = new TcpGate(gateInfo); break;
+                default: break;
+            }
+            if (gate != null)
+            {
+                this.gates.Add(gate);
+                gate.Start(this.OnConnect);
+            }
+        }
+        public void AddSpace(string identifier, ISpace tuplespace)
+        {
+            if (!this.spaces.ContainsKey(identifier))
+            {
+                this.spaces.Add(identifier, tuplespace);
+            }
+        }
         public override ISpace GetSpace(string target)
         {
             if (this.spaces.ContainsKey(target))
@@ -111,47 +120,27 @@ namespace dotSpace.Objects.Network
         {
             this.GetSpace(target)?.Put(tuple);
         }
-        public void StartListen()
-        {
-            this.listener.Start(this.OnClientConnect);
-        }
-        public void StopListen()
-        {
-            this.listener.Stop();
-        }
-        public void AddSpace(string identifier, ISpace tuplespace)
-        {
-            if (!this.spaces.ContainsKey(identifier))
-            {
-                this.spaces.Add(identifier, tuplespace);
-            }
-        }
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Private Methods
 
-        private void OnClientConnect(TcpClient client)
+        // move to gatebase
+        private void OnConnect(ISocket client, ConnectionMode mode)
         {
-            Socket socket = new Socket(client, this.encoder);
-            BasicRequest request = (BasicRequest)socket.Receive<BasicRequest>();
-            if (request != null)
-            {
-                this.GetProtocol(request).ProcessRequest(socket, request);
-                return;
-            }
-            // Forcibly closing socket on unknown request. We do not know the protocol so we cannot reply.
-            socket.Close(); 
+            this.GetMode(mode, client)?.ProcessRequest(this.operationMap);
         }
-        private ProtocolBase GetProtocol(BasicRequest request)
+        private ConnectionModeBase GetMode(ConnectionMode connectionmode, ISocket socket)
         {
-            if (this.protocols.ContainsKey(request.Connectionmode))
+            switch (connectionmode)
             {
-                return this.protocols[request.Connectionmode];
+                case ConnectionMode.CONN: return new Conn(socket, this.encoder);
+                case ConnectionMode.KEEP: return new Keep(socket, this.encoder);
+                case ConnectionMode.PULL: return null;
+                case ConnectionMode.PUSH: return null;
+                default: return null;
             }
-
-            return null; // TODO: return response error
         }
 
         #endregion

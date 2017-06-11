@@ -15,7 +15,8 @@ namespace Example7
             {
                 if (args[0] == "producer")
                 {
-                    SpaceRepository repository = new SpaceRepository(ConnectionMode.CONN, 123, "127.0.0.1");
+                    SpaceRepository repository = new SpaceRepository();
+                    repository.AddGate("tcp://127.0.0.1:123?CONN");
                     repository.AddSpace("fridge", new Space());
                     AgentBase alice = new Producer("Alice", repository.GetSpace("fridge"));
                     alice.Start();
@@ -23,11 +24,11 @@ namespace Example7
                 }
                 else if (args[0] == "consumer")
                 {
-                    Gate gate = new Gate(ConnectionMode.CONN, "127.0.0.1", 123);
+                    RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/fridge?CONN");
                     List<AgentBase> agents = new List<AgentBase>();
-                    agents.Add(new FoodConsumer("Bob", gate.GetSpace("fridge")));
-                    agents.Add(new FoodConsumer("Charlie", gate.GetSpace("fridge")));
-                    agents.Add(new DrugConsumer("Dave", gate.GetSpace("fridge")));
+                    agents.Add(new FoodConsumer("Bob", remotespace));
+                    agents.Add(new FoodConsumer("Charlie", remotespace));
+                    agents.Add(new DrugConsumer("Dave", remotespace));
                     agents.ForEach(a => a.Start());
                     return;
                 }

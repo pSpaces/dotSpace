@@ -22,20 +22,20 @@ namespace Pong
         protected override void DoWork()
         {
             // Wait until we can start
-            this.ts.Query("start");
+            this.Query("start");
             int leftPlayerId = 1;
             int rightPlayerId = 2;
             
             // Read the player names
-            ITuple leftplayer = this.ts.Query(leftPlayerId, typeof(string));
-            ITuple rightplayer = this.ts.Query(rightPlayerId, typeof(string));
+            ITuple leftplayer = this.Query(leftPlayerId, typeof(string));
+            ITuple rightplayer = this.Query(rightPlayerId, typeof(string));
 
             // Keep iterating while the state is 'running'
-            while (this.ts.QueryP("running", true) != null)
+            while (this.QueryP("running", true) != null)
             {
                 // Get the position so we can update it
                 // "pong", position:(x,y), normalized direction(x,y), speed: z
-                ITuple pong = this.ts.Get("pong", typeof(double), typeof(double), typeof(double), typeof(double), typeof(double));
+                ITuple pong = this.Get("pong", typeof(double), typeof(double), typeof(double), typeof(double), typeof(double));
                 
                 // Calculate new position based on the direction
                 Vector position = new Vector((double)pong[1], (double)pong[2]);
@@ -53,7 +53,7 @@ namespace Pong
                 if (newPosition.X <= 0)
                 {
                     // Read the latest position of the player
-                    ITuple playerPosition = this.ts.Query(leftPlayerId, typeof(double), typeof(double));
+                    ITuple playerPosition = this.Query(leftPlayerId, typeof(double), typeof(double));
                     // Check if the pong hit the player pad, then change the position and direction
                     // otherwise reward the other player
                     if ((int)(double)playerPosition[2] == (int)newPosition.Y )
@@ -71,7 +71,7 @@ namespace Pong
                 if (newPosition.X >= this.width)
                 {
                     // Read the latest position of the player
-                    ITuple playerPosition = this.ts.Query(rightPlayerId, typeof(double), typeof(double));
+                    ITuple playerPosition = this.Query(rightPlayerId, typeof(double), typeof(double));
                     // Check if the pong hit the player pad, then change the position and direction
                     // otherwise reward the other player
                     if ((int)(double)playerPosition[2] == (int)newPosition.Y)
@@ -93,17 +93,17 @@ namespace Pong
                 pong[2] = pongY;
                 pong[3] = direction.X;
                 pong[4] = direction.Y;
-                this.ts.Put(pong);
+                this.Put(pong);
                 Thread.Sleep(100);
             }
         }
 
         private void IncreasePlayerScore(string playername, string serving)
         {
-            ITuple playerScore = this.ts.Get(playername, typeof(int));
+            ITuple playerScore = this.Get(playername, typeof(int));
             playerScore[1] = (int)playerScore[1] + 1;
-            this.ts.Put(playerScore);
-            this.ts.Put("serving", serving);
+            this.Put(playerScore);
+            this.Put("serving", serving);
         }
 
         private Vector ChangeDirection(Vector currentDirection, bool xAxis)

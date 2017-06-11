@@ -32,7 +32,7 @@ namespace Example7
                 {
                     bool goShop = false;
                     // The get operation returns a tuple, that we save into t
-                    t = this.ts.GetP(what);
+                    t = this.GetP(what);
                     if (t != null)
                     {
                         // The extracted field needs often to be casted to the right class

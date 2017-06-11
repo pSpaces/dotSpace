@@ -65,13 +65,13 @@ namespace Lifeforms
         protected override void DoWork()
         {
             // Wait until we can start
-            this.ts.Query("start");
-            this.ts.Put("lifeform", this.id, this.X, this.Y);
-            this.ts.Put("lifeformProperties", this.id, this.Genom, this.P1Genom, this.P2Genom, this.InitialLife, this.Generation, this.VisualRange, this.MaxNrChildren, this.Speed);
+            this.Query("start");
+            this.Put("lifeform", this.id, this.X, this.Y);
+            this.Put("lifeformProperties", this.id, this.Genom, this.P1Genom, this.P2Genom, this.InitialLife, this.Generation, this.VisualRange, this.MaxNrChildren, this.Speed);
             this.roamX = (this.rng.Next() % (this.width - 3)) + 1;
             this.roamY = (this.rng.Next() % (this.height - 3)) + 1;
             // Keep iterating while the state is 'running'
-            while (this.ts.QueryP("running", true) != null && this.Life > 0)
+            while (this.QueryP("running", true) != null && this.Life > 0)
             {
                 // if the lifeform has more food than the cost to breed, then find a mate
                 if (this.Food > this.breedingCost && nrChildren < this.MaxNrChildren)
@@ -94,7 +94,7 @@ namespace Lifeforms
                         if (targetMate != null)
                         {
                             // update the mate's location
-                            if ((targetMate = this.ts.QueryP("lifeform", (string)targetMate[1], typeof(int), typeof(int))) != null)
+                            if ((targetMate = this.QueryP("lifeform", (string)targetMate[1], typeof(int), typeof(int))) != null)
                             {
                                 this.Move((int)targetMate[2], (int)targetMate[3]);
                             }
@@ -139,8 +139,8 @@ namespace Lifeforms
                 }
                 Thread.Sleep(50 - this.Speed);
             }
-            this.ts.Get("lifeform", this.id, typeof(int), typeof(int));
-            this.ts.Get("lifeformProperties", this.id, typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+            this.Get("lifeform", this.id, typeof(int), typeof(int));
+            this.Get("lifeformProperties", this.id, typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
         }
         private void Roam()
         {
@@ -157,7 +157,7 @@ namespace Lifeforms
         }
         private void Eat(ITuple food)
         {
-            if ((food = this.ts.GetP("food", food[1], typeof(int), food[3], food[4])) != null)
+            if ((food = this.GetP("food", food[1], typeof(int), food[3], food[4])) != null)
             {
                 int amount = (int)food[1];
                 int foodDiff = this.maxFood - this.Food;
@@ -169,18 +169,18 @@ namespace Lifeforms
 
                     if (amount > 0)
                     {
-                        this.ts.Put("food", amount, (int)food[2], (int)food[3], (int)food[4]);
+                        this.Put("food", amount, (int)food[2], (int)food[3], (int)food[4]);
                     }
                     else
                     {
-                        this.ts.Put("foodEaten");
+                        this.Put("foodEaten");
                     }
                 }
             }
         }
         private ITuple FindMate()
         {
-            IEnumerable<ITuple> targetmates = this.ts.QueryAll("lifeform", typeof(string), typeof(int), typeof(int));
+            IEnumerable<ITuple> targetmates = this.QueryAll("lifeform", typeof(string), typeof(int), typeof(int));
             targetmates = targetmates.Where(lf => this.CanSee((int)lf[2], (int)lf[3]) && this.CanBreed(lf)).ToList();
             if (targetmates.Count() > 0)
             {
@@ -190,7 +190,7 @@ namespace Lifeforms
         }
         private ITuple FindFood()
         {
-            IEnumerable<ITuple> targetFoods = this.ts.QueryAll("food", typeof(int), typeof(int), typeof(int), typeof(int));
+            IEnumerable<ITuple> targetFoods = this.QueryAll("food", typeof(int), typeof(int), typeof(int), typeof(int));
             targetFoods = targetFoods.Where(f => this.CanSee((int)f[3], (int)f[4]));
             if (targetFoods.Count() > 0)
             {
@@ -202,7 +202,7 @@ namespace Lifeforms
         {
             int deltaX = Math.Abs(this.X - x);
             int deltaY = Math.Abs(this.Y - y);
-            this.ts.Get("lifeform", this.id, typeof(int), typeof(int));
+            this.Get("lifeform", this.id, typeof(int), typeof(int));
 
             if (deltaX > deltaY)
             {
@@ -231,7 +231,7 @@ namespace Lifeforms
             this.Y = Math.Min(this.Y, this.height - 2);
             this.Y = Math.Max(this.Y, 1);
 
-            this.ts.Put("lifeform", this.id, this.X, this.Y);
+            this.Put("lifeform", this.id, this.X, this.Y);
         }
         private bool CanSee(int x, int y)
         {
@@ -242,16 +242,16 @@ namespace Lifeforms
         }
         private void GetFreeAdjacentCell(out int x, out int y)
         {
-            ITuple adjacent = this.ts.QueryP("lifeform", typeof(string), this.X, this.Y + 1);
+            ITuple adjacent = this.QueryP("lifeform", typeof(string), this.X, this.Y + 1);
             if (adjacent == null)
             {
-                adjacent = this.ts.QueryP("lifeform", typeof(string), this.X + 1, this.Y);
+                adjacent = this.QueryP("lifeform", typeof(string), this.X + 1, this.Y);
                 if (adjacent == null)
                 {
-                    adjacent = this.ts.QueryP("lifeform", typeof(string), this.X - 1, this.Y);
+                    adjacent = this.QueryP("lifeform", typeof(string), this.X - 1, this.Y);
                     if (adjacent == null)
                     {
-                        adjacent = this.ts.QueryP("lifeform", typeof(string), this.X, this.Y - 1);
+                        adjacent = this.QueryP("lifeform", typeof(string), this.X, this.Y - 1);
                         if (adjacent == null)
                         {
                             x = -1;
@@ -275,7 +275,7 @@ namespace Lifeforms
             {
                 return false;
             }
-            ITuple lifeformProperties = this.ts.QueryP("lifeformProperties", other[1], typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+            ITuple lifeformProperties = this.QueryP("lifeformProperties", other[1], typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
             if (lifeformProperties == null)
             {
                 return false;
@@ -295,7 +295,7 @@ namespace Lifeforms
             this.GetFreeAdjacentCell(out x, out y);
             if (x > 0 && y > 0)
             {
-                ITuple mateProperties = this.ts.QueryP("lifeformProperties", other[1], typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+                ITuple mateProperties = this.QueryP("lifeformProperties", other[1], typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
                 if (mateProperties != null)
                 {
                     x = x == this.width ? this.X - 1 : X;
@@ -325,7 +325,7 @@ namespace Lifeforms
                     int maxNrChildren = ((this.MaxNrChildren + othermaxNrChildren) / 2) + (this.rng.Next() % 5) - 2;
                     int speed = Math.Max(this.Speed, otherSpeed) + (this.rng.Next() % 5) - 2;
 
-                    this.ts.Put("spawn", genom, this.Genom, otherGenom, initiallife, food, x, y, generation, visualRange, maxNrChildren, speed);
+                    this.Put("spawn", genom, this.Genom, otherGenom, initiallife, food, x, y, generation, visualRange, maxNrChildren, speed);
                     this.nrChildren++;
                 }
             }

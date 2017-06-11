@@ -25,18 +25,18 @@ namespace Example2
                 while (true)
                 {
                     // The get operation returns a tuple
-                    lf = this.ts.Get("FORK", this.leftId);
-                    rf = this.ts.GetP("FORK", this.rightId);
+                    lf = this.Get("FORK", this.leftId);
+                    rf = this.GetP("FORK", this.rightId);
                     if (rf != null)
                     {
                         Console.WriteLine(this.name + ": I AM EATING WITH BOTH MY HANDS: " + this.seatIndex);
-                        this.ts.Put(rf);
-                        this.ts.Put(lf);
+                        this.Put(rf);
+                        this.Put(lf);
                         Console.WriteLine("Done eating: " + this.seatIndex);
                     }
                     else
                     {
-                        this.ts.Put(lf);
+                        this.Put(lf);
                     }
                 }
             }

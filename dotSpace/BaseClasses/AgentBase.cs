@@ -1,27 +1,27 @@
 ﻿using dotSpace.Interfaces;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace dotSpace.BaseClasses
 {
-    public abstract class AgentBase
+    public abstract class AgentBase : ISpace
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        private Thread thread;
         protected string name;
-        protected ISpace ts;
+        protected ISpace space;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public AgentBase(string name, ISpace ts)
+        public AgentBase(string name, ISpace space)
         {
-            this.thread = new Thread(this.DoWork);
             this.name = name;
-            this.ts = ts;
+            this.space = space;
         }
 
         #endregion
@@ -31,16 +31,82 @@ namespace dotSpace.BaseClasses
 
         public void Start()
         {
-            this.thread.Start();
+            var t = Task.Factory.StartNew(this.DoWork);
         }
 
-        public void Join()
+        public ITuple Get(IPattern pattern)
         {
-            this.thread.Join();
+            return this.space.Get(pattern);
         }
 
-        protected abstract void DoWork();  
+        public ITuple Get(params object[] pattern)
+        {
+            return this.space.Get(pattern);
+        }
+
+        public ITuple GetP(IPattern pattern)
+        {
+            return this.space.GetP(pattern);
+        }
+
+        public ITuple GetP(params object[] pattern)
+        {
+            return this.space.GetP(pattern);
+        }
+
+        public IEnumerable<ITuple> GetAll(IPattern pattern)
+        {
+            return this.space.GetAll(pattern);
+        }
+
+        public IEnumerable<ITuple> GetAll(params object[] pattern)
+        {
+            return this.space.GetAll(pattern);
+        }
+
+        public ITuple Query(IPattern pattern)
+        {
+            return this.space.Query(pattern);
+        }
+
+        public ITuple Query(params object[] pattern)
+        {
+            return this.space.Query(pattern);
+        }
+
+        public ITuple QueryP(IPattern pattern)
+        {
+            return this.space.QueryP(pattern);
+        }
+
+        public ITuple QueryP(params object[] pattern)
+        {
+            return this.space.QueryP(pattern);
+        }
+
+        public IEnumerable<ITuple> QueryAll(IPattern pattern)
+        {
+            return this.space.QueryAll(pattern);
+        }
+
+        public IEnumerable<ITuple> QueryAll(params object[] pattern)
+        {
+            return this.space.QueryAll(pattern);
+        }
+
+        public void Put(ITuple tuple)
+        {
+            this.space.Put(tuple);
+        }
+
+        public void Put(params object[] tuple)
+        {
+            this.space.Put(tuple);
+        }
 
         #endregion
+
+        protected abstract void DoWork();
+
     }
 }

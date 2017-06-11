@@ -8,6 +8,7 @@ namespace dotSpace.Enumerations
         NONE = 1,
         CONN = 2,
         PUSH = 4,
-        PULL = 8
+        PULL = 8,
+        KEEP = 16
     }
 }

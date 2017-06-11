@@ -8,10 +8,10 @@ namespace LifeformsClient
     {
         static void Main(string[] args)
         {
-            Gate gate = new Gate(ConnectionMode.CONN, "127.0.0.1", 123);
+            RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/lifeforms?KEEP");
             int width = 80;
             int height = 25;
-            Game lifeforms = new Game(width, height, gate.GetSpace("lifeforms"));
+            Game lifeforms = new Game(width, height, remotespace);
             lifeforms.AddLifeform(3);
             lifeforms.AddLifeform(5);
             lifeforms.AddLifeform(7);

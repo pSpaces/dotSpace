@@ -1,27 +1,33 @@
-﻿using dotSpace.Interfaces;
+﻿using dotSpace.BaseClasses;
+using dotSpace.Interfaces;
 using System;
 using System.IO;
 using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network
 {
-    public sealed class Socket
+    public sealed class TcpSocket : SocketBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        private IEncoder encoder;
         private TcpClient client;
+        private NetworkStream netStream;
+        private StreamReader reader;
+        private StreamWriter writer;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Socket(TcpClient client, IEncoder encoder)
+        public TcpSocket(TcpClient client)
         {
             this.client = client;
-            this.encoder = encoder;
+            this.netStream = client.GetStream();
+            this.reader = new StreamReader(this.netStream);
+            this.writer = new StreamWriter(this.netStream);
+            this.writer.AutoFlush = true;
         }
 
         #endregion
@@ -29,35 +35,32 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public MessageBase Receive<T>() where T : MessageBase
+        public override MessageBase Receive(IEncoder encoder)
         {
             try
             {
-                StreamReader sr = new StreamReader(this.client.GetStream());
-                string msg = sr.ReadLine();
-                return this.encoder.Decode<T>(msg);
+                string msg = reader.ReadLine();
+                return (MessageBase)encoder.Decode(msg);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 this.client.Close();
             }
-            return default(T);
+            return null;
         }
-        public void Send(MessageBase message)
+        public override void Send(MessageBase message, IEncoder encoder)
         {
             try
             {
-                string msg = this.encoder.Encode(message);
-                StreamWriter sw = new StreamWriter(this.client.GetStream());
-                sw.WriteLine(msg);
-                sw.Flush();
+                string msg = encoder.Encode(message);
+                writer.WriteLine(msg);
             }
             catch (Exception e)
             {
                 this.client.Close();
             }
         }
-        public void Close()
+        public override void Close()
         {
             if (this.client.Connected)
             {

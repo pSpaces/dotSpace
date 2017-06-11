@@ -8,21 +8,12 @@ namespace dotSpace.BaseClasses
 {
     public abstract class RepositoryBase : IRepository
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        #region // Fields
-
-        protected string address;
-        protected int port;
-
-        #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public RepositoryBase(string address, int port)
+        public RepositoryBase()
         {
-            this.address = string.IsNullOrEmpty(address) ? this.GetLocalIPAddress() : address;
-            this.port = port;
         }
 
         #endregion
@@ -44,10 +35,10 @@ namespace dotSpace.BaseClasses
         public abstract IEnumerable<ITuple> QueryAll(string target, params object[] pattern);
         public abstract void Put(string target, ITuple tuple);
         public abstract void Put(string target, params object[] tuple);
-        public IPEndPoint CreateEndpoint()
+        public IPEndPoint CreateEndpoint(string address, int port)
         {
-            IPAddress ipAddress = IPAddress.Parse(this.address);
-            return new IPEndPoint(ipAddress, this.port);
+            IPAddress ipAddress = IPAddress.Parse(address);
+            return new IPEndPoint(ipAddress, port);
         }
         public string GetLocalIPAddress()
         {

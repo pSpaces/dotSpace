@@ -19,9 +19,9 @@ namespace dotSpace.BaseClasses
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             return serializer.Serialize(message);
-        } 
+        }
 
-        public abstract MessageBase Decode<T>(string msg) where T : MessageBase;
+        public abstract MessageBase Decode(string msg); 
         public abstract string Encode(MessageBase message);
 
         #endregion

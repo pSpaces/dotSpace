@@ -19,11 +19,11 @@ namespace Example3
             {
                 Console.WriteLine(name + " adding items to the grocery list...");
                 Console.WriteLine(name + " adding milk(1)");
-                this.ts.Put("milk", 1, "food");
+                this.Put("milk", 1, "food");
                 Console.WriteLine(name + " adding soap(2)");
-                this.ts.Put("soap", 2, "drug");
+                this.Put("soap", 2, "drug");
                 Console.WriteLine(name + " adding butter(3)");
-                this.ts.Put("butter", 3, "food");
+                this.Put("butter", 3, "food");
             }
             catch (Exception e)
             {

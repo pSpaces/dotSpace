@@ -12,7 +12,7 @@ namespace dotSpace.Objects.Network.Messages.Requests
         {
         }
 
-        public PutRequest(ConnectionMode mode, string source, string session, string target, object[] tuple) : base(mode, ActionType.PUT_REQUEST, source, session, target)
+        public PutRequest(string source, string session, string target, object[] tuple) : base( ActionType.PUT_REQUEST, source, session, target)
         {
             this.Tuple = tuple;
         }

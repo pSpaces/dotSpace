@@ -4,12 +4,18 @@ using dotSpace.Objects.Network.Messages.Requests;
 
 namespace dotSpace.Objects.Network
 {
-    public sealed class RepositoryEncoder : EncoderBase
+    public sealed class ResponseEncoder : EncoderBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public override MessageBase Decode<T>(string msg)
+        public override string Encode(MessageBase message)
+        {
+            JsonTypeConverter.Box(message);
+            return this.Serialize(message);
+        }
+
+        public override MessageBase Decode(string msg)
         {
             BasicRequest breq = Deserialize<BasicRequest>(msg);
             switch (breq.Actiontype)
@@ -25,12 +31,6 @@ namespace dotSpace.Objects.Network
 
             JsonTypeConverter.Unbox(breq);
             return breq;
-        }
-
-        public override string Encode(MessageBase message)
-        {
-            JsonTypeConverter.Box(message);
-            return this.Serialize(message);
         }
 
         #endregion

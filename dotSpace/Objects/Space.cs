@@ -204,7 +204,8 @@ namespace dotSpace.Objects
             {
                 if (pattern[idx] is Type)
                 {
-                    result &= tuple[idx] is Type ? tuple[idx].GetType() == (Type)pattern[idx] : tuple[idx].GetType() == (Type)pattern[idx];
+                    Type tupleType = tuple[idx] is Type ? (Type)tuple[idx] : tuple[idx].GetType();
+                    result &= this.IsOfType(tupleType, (Type)pattern[idx]);
                 }
                 else
                 {
@@ -214,6 +215,10 @@ namespace dotSpace.Objects
             }
 
             return result;
+        }
+        private bool IsOfType(Type tupleType, Type patternType)
+        {
+            return tupleType == patternType;
         }
         private List<ITuple> GetBucket(ulong hash)
         {

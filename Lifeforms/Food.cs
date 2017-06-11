@@ -21,26 +21,26 @@ namespace Lifeforms
         protected override void DoWork()
         {
             // Wait until we can start
-            this.ts.Query("start");
+            this.Query("start");
             this.NewFood();
             this.NewFood();
             this.NewFood();
             this.NewFood();
             // Keep iterating while the state is 'running'
-            while (this.ts.QueryP("running", true) != null)
+            while (this.QueryP("running", true) != null)
             {
-                if (this.ts.GetP("foodEaten") != null)
+                if (this.GetP("foodEaten") != null)
                 {
                     this.NewFood();
                 }
                 // time left, amount, position(x,y)
-                ITuple food = this.ts.GetP("food", typeof(int), typeof(int), typeof(int), typeof(int));
+                ITuple food = this.GetP("food", typeof(int), typeof(int), typeof(int), typeof(int));
                 if (food != null)
                 {
                     int timeleft = (int)food[1] - 1;
                     if (timeleft > 0)
                     {
-                        this.ts.Put("food",food[1], timeleft, food[3], food[4]);
+                        this.Put("food",food[1], timeleft, food[3], food[4]);
                     }
                     else 
                     {
@@ -64,7 +64,7 @@ namespace Lifeforms
                 int timeleft = this.rng.Next() % 500;
                 int x = (this.rng.Next() % (this.width - 2)) + 1;
                 int y = (this.rng.Next() % (this.height - 2)) + 1;
-                this.ts.Put("food", amount, timeleft, x, y);
+                this.Put("food", amount, timeleft, x, y);
                 if (rnd > 98)
                 {
                     this.NewFood();

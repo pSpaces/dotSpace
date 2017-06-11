@@ -20,11 +20,11 @@ namespace Pong.BaseClasses
             this.rng = new Random(Environment.TickCount);
             this.PlayerId = playerId;
             this.Name = playerName;
-            this.ts.Put(playerId, playerName);
-            this.ts.Put(playerName, 0);
+            this.Put(playerId, playerName);
+            this.Put(playerName, 0);
             this.initialX = this.PlayerId == 1 ? 0d : (double)(width - 1d);
             this.initialY = (double)(height / 2d);
-            this.ts.Put(this.PlayerId, this.initialX, this.initialY);
+            this.Put(this.PlayerId, this.initialX, this.initialY);
         }
 
         public int PlayerId { get; set; }
@@ -32,7 +32,7 @@ namespace Pong.BaseClasses
 
         protected void Serve(Vector position)
         {
-            this.ts.Put("pong", position.X, position.Y, this.GetServeDirection(), (this.rng.NextDouble()*0.51d)-0.25d, 2.5d);
+            this.Put("pong", position.X, position.Y, this.GetServeDirection(), (this.rng.NextDouble()*0.51d)-0.25d, 2.5d);
         }
 
         private double GetServeDirection()
