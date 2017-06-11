@@ -2,8 +2,6 @@
 using dotSpace.Interfaces;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
-using System.Net;
-using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network.Protocols
 {
