@@ -14,7 +14,7 @@ namespace dotSpace.Objects.Network.ConnectionModes
         #region // Fields
 
         private MessageQueue messageQueue;
-        private Thread receiveThread; 
+        private Thread receiveThread;
 
         #endregion
 
@@ -75,7 +75,7 @@ namespace dotSpace.Objects.Network.ConnectionModes
                 message = this.ValidateResponse(message);
                 this.messageQueue.Put(message);
             }
-        } 
+        }
 
         #endregion
     }

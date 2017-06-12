@@ -141,7 +141,7 @@ namespace dotSpace.Objects.Network
             switch (this.gateInfo.Protocol)
             {
                 case Protocol.TCP: return new Tcp(new TcpClient(this.gateInfo.Host, this.gateInfo.Port));
-                case Protocol.UDP: return new Udp(new UdpClient(), this.gateInfo.Host, this.gateInfo.Port);
+                case Protocol.UDP: return new Udp(this.gateInfo.Host, this.gateInfo.Port);
                 default: return null;
             }
         }

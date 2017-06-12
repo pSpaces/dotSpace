@@ -20,13 +20,10 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Udp(UdpClient client, string host, int port)
+        public Udp(string host, int port)
         {
-            this.client = client;            
-            //if(connect)
-            //this.client.Connect(host, port);
-            //else
-            //    this.client.Client.Bind()
+            throw new Exception("The UDP gate is not supported.");
+            this.client = new UdpClient(port);            
         }
 
         #endregion

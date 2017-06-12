@@ -22,6 +22,7 @@ namespace dotSpace.Objects.Network.Gates
 
         public UdpGate(IEncoder encoder, GateInfo gateInfo) : base(encoder, gateInfo)
         {
+            throw new Exception("The UDP gate is not supported.");
             this.listener = new UdpClient();
             this.listening = false;
         }
@@ -36,7 +37,7 @@ namespace dotSpace.Objects.Network.Gates
             if (!this.listening)
             {
                 this.listening = true;
-                IConnectionMode mode = this.GetMode(this.gateInfo.Mode, new Udp(listener, this.gateInfo.Host, this.gateInfo.Port));
+                IConnectionMode mode = this.GetMode(this.gateInfo.Mode, new Udp(this.gateInfo.Host, this.gateInfo.Port));
                 new Thread(() => { callback(mode); }).Start();
             }
         }
