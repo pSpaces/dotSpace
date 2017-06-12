@@ -1,4 +1,4 @@
-﻿using dotSpace.Objects.Network;
+﻿using dotSpace.BaseClasses;
 using System;
 
 namespace dotSpace.Interfaces

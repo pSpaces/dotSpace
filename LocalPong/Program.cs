@@ -1,5 +1,5 @@
 ﻿using dotSpace.Interfaces;
-using dotSpace.Objects;
+using dotSpace.Objects.Spaces;
 using Pong;
 using System;
 
@@ -9,7 +9,7 @@ namespace LocalPong
     {
         static void Main(string[] args)
         {
-            ISpace ts = new Space();
+            ISpace ts = new FifoSpace();
             int width = 80;
             int height = 25;
             Game pongGame = new Game(width, height, ts);

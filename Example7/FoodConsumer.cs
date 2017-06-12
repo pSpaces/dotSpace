@@ -1,11 +1,8 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Interfaces;
-using dotSpace.Objects;
+using dotSpace.Objects.Spaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Example7
 {

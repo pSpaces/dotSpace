@@ -1,7 +1,7 @@
 ﻿using dotSpace.BaseClasses;
-using dotSpace.Enumerations;
-using dotSpace.Objects;
+using dotSpace.Interfaces;
 using dotSpace.Objects.Network;
+using dotSpace.Objects.Spaces;
 using System;
 using System.Collections.Generic;
 
@@ -17,7 +17,7 @@ namespace Example6
                 {
                     SpaceRepository repository = new SpaceRepository();
                     repository.AddGate("tcp://127.0.0.1:123?CONN");
-                    repository.AddSpace("DiningTable", new Space());
+                    repository.AddSpace("DiningTable", new FifoSpace());
                     repository.Put("DiningTable", "FORK", 1);
                     repository.Put("DiningTable", "FORK", 2);
                     repository.Put("DiningTable", "FORK", 3);
@@ -27,7 +27,7 @@ namespace Example6
                 }
                 else if (args[0] == "philosopher")
                 {
-                    RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/DiningTable?CONN");
+                    ISpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/DiningTable?CONN");
                     List<AgentBase> agents = new List<AgentBase>();
                     agents.Add(new Philosopher("Alice", 1, 5, remotespace));
                     agents.Add(new Philosopher("Charlie", 2, 5, remotespace));

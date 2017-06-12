@@ -1,36 +1,32 @@
 ﻿using dotSpace.BaseClasses;
-using dotSpace.Enumerations;
 using dotSpace.Interfaces;
+using dotSpace.Objects.Network.Protocols;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace dotSpace.Objects.Network
+namespace dotSpace.Objects.Network.Gates
 {
     public sealed class TcpGate : GateBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        private readonly int port;
         private IPAddress ipAddress;
         private TcpListener listener;
         private bool listening;
-        private Action<ISocket, ConnectionMode> callBack;
-        private ConnectionMode mode;
+        private Action<IConnectionMode> callBack;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public TcpGate(GateInfo gateInfo)
+        public TcpGate(IEncoder encoder, GateInfo gateInfo) : base(encoder, gateInfo)
         {
-            this.port = gateInfo.Port;
             this.ipAddress = IPAddress.Parse(gateInfo.Host);
-            this.mode = gateInfo.Mode;
-            this.listener = new System.Net.Sockets.TcpListener(ipAddress, this.port);
+            this.listener = new TcpListener(ipAddress, this.gateInfo.Port);
         }
 
         #endregion
@@ -38,7 +34,7 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public override void Start(Action<ISocket, ConnectionMode> callback)
+        public override void Start(Action<IConnectionMode> callback)
         {
             if (!this.listening)
             {
@@ -48,7 +44,7 @@ namespace dotSpace.Objects.Network
             }
         }
 
-        public void Stop()
+        public override void Stop()
         {
             this.listening = false;
             this.listener.Stop();
@@ -62,15 +58,16 @@ namespace dotSpace.Objects.Network
         private void Listen()
         {
             this.listener.Start(121);
-            Console.WriteLine("Current endpoint: {0}:{1}", this.ipAddress.ToString(), this.port);
+            Console.WriteLine("Current endpoint: {0}:{1}", this.ipAddress.ToString(), this.gateInfo.Port);
             Console.WriteLine("Begin listening...");
             try
             {
                 while (this.listening)
                 {
                     TcpClient client = listener.AcceptTcpClient();
-                    TcpSocket socket = new TcpSocket(client);
-                    new Thread(() => { this.callBack(socket, this.mode); }).Start();
+                    Tcp socket = new Tcp(client);
+                    IConnectionMode mode = this.GetMode(this.gateInfo.Mode, socket);
+                    new Thread(() => { this.callBack(mode); }).Start();
                 }
             }
             catch (Exception e)

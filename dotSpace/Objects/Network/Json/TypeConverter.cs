@@ -1,11 +1,11 @@
-﻿using dotSpace.Interfaces;
-using dotSpace.Objects.Network;
+﻿using dotSpace.BaseClasses;
+using dotSpace.Interfaces;
 using System;
 using System.Collections.Generic;
 
-namespace dotSpace.Objects
+namespace dotSpace.Objects.Json
 {
-    public class JsonTypeConverter
+    public class TypeConverter
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -18,7 +18,7 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        static JsonTypeConverter()
+        static TypeConverter()
         {
             unboxedTypes = new Dictionary<string, Type>();
             boxedTypes = new Dictionary<Type, string>();

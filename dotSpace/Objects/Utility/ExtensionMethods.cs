@@ -1,10 +1,9 @@
-﻿using dotSpace.Enumerations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace dotSpace.Objects
+namespace dotSpace.Objects.Utility
 {
-    public static class Utility
+    public static class ExtensionMethods
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods

@@ -1,13 +1,13 @@
 ﻿using dotSpace.Interfaces;
 
-namespace dotSpace.Objects
+namespace dotSpace.Objects.Spaces
 {
-    public class Pattern : IPattern
+    public sealed class Tuple : ITuple
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Pattern(params object[] fields)
+        public Tuple(params object[] fields)
         {
             this.Fields = fields;
         }
@@ -18,10 +18,8 @@ namespace dotSpace.Objects
         #region // Public Properties
 
         public object[] Fields { get; set; }
-
         public int Size { get { return Fields.Length; } }
-
-        public object this[int idx] { get { return this.Fields[idx]; } }
+        public object this[int idx] { get { return this.Fields[idx]; } set { this.Fields[idx] = value; } }
 
         #endregion
 

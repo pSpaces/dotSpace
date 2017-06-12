@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace dotSpace.Objects
+namespace dotSpace.Objects.Json
 {
     public class PatternValue
     {

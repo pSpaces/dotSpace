@@ -1,5 +1,5 @@
 ﻿using dotSpace.Interfaces;
-using dotSpace.Objects;
+using dotSpace.Objects.Spaces;
 using System;
 
 namespace LocalLifeforms
@@ -8,7 +8,7 @@ namespace LocalLifeforms
     {
         static void Main(string[] args)
         {
-            ISpace ts = new Space();
+            ISpace ts = new FifoSpace();
             int width = 110;
             int height = 25;
             Game lifeforms = new Game(width, height, ts);

@@ -1,7 +1,7 @@
 ﻿using dotSpace.BaseClasses;
-using dotSpace.Enumerations;
-using dotSpace.Objects;
+using dotSpace.Interfaces;
 using dotSpace.Objects.Network;
+using dotSpace.Objects.Spaces;
 using System;
 using System.Collections.Generic;
 
@@ -17,14 +17,14 @@ namespace Example7
                 {
                     SpaceRepository repository = new SpaceRepository();
                     repository.AddGate("tcp://127.0.0.1:123?CONN");
-                    repository.AddSpace("fridge", new Space());
+                    repository.AddSpace("fridge", new FifoSpace());
                     AgentBase alice = new Producer("Alice", repository.GetSpace("fridge"));
                     alice.Start();
                     return;
                 }
                 else if (args[0] == "consumer")
                 {
-                    RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/fridge?CONN");
+                    ISpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/fridge?CONN");
                     List<AgentBase> agents = new List<AgentBase>();
                     agents.Add(new FoodConsumer("Bob", remotespace));
                     agents.Add(new FoodConsumer("Charlie", remotespace));

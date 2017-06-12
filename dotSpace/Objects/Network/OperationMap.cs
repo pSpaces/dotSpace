@@ -1,20 +1,20 @@
 ﻿using dotSpace.Enumerations;
 using dotSpace.Interfaces;
-using dotSpace.Objects.Network;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
+using dotSpace.Objects.Spaces;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace dotSpace.Objects
+namespace dotSpace.Objects.Network
 {
     public sealed class OperationMap
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        private SpaceRepository repository;
+        private IRepository repository;
         private Dictionary<Type, Func<BasicRequest, BasicResponse>> operationMap;
 
         #endregion
@@ -22,7 +22,7 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public OperationMap(SpaceRepository repository)
+        public OperationMap(IRepository repository)
         {
             this.repository = repository;
             this.operationMap = new Dictionary<Type, Func<BasicRequest, BasicResponse>>();
@@ -128,7 +128,7 @@ namespace dotSpace.Objects
             if (ts != null)
             {
                 PutRequest putReq = (PutRequest)request;
-                ts.Put(new Tuple(putReq.Tuple));
+                ts.Put(new Objects.Spaces.Tuple(putReq.Tuple));
                 return new PutResponse(request.Source, request.Session, request.Target, StatusCode.OK, StatusMessage.OK);
             }
             return new PutResponse(request.Source, request.Session, request.Target, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);

@@ -1,5 +1,6 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Enumerations;
+using dotSpace.Objects.Json;
 using dotSpace.Objects.Network.Messages.Requests;
 
 namespace dotSpace.Objects.Network
@@ -11,7 +12,7 @@ namespace dotSpace.Objects.Network
 
         public override string Encode(MessageBase message)
         {
-            JsonTypeConverter.Box(message);
+            TypeConverter.Box(message);
             return this.Serialize(message);
         }
 
@@ -29,7 +30,7 @@ namespace dotSpace.Objects.Network
                 case ActionType.PUT_REQUEST: breq = this.Deserialize<PutRequest>(msg); break;
             }
 
-            JsonTypeConverter.Unbox(breq);
+            TypeConverter.Unbox(breq);
             return breq;
         }
 

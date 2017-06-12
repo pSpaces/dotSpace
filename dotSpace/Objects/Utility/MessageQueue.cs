@@ -1,8 +1,9 @@
-﻿using dotSpace.Objects.Network;
+﻿using dotSpace.BaseClasses;
+using dotSpace.Objects.Network;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace dotSpace.Objects
+namespace dotSpace.Objects.Utility
 {
     public sealed class MessageQueue
     {

@@ -1,11 +1,10 @@
-﻿using dotSpace.Enumerations;
-using dotSpace.Objects.Network;
-using System;
+﻿using System;
 
 namespace dotSpace.Interfaces
 {
     public interface IGate
     {
-        void Start(Action<ISocket, ConnectionMode> callback);
+        void Start(Action<IConnectionMode> callback);
+        void Stop();
     }
 }

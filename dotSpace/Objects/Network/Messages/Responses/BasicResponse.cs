@@ -1,4 +1,5 @@
-﻿using dotSpace.Enumerations;
+﻿using dotSpace.BaseClasses;
+using dotSpace.Enumerations;
 
 namespace dotSpace.Objects.Network.Messages.Responses
 {

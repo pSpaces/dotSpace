@@ -5,16 +5,15 @@ using dotSpace.Objects.Network;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
 using System;
-using System.Net;
 
 namespace dotSpace.BaseClasses
 {
-    public abstract class ConnectionModeBase
+    public abstract class ConnectionModeBase : IConnectionMode
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        protected ISocket socket;
+        protected IProtocol protocol;
         protected IEncoder encoder;
 
         #endregion
@@ -22,9 +21,9 @@ namespace dotSpace.BaseClasses
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public ConnectionModeBase(ISocket socket, IEncoder encoder)
+        public ConnectionModeBase(IProtocol protocol, IEncoder encoder)
         {
-            this.socket = socket;
+            this.protocol = protocol;
             this.encoder = encoder;
         }
 

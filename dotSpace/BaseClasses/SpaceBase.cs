@@ -1,12 +1,14 @@
 ﻿using dotSpace.Interfaces;
+using dotSpace.Objects.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace dotSpace.Objects
+
+namespace dotSpace.BaseClasses
 {
-    public sealed class Space : ISpace
+    public abstract class SpaceBase : ISpace
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -20,7 +22,7 @@ namespace dotSpace.Objects
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Space()
+        public SpaceBase()
         {
             this.buckets = new Dictionary<ulong, List<ITuple>>();
             this.bucketLocks = new Dictionary<ulong, ReaderWriterLockSlim>();
@@ -150,15 +152,22 @@ namespace dotSpace.Objects
             Monitor.Exit(this.bucketAccess);
 
             bucketLock.EnterWriteLock();
-            bucket.Add(new Tuple(values));
+            bucket.Insert(this.GetIndex(bucket.Count), new Objects.Spaces.Tuple(values));
             bucketLock.ExitWriteLock();
             this.Awake(bucket);
         }
 
         #endregion
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Protected Methods
+
+        protected abstract int GetIndex(int size); 
+
+        #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Private Methods
+
 
         private ulong ComputeHash(object[] values)
         {

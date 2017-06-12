@@ -1,6 +1,6 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Interfaces;
-using dotSpace.Objects;
+using dotSpace.Objects.Spaces;
 using System;
 
 namespace Example4

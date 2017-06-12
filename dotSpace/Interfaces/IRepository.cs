@@ -4,6 +4,8 @@ namespace dotSpace.Interfaces
 {
     public interface IRepository
     {
+        void AddGate(string uri);
+        void AddSpace(string identifier, ISpace tuplespace);
         ISpace GetSpace(string target);
         ITuple Get(string target, IPattern pattern);
         ITuple Get(string target, params object[] pattern);

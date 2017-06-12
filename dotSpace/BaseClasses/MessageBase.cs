@@ -1,9 +1,8 @@
 ﻿using dotSpace.Enumerations;
 using System;
-using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 
-namespace dotSpace.Objects.Network
+namespace dotSpace.BaseClasses
 {
     public abstract class MessageBase
     {

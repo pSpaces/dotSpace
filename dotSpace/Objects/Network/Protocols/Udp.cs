@@ -1,33 +1,32 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Interfaces;
 using System;
-using System.IO;
+using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
-namespace dotSpace.Objects.Network
+namespace dotSpace.Objects.Network.Protocols
 {
-    public sealed class TcpSocket : SocketBase
+    public sealed class Udp : ProtocolBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        private TcpClient client;
-        private NetworkStream netStream;
-        private StreamReader reader;
-        private StreamWriter writer;
+        private UdpClient client;
+        private IPEndPoint endpoint;
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public TcpSocket(TcpClient client)
+        public Udp(UdpClient client, string host, int port)
         {
-            this.client = client;
-            this.netStream = client.GetStream();
-            this.reader = new StreamReader(this.netStream);
-            this.writer = new StreamWriter(this.netStream);
-            this.writer.AutoFlush = true;
+            this.client = client;            
+            //if(connect)
+            //this.client.Connect(host, port);
+            //else
+            //    this.client.Client.Bind()
         }
 
         #endregion
@@ -39,7 +38,8 @@ namespace dotSpace.Objects.Network
         {
             try
             {
-                string msg = reader.ReadLine();
+                Byte[] receiveBytes = this.client.Receive(ref this.endpoint);
+                string msg = Encoding.ASCII.GetString(receiveBytes);
                 return (MessageBase)encoder.Decode(msg);
             }
             catch (Exception e)
@@ -53,7 +53,8 @@ namespace dotSpace.Objects.Network
             try
             {
                 string msg = encoder.Encode(message);
-                writer.WriteLine(msg);
+                byte[] data  = Encoding.ASCII.GetBytes(msg);
+                this.client.Send(data, data.Length);
             }
             catch (Exception e)
             {
@@ -62,10 +63,8 @@ namespace dotSpace.Objects.Network
         }
         public override void Close()
         {
-            if (this.client.Connected)
-            {
-                this.client.Close();
-            }
+
+            this.client.Close();
         }
 
         #endregion

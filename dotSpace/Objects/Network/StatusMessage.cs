@@ -1,4 +1,4 @@
-﻿namespace dotSpace.Objects
+﻿namespace dotSpace.Objects.Network
 {
     public static class StatusMessage
     {

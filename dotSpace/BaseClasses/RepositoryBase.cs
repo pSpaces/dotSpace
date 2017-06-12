@@ -1,57 +1,125 @@
 ﻿using dotSpace.Interfaces;
-using System;
+using dotSpace.Objects.Network;
+using dotSpace.Objects.Network.Gates;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
 
 namespace dotSpace.BaseClasses
 {
     public abstract class RepositoryBase : IRepository
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Fields
+
+        protected List<IGate> gates;
+        protected IEncoder encoder;
+        protected Dictionary<string, ISpace> spaces;
+        protected GateFactory gateFactory;
+
+        #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
         public RepositoryBase()
         {
+            this.spaces = new Dictionary<string, ISpace>();
+            this.gates = new List<IGate>();
+            this.encoder = new ResponseEncoder();
+            this.gateFactory = new GateFactory();
         }
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
-        public abstract ISpace GetSpace(string target);
-        public abstract ITuple Get(string target, IPattern pattern);
-        public abstract ITuple Get(string target, params object[] pattern);
-        public abstract ITuple GetP(string target, IPattern pattern);
-        public abstract ITuple GetP(string target, params object[] pattern);
-        public abstract IEnumerable<ITuple> GetAll(string target, IPattern pattern);
-        public abstract IEnumerable<ITuple> GetAll(string target, params object[] pattern);
-        public abstract ITuple Query(string target, IPattern pattern);
-        public abstract ITuple Query(string target, params object[] pattern);
-        public abstract ITuple QueryP(string target, IPattern pattern);
-        public abstract ITuple QueryP(string target, params object[] pattern);
-        public abstract IEnumerable<ITuple> QueryAll(string target, IPattern pattern);
-        public abstract IEnumerable<ITuple> QueryAll(string target, params object[] pattern);
-        public abstract void Put(string target, ITuple tuple);
-        public abstract void Put(string target, params object[] tuple);
-        public IPEndPoint CreateEndpoint(string address, int port)
+
+        public void AddGate(string uri)
         {
-            IPAddress ipAddress = IPAddress.Parse(address);
-            return new IPEndPoint(ipAddress, port);
-        }
-        public string GetLocalIPAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
+            IGate gate = this.gateFactory.CreateGate(uri, this.encoder);
+            if (gate != null)
             {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
+                this.gates.Add(gate);
+                gate.Start(this.OnConnect);
             }
-            throw new Exception("Local IP Address Not Found!");
-        } 
+        }
+        public void AddSpace(string identifier, ISpace tuplespace)
+        {
+            if (!this.spaces.ContainsKey(identifier))
+            {
+                this.spaces.Add(identifier, tuplespace);
+            }
+        }
+        public ISpace GetSpace(string target)
+        {
+            if (this.spaces.ContainsKey(target))
+            {
+                return this.spaces[target];
+            }
+            return null;
+        }
+        public ITuple Get(string target, IPattern pattern)
+        {
+            return this.GetSpace(target)?.Get(pattern);
+        }
+        public ITuple Get(string target, params object[] pattern)
+        {
+            return this.GetSpace(target)?.Get(pattern);
+        }
+        public ITuple GetP(string target, IPattern pattern)
+        {
+            return this.GetSpace(target)?.GetP(pattern);
+        }
+        public ITuple GetP(string target, params object[] pattern)
+        {
+            return this.GetSpace(target)?.GetP(pattern);
+        }
+        public IEnumerable<ITuple> GetAll(string target, IPattern pattern)
+        {
+            return this.GetSpace(target)?.GetAll(pattern);
+        }
+        public IEnumerable<ITuple> GetAll(string target, params object[] pattern)
+        {
+            return this.GetSpace(target)?.GetAll(pattern);
+        }
+        public ITuple Query(string target, IPattern pattern)
+        {
+            return this.GetSpace(target)?.Query(pattern);
+        }
+        public ITuple Query(string target, params object[] pattern)
+        {
+            return this.GetSpace(target)?.Query(pattern);
+        }
+        public ITuple QueryP(string target, IPattern pattern)
+        {
+            return this.GetSpace(target)?.QueryP(pattern);
+        }
+        public ITuple QueryP(string target, params object[] pattern)
+        {
+            return this.GetSpace(target)?.QueryP(pattern);
+        }
+        public IEnumerable<ITuple> QueryAll(string target, IPattern pattern)
+        {
+            return this.GetSpace(target)?.QueryAll(pattern);
+        }
+        public IEnumerable<ITuple> QueryAll(string target, params object[] pattern)
+        {
+            return this.GetSpace(target)?.QueryAll(pattern);
+        }
+        public void Put(string target, ITuple tuple)
+        {
+            this.GetSpace(target)?.Put(tuple);
+        }
+        public void Put(string target, params object[] tuple)
+        {
+            this.GetSpace(target)?.Put(tuple);
+        }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Protected Methods
+
+        protected abstract void OnConnect(IConnectionMode mode);
 
         #endregion
     }

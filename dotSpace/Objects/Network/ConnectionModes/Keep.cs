@@ -2,10 +2,11 @@
 using dotSpace.Interfaces;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
+using dotSpace.Objects.Utility;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace dotSpace.Objects.Network.Protocols
+namespace dotSpace.Objects.Network.ConnectionModes
 {
     public sealed class Keep : ConnectionModeBase
     {
@@ -20,7 +21,7 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Keep(ISocket socket, IEncoder encoder) : base(socket, encoder)
+        public Keep(IProtocol protocol, IEncoder encoder) : base(protocol, encoder)
         {
             this.messageQueue = new MessageQueue();
             this.receiveThread = new Thread(this.Receive);
@@ -35,15 +36,15 @@ namespace dotSpace.Objects.Network.Protocols
         {
             while (true) // FIX THIS
             {
-                BasicRequest request = (BasicRequest)this.socket.Receive(this.encoder);
+                BasicRequest request = (BasicRequest)this.protocol.Receive(this.encoder);
                 var t = Task.Factory.StartNew(() =>
                 {
                     BasicRequest req = request;
                     req = this.ValidateRequest(req);
                     BasicResponse response = operationMap.Execute(req);
-                    lock (this.socket)
+                    lock (this.protocol)
                     {
-                        this.socket.Send(response, this.encoder);
+                        this.protocol.Send(response, this.encoder);
                     }
                 }
                 );
@@ -52,11 +53,11 @@ namespace dotSpace.Objects.Network.Protocols
 
         public override T PerformRequest<T>(BasicRequest request)
         {
-            lock (this.socket)
+            lock (this.protocol)
             {
                 if (!this.receiveThread.IsAlive)
                     this.receiveThread.Start();
-                this.socket.Send(request, this.encoder);
+                this.protocol.Send(request, this.encoder);
             }
             return (T)this.messageQueue.Get(request.Session);
         }
@@ -70,7 +71,7 @@ namespace dotSpace.Objects.Network.Protocols
         {
             while (true) // FIX THIS
             {
-                MessageBase message = this.socket.Receive(this.encoder);
+                MessageBase message = this.protocol.Receive(this.encoder);
                 message = this.ValidateResponse(message);
                 this.messageQueue.Put(message);
             }

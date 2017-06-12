@@ -1,6 +1,6 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Interfaces;
-using dotSpace.Objects;
+using dotSpace.Objects.Spaces;
 using System;
 
 namespace Example1
@@ -9,7 +9,7 @@ namespace Example1
     {
         static void Main(string[] args)
         {
-            Space dtu = new Space();
+            ISpace dtu = new FifoSpace();
             dtu.Put("Hello world!");
             AgentBase student = new Student("sxxxxxx", dtu);
             student.Start();

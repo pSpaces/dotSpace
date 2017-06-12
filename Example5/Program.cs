@@ -1,8 +1,7 @@
 ﻿using dotSpace.BaseClasses;
-using dotSpace.Enumerations;
 using dotSpace.Interfaces;
-using dotSpace.Objects;
 using dotSpace.Objects.Network;
+using dotSpace.Objects.Spaces;
 using System;
 
 namespace Example5
@@ -13,10 +12,10 @@ namespace Example5
         {
             SpaceRepository repository = new SpaceRepository();
             repository.AddGate("tcp://127.0.0.1:123?CONN");
-            repository.AddSpace("dtu", new Space());
+            repository.AddSpace("dtu", new FifoSpace());
             repository.Put("dtu", "Hello world!");
 
-            RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/dtu?CONN");
+            ISpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/dtu?CONN");
             AgentBase student = new Student("sxxxxxx", remotespace);
             student.Start();
             ITuple tuple = repository.Get("dtu",typeof(string), typeof(string));

@@ -3,7 +3,7 @@ using dotSpace.Interfaces;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
 
-namespace dotSpace.Objects.Network.Protocols
+namespace dotSpace.Objects.Network.ConnectionModes
 {
 
     public sealed class Conn : ConnectionModeBase
@@ -11,7 +11,7 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Conn(ISocket socket, IEncoder encoder) : base(socket, encoder)
+        public Conn(IProtocol socket, IEncoder encoder) : base(socket, encoder)
         {
         }
 
@@ -22,17 +22,17 @@ namespace dotSpace.Objects.Network.Protocols
 
         public override void ProcessRequest(OperationMap operationMap)
         {
-            BasicRequest request = (BasicRequest)this.socket.Receive(this.encoder);
+            BasicRequest request = (BasicRequest)this.protocol.Receive(this.encoder);
             request = this.ValidateRequest(request);
             BasicResponse response = operationMap.Execute(request);
-            this.socket.Send(response, this.encoder);
+            this.protocol.Send(response, this.encoder);
         }
 
         public override T PerformRequest<T>(BasicRequest request)
         {
-            this.socket.Send(request, this.encoder);
-            MessageBase message = socket.Receive(this.encoder);
-            this.socket.Close();
+            this.protocol.Send(request, this.encoder);
+            MessageBase message = protocol.Receive(this.encoder);
+            this.protocol.Close();
             return (T)this.ValidateResponse(message);
         } 
 

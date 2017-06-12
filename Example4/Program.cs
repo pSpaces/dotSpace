@@ -1,5 +1,6 @@
 ﻿using dotSpace.BaseClasses;
-using dotSpace.Objects;
+using dotSpace.Interfaces;
+using dotSpace.Objects.Spaces;
 using System.Collections.Generic;
 
 namespace Example4
@@ -8,7 +9,7 @@ namespace Example4
     {
         static void Main(string[] args)
         {
-            Space ts = new Space();
+            ISpace ts = new FifoSpace();
             List<AgentBase> agents = new List<AgentBase>();
 
             // We create Alice and Bob as Producer/Consumer agents

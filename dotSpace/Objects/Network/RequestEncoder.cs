@@ -1,5 +1,6 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Enumerations;
+using dotSpace.Objects.Json;
 using dotSpace.Objects.Network.Messages.Responses;
 
 namespace dotSpace.Objects.Network
@@ -7,11 +8,10 @@ namespace dotSpace.Objects.Network
     public sealed class RequestEncoder : EncoderBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
-
         #region // Public Methods
         public override string Encode(MessageBase message)
         {
-            JsonTypeConverter.Box(message);
+            TypeConverter.Box(message);
             return this.Serialize(message, typeof(PatternBinding));
         }
 
@@ -28,11 +28,10 @@ namespace dotSpace.Objects.Network
                 case ActionType.QUERYALL_RESPONSE: breq = this.Deserialize<QueryAllResponse>(msg); break;
                 case ActionType.PUT_RESPONSE: breq = this.Deserialize<PutResponse>(msg); break;
             }
-            JsonTypeConverter.Unbox(breq);
 
+            TypeConverter.Unbox(breq);
             return breq;
         }
-
 
         #endregion
     }
