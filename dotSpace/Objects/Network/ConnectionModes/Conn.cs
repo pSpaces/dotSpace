@@ -11,7 +11,7 @@ namespace dotSpace.Objects.Network.ConnectionModes
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Conn(IProtocol socket, IEncoder encoder) : base(socket, encoder)
+        public Conn(IProtocol protocol, IEncoder encoder) : base(protocol, encoder)
         {
         }
 

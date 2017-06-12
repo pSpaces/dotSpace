@@ -65,8 +65,8 @@ namespace dotSpace.Objects.Network.Gates
                 while (this.listening)
                 {
                     TcpClient client = listener.AcceptTcpClient();
-                    Tcp socket = new Tcp(client);
-                    IConnectionMode mode = this.GetMode(this.gateInfo.Mode, socket);
+                    Tcp protocol = new Tcp(client);
+                    IConnectionMode mode = this.GetMode(this.gateInfo.Mode, protocol);
                     new Thread(() => { this.callBack(mode); }).Start();
                 }
             }

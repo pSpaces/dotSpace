@@ -10,7 +10,7 @@ namespace dotSpace.Objects.Network.ConnectionModes
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public Push(IProtocol socket, IEncoder encoder) : base(socket, encoder)
+        public Push(IProtocol protocol, IEncoder encoder) : base(protocol, encoder)
         {
         }
 
