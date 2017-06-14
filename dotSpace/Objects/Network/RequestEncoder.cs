@@ -1,5 +1,6 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Enumerations;
+using dotSpace.Interfaces;
 using dotSpace.Objects.Json;
 using dotSpace.Objects.Network.Messages.Responses;
 
@@ -9,13 +10,13 @@ namespace dotSpace.Objects.Network
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
-        public override string Encode(MessageBase message)
+        public override string Encode(IMessage message)
         {
             TypeConverter.Box(message);
             return this.Serialize(message, typeof(PatternBinding));
         }
 
-        public override MessageBase Decode(string msg)
+        public override IMessage Decode(string msg)
         {
             BasicResponse breq = this.Deserialize<BasicResponse>(msg);
             switch (breq.Actiontype)

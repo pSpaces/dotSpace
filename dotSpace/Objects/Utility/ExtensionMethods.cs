@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace dotSpace.Objects.Utility
 {
-    public static class ExtensionMethods
+    internal static class ExtensionMethods
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods

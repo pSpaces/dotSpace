@@ -32,7 +32,7 @@ namespace dotSpace.Objects.Network.ConnectionModes
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public override void ProcessRequest(OperationMap operationMap)
+        public override void ProcessRequest(IOperationMap operationMap)
         {
             while (true) // FIX THIS
             {
@@ -40,8 +40,8 @@ namespace dotSpace.Objects.Network.ConnectionModes
                 var t = Task.Factory.StartNew(() =>
                 {
                     BasicRequest req = request;
-                    req = this.ValidateRequest(req);
-                    BasicResponse response = operationMap.Execute(req);
+                    req = (BasicRequest)this.ValidateRequest(req);
+                    BasicResponse response = (BasicResponse)operationMap.Execute(req);
                     lock (this.protocol)
                     {
                         this.protocol.Send(response, this.encoder);
@@ -51,7 +51,7 @@ namespace dotSpace.Objects.Network.ConnectionModes
             }
         }
 
-        public override T PerformRequest<T>(BasicRequest request)
+        public override T PerformRequest<T>(IMessage request)
         {
             lock (this.protocol)
             {
@@ -71,8 +71,8 @@ namespace dotSpace.Objects.Network.ConnectionModes
         {
             while (true) // FIX THIS
             {
-                MessageBase message = this.protocol.Receive(this.encoder);
-                message = this.ValidateResponse(message);
+                MessageBase message = (MessageBase)this.protocol.Receive(this.encoder);
+                message = (MessageBase)this.ValidateResponse(message);
                 this.messageQueue.Put(message);
             }
         }

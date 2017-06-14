@@ -37,7 +37,7 @@ namespace dotSpace.Objects.Json
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public static void Box(MessageBase message)
+        public static void Box(IMessage message)
         {
             if (message is IResult)
             {

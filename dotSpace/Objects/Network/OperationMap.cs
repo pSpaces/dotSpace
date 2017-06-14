@@ -9,13 +9,13 @@ using System.Linq;
 
 namespace dotSpace.Objects.Network
 {
-    public sealed class OperationMap
+    internal sealed class OperationMap : IOperationMap
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
         private IRepository repository;
-        private Dictionary<Type, Func<BasicRequest, BasicResponse>> operationMap;
+        private Dictionary<Type, Func<IMessage, IMessage>> operationMap;
 
         #endregion
 
@@ -25,7 +25,7 @@ namespace dotSpace.Objects.Network
         public OperationMap(IRepository repository)
         {
             this.repository = repository;
-            this.operationMap = new Dictionary<Type, Func<BasicRequest, BasicResponse>>();
+            this.operationMap = new Dictionary<Type, Func<IMessage, IMessage>>();
             this.operationMap.Add(typeof(GetRequest), this.PerformGet);
             this.operationMap.Add(typeof(GetPRequest), this.PerformGetP);
             this.operationMap.Add(typeof(GetAllRequest), this.PerformGetAll);
@@ -40,7 +40,7 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public BasicResponse Execute(BasicRequest request)
+        public IMessage Execute(IMessage request)
         {
             Type requestType = request.GetType();
             if (this.operationMap.ContainsKey(requestType))
@@ -56,7 +56,7 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Private Methods
 
-        private BasicResponse PerformGet(BasicRequest request)
+        private IMessage PerformGet(IMessage request)
         {
             ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
@@ -67,7 +67,7 @@ namespace dotSpace.Objects.Network
             }
             return new GetResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
-        private BasicResponse PerformGetP(BasicRequest request)
+        private IMessage PerformGetP(IMessage request)
         {
             ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
@@ -78,7 +78,7 @@ namespace dotSpace.Objects.Network
             }
             return new GetPResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
-        private BasicResponse PerformGetAll(BasicRequest request)
+        private IMessage PerformGetAll(IMessage request)
         {
             ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
@@ -89,7 +89,7 @@ namespace dotSpace.Objects.Network
             }
             return new GetAllResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
-        private BasicResponse PerformQuery(BasicRequest request)
+        private IMessage PerformQuery(IMessage request)
         {
             ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
@@ -100,7 +100,7 @@ namespace dotSpace.Objects.Network
             }
             return new QueryResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
-        private BasicResponse PerformQueryP(BasicRequest request)
+        private IMessage PerformQueryP(IMessage request)
         {
             ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
@@ -111,7 +111,7 @@ namespace dotSpace.Objects.Network
             }
             return new QueryPResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
-        private BasicResponse PerformQueryAll(BasicRequest request)
+        private IMessage PerformQueryAll(IMessage request)
         {
             ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)
@@ -122,7 +122,7 @@ namespace dotSpace.Objects.Network
             }
             return new QueryAllResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
-        private BasicResponse PerformPut(BasicRequest request)
+        private IMessage PerformPut(IMessage request)
         {
             ISpace ts = this.repository.GetSpace(request.Target);
             if (ts != null)

@@ -1,6 +1,6 @@
 ﻿namespace dotSpace.Objects.Network
 {
-    public static class StatusMessage
+    internal static class StatusMessage
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields

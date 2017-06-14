@@ -1,16 +1,17 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.Interfaces;
 using dotSpace.Objects.Network;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace dotSpace.Objects.Utility
 {
-    public sealed class MessageQueue
+    internal sealed class MessageQueue
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        private readonly Dictionary<string, MessageBase> messages;
+        private readonly Dictionary<string, IMessage> messages;
         private readonly ReaderWriterLockSlim rwLock;
 
         #endregion
@@ -20,7 +21,7 @@ namespace dotSpace.Objects.Utility
 
         public MessageQueue()
         {
-            this.messages = new Dictionary<string, MessageBase>();
+            this.messages = new Dictionary<string, IMessage>();
             this.rwLock = new ReaderWriterLockSlim();
         }
 
@@ -29,9 +30,9 @@ namespace dotSpace.Objects.Utility
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public MessageBase Get(string key)
+        public IMessage Get(string key)
         {
-            MessageBase t = this.WaitForSession(key);
+            MessageBase t = (MessageBase)this.WaitForSession(key);
             bool successs = true;
             rwLock.EnterWriteLock();
             successs = messages.Remove(key);
@@ -39,7 +40,7 @@ namespace dotSpace.Objects.Utility
             return successs ? t : null;
         }
 
-        public void Put(MessageBase message)
+        public void Put(IMessage message)
         {
             rwLock.EnterWriteLock();
             messages.Add(message.Session, message);
@@ -52,19 +53,19 @@ namespace dotSpace.Objects.Utility
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Private Methods
 
-        private MessageBase WaitForSession(string key)
+        private IMessage WaitForSession(string key)
         {
-            MessageBase t;
+            IMessage t;
             while (((t = this.Find(key)) == null))
             {
                 this.Wait(messages);
             }
             return t;
         }
-        private MessageBase Find(string key)
+        private IMessage Find(string key)
         {
             rwLock.EnterReadLock();
-            MessageBase msg = this.messages.ContainsKey(key) ? this.messages[key] : null;
+            MessageBase msg = this.messages.ContainsKey(key) ? (MessageBase)this.messages[key] : null;
             rwLock.ExitReadLock();
             return msg;
         }

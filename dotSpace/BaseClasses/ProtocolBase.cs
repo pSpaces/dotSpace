@@ -13,11 +13,11 @@ namespace dotSpace.BaseClasses
         /// <summary>
         /// Template method returning a decoded message.
         /// </summary>
-        public abstract MessageBase Receive(IEncoder encoder);
+        public abstract IMessage Receive(IEncoder encoder);
         /// <summary>
         /// Template method for sending an encoded message.
         /// </summary>
-        public abstract void Send(MessageBase message, IEncoder encoder);
+        public abstract void Send(IMessage message, IEncoder encoder);
         /// <summary>
         /// Closes the communication with the endpoint.
         /// </summary>

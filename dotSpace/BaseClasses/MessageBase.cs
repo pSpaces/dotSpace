@@ -1,4 +1,5 @@
 ﻿using dotSpace.Enumerations;
+using dotSpace.Interfaces;
 using System;
 using System.Web.Script.Serialization;
 
@@ -7,7 +8,7 @@ namespace dotSpace.BaseClasses
     /// <summary>
     /// Toplevel entity containing the minimal properties any message contain. This is an abstract class
     /// </summary>
-    public abstract class MessageBase
+    public abstract class MessageBase : IMessage
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors

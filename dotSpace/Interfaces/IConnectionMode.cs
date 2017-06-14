@@ -12,10 +12,10 @@ namespace dotSpace.Interfaces
         /// <summary>
         /// Method for processing requests by the SpaceRepository executing the requested action.
         /// </summary>
-        void ProcessRequest(OperationMap operationMap);
+        void ProcessRequest(IOperationMap operationMap);
         /// <summary>
         /// Method for executing a request by the RemoteSpace.
         /// </summary>
-        T PerformRequest<T>(BasicRequest request) where T : BasicResponse;
+        T PerformRequest<T>(IMessage request) where T : IMessage;
     }
 }

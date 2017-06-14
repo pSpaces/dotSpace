@@ -53,6 +53,7 @@
     <Compile Include="BaseClasses\SpaceBase.cs" />
     <Compile Include="Enumerations\Protocol.cs" />
     <Compile Include="Enumerations\StatusCode.cs" />
+    <Compile Include="Interfaces\IOperationMap.cs" />
     <Compile Include="Interfaces\IConnectionMode.cs" />
     <Compile Include="Interfaces\IEncoder.cs" />
     <Compile Include="Interfaces\IGate.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Interfaces\IEnumerableResult.cs" />
     <Compile Include="Interfaces\IResult.cs" />
     <Compile Include="Interfaces\IProtocol.cs" />
+    <Compile Include="Interfaces\IMessage.cs" />
     <Compile Include="Interfaces\IWriteRequest.cs" />
     <Compile Include="Interfaces\IReadRequest.cs" />
     <Compile Include="Objects\Network\Gates\GateFactory.cs" />

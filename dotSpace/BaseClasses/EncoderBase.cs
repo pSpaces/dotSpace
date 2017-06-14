@@ -23,7 +23,7 @@ namespace dotSpace.BaseClasses
         /// <summary>
         /// Decomposes the passed object into a json string.
         /// </summary>
-        public string Serialize(MessageBase message, params Type[] types)
+        public string Serialize(IMessage message, params Type[] types)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             return serializer.Serialize(message);
@@ -31,11 +31,11 @@ namespace dotSpace.BaseClasses
         /// <summary>
         /// Template method for deserializing and unboxing the interoperable types specified in json into valid .NET primitive types.
         /// </summary>
-        public abstract MessageBase Decode(string msg);
+        public abstract IMessage Decode(string msg);
         /// <summary>
         /// Template method for serializing and boxing the passed message into interoperable types specified as a json string.
         /// </summary>
-        public abstract string Encode(MessageBase message);
+        public abstract string Encode(IMessage message);
 
         #endregion
     }

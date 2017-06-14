@@ -8,7 +8,7 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        private OperationMap operationMap;
+        private IOperationMap operationMap;
 
         #endregion
 

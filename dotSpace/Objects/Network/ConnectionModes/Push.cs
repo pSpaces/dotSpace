@@ -19,19 +19,19 @@ namespace dotSpace.Objects.Network.ConnectionModes
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public override void ProcessRequest(OperationMap operationMap)
+        public override void ProcessRequest(IOperationMap operationMap)
         {
             BasicRequest request = (BasicRequest)this.protocol.Receive(this.encoder);
-            request = this.ValidateRequest(request);
-            BasicResponse response = operationMap.Execute(request);
+            request = (BasicRequest)this.ValidateRequest(request);
+            BasicResponse response = (BasicResponse)operationMap.Execute(request);
             this.protocol.Send(response, this.encoder);
             this.protocol.Close();
         }
 
-        public override T PerformRequest<T>(BasicRequest request)
+        public override T PerformRequest<T>(IMessage request)
         {
             this.protocol.Send(request, this.encoder);
-            MessageBase message = protocol.Receive(this.encoder);
+            MessageBase message = (MessageBase)protocol.Receive(this.encoder);
             this.protocol.Close();
             return (T)this.ValidateResponse(message);
         }

@@ -40,11 +40,11 @@ namespace dotSpace.BaseClasses
         /// <summary>
         /// Template method for processing requests by the SpaceRepository executing the requested action.
         /// </summary>
-        public abstract void ProcessRequest(OperationMap operationMap);
+        public abstract void ProcessRequest(IOperationMap operationMap);
         /// <summary>
         /// Template method for executing a request by the RemoteSpace.
         /// </summary>
-        public abstract T PerformRequest<T>(BasicRequest request) where T : BasicResponse;
+        public abstract T PerformRequest<T>(IMessage request) where T : IMessage;
 
         #endregion
 
@@ -54,7 +54,7 @@ namespace dotSpace.BaseClasses
         /// <summary>
         /// Validates the passed response. If the message is a response and the response code is OK the message is returned; otherwise an exception is thrown.
         /// </summary>
-        protected BasicResponse ValidateResponse(MessageBase message)
+        protected IMessage ValidateResponse(IMessage message)
         {
             if (message is BasicResponse)
             {
@@ -70,7 +70,7 @@ namespace dotSpace.BaseClasses
         /// <summary>
         /// Validates the passed Request. If the message is a request the message is returned; otherwise an exception is thrown.
         /// </summary>
-        protected BasicRequest ValidateRequest(MessageBase message)
+        protected IMessage ValidateRequest(IMessage message)
         {
             if (message is BasicRequest)
             {

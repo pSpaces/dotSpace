@@ -31,7 +31,7 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public override MessageBase Receive(IEncoder encoder)
+        public override IMessage Receive(IEncoder encoder)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace dotSpace.Objects.Network.Protocols
             }
             return null;
         }
-        public override void Send(MessageBase message, IEncoder encoder)
+        public override void Send(IMessage message, IEncoder encoder)
         {
             try
             {
