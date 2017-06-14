@@ -1,15 +1,23 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.Enumerations;
 using dotSpace.Interfaces;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
 
 namespace dotSpace.Objects.Network.ConnectionModes
 {
+    /// <summary>
+    /// Implements the mechanisms to support the PUSH connection scheme.
+    /// This connection mode is incomplete, and is thus not supported.
+    /// </summary>
     public sealed class Push : ConnectionModeBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the Push class. 
+        /// </summary>
         public Push(IProtocol protocol, IEncoder encoder) : base(protocol, encoder)
         {
         }
@@ -19,19 +27,18 @@ namespace dotSpace.Objects.Network.ConnectionModes
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        /// <summary>
+        /// Not implemented.
+        /// </summary>
         public override void ProcessRequest(IOperationMap operationMap)
         {
-            BasicRequest request = (BasicRequest)this.protocol.Receive(this.encoder);
-            request = (BasicRequest)this.ValidateRequest(request);
-            BasicResponse response = (BasicResponse)operationMap.Execute(request);
-            this.protocol.Send(response, this.encoder);
-            this.protocol.Close();
         }
-
+        /// <summary>
+        /// Not implemented. 
+        /// </summary>
         public override T PerformRequest<T>(IMessage request)
         {
-            this.protocol.Send(request, this.encoder);
-            MessageBase message = (MessageBase)protocol.Receive(this.encoder);
+            IMessage message = new BasicResponse(request.Actiontype, request.Source, request.Session, request.Target, StatusCode.NOT_IMPLEMENTED, StatusMessage.NOT_IMPLEMENTED);
             this.protocol.Close();
             return (T)this.ValidateResponse(message);
         }

@@ -181,7 +181,6 @@ namespace dotSpace.BaseClasses
         /// <summary>
         /// Template method that is called when the repository receives an incoming connection.
         /// </summary>
-        /// <param name="mode"></param>
         protected abstract void OnConnect(IConnectionMode mode);
 
         #endregion

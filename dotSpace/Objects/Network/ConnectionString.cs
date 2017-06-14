@@ -4,8 +4,14 @@ using System.Text.RegularExpressions;
 
 namespace dotSpace.Objects.Network
 {
+    /// <summary>
+    /// This entity maps a valid connection string to a property based representation.
+    /// </summary>
     public class ConnectionString
     {
+        /// <summary>
+        /// Initializes a new instances of the ConnectionString class.
+        /// </summary>
         public ConnectionString(string uri)
         {
             Match match = new Regex(@"^(.+://){0,1}(.[^:\/\?]+)(:[0-9]+){0,1}(\/[a-zA-Z]+){0,1}(\?[a-zA-Z]+){0,1}$").Match(uri);
@@ -21,10 +27,29 @@ namespace dotSpace.Objects.Network
             }
         }
 
+        /// <summary>
+        /// Gets the specified protocol. This property is optional. If no value was defined, it defaults to TCP.
+        /// </summary>
         public Protocol Protocol { get; private set; }
+
+        /// <summary>
+        /// Gets the specified host. 
+        /// </summary>
         public string Host { get; private set; }
+
+        /// <summary>
+        /// Gets the specified port. This property is optional. If no value was defined, it defaults to 31415.
+        /// </summary>
         public int Port { get; private set; }
+
+        /// <summary>
+        /// Gets the specified target space. This property is optional depending on usage.
+        /// </summary>
         public string Target { get; private set; }
+
+        /// <summary>
+        /// Gets the specified connection scheme. This property is optional. If no value was defined, it defaults to KEEP.
+        /// </summary>
         public ConnectionMode Mode { get; private set; }
     }
 }

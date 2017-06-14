@@ -30,6 +30,7 @@ namespace Example7
                     agents.Add(new FoodConsumer("Charlie", remotespace));
                     agents.Add(new DrugConsumer("Dave", remotespace));
                     agents.ForEach(a => a.Start());
+                    Console.Read();
                     return;
                 }
             }

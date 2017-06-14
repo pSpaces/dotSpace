@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace dotSpace.Objects.Network.ConnectionModes
 {
+    /// <summary>
+    /// Implements the mechanisms to support the KEEP connection scheme.
+    /// </summary>
     public sealed class Keep : ConnectionModeBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +24,9 @@ namespace dotSpace.Objects.Network.ConnectionModes
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the Keep class.
+        /// </summary>
         public Keep(IProtocol protocol, IEncoder encoder) : base(protocol, encoder)
         {
             this.messageQueue = new MessageQueue();
@@ -31,7 +37,11 @@ namespace dotSpace.Objects.Network.ConnectionModes
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
-
+        
+        /// <summary>
+        /// Waits for an incoming message, then executes the corresponding operation concurrently.
+        /// Once the operation completes, it transmits a response back.
+        /// </summary>
         public override void ProcessRequest(IOperationMap operationMap)
         {
             while (true) // FIX THIS
@@ -50,7 +60,9 @@ namespace dotSpace.Objects.Network.ConnectionModes
                 );
             }
         }
-
+        /// <summary>
+        /// Sends a request, and waits for a response matching the session. This is a blocking operation.
+        /// </summary>
         public override T PerformRequest<T>(IMessage request)
         {
             lock (this.protocol)

@@ -6,17 +6,18 @@ using dotSpace.Objects.Network.Messages.Requests;
 
 namespace dotSpace.Objects.Network
 {
+    /// <summary>
+    /// Provides basic functionality for serializing and deserializing responses as json string. 
+    /// Furthermore, the underlying values are boxed and unboxed thereby supporting language independent types.
+    /// </summary>
     public sealed class ResponseEncoder : EncoderBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        public override string Encode(IMessage message)
-        {
-            TypeConverter.Box(message);
-            return this.Serialize(message);
-        }
-
+        /// <summary>
+        /// Unboxes and deserializes the passed json string containing interoperable types to a message containine .NET primitive types.
+        /// </summary>
         public override IMessage Decode(string msg)
         {
             BasicRequest breq = Deserialize<BasicRequest>(msg);

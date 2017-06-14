@@ -8,7 +8,10 @@ using System.Threading;
 
 namespace dotSpace.Objects.Network.Gates
 {
-    public sealed class TcpGate : GateBase
+    /// <summary>
+    /// Provides mechanisms for listening of incoming TCP connections, and delegates the connection back through a callback function.
+    /// </summary>
+    internal sealed class TcpGate : GateBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -23,6 +26,9 @@ namespace dotSpace.Objects.Network.Gates
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
+        /// <summary>
+        /// Initializes a new instances of the TcpGate class.
+        /// </summary>
         public TcpGate(IEncoder encoder, ConnectionString connectionstring) : base(encoder, connectionstring)
         {
             this.ipAddress = IPAddress.Parse(connectionstring.Host);
@@ -34,6 +40,9 @@ namespace dotSpace.Objects.Network.Gates
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        /// <summary>
+        /// Starts the process of listening concurrently on the specified host and port.
+        /// </summary>
         public override void Start(Action<IConnectionMode> callback)
         {
             if (!this.listening)
@@ -44,6 +53,9 @@ namespace dotSpace.Objects.Network.Gates
             }
         }
 
+        /// <summary>
+        /// Stops the listening process.
+        /// </summary>
         public override void Stop()
         {
             this.listening = false;

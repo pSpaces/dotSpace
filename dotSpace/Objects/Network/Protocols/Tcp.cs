@@ -6,7 +6,10 @@ using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network.Protocols
 {
-    public sealed class Tcp : ProtocolBase
+    /// <summary>
+    /// This classes represents a wrapper for a TCP socket, allowing it to encode and decode the stringbased messages using a provided encoder.
+    /// </summary>
+    internal sealed class Tcp : ProtocolBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -21,6 +24,9 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
+        /// <summary>
+        /// Initializes a new instances of the Tcp class.
+        /// </summary>
         public Tcp(TcpClient client)
         {
             this.client = client;
@@ -35,6 +41,9 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        /// <summary>
+        /// Reads a single stringbased message from the underlying Tcpclient, and returns the decoded message.
+        /// </summary>
         public override IMessage Receive(IEncoder encoder)
         {
             try
@@ -48,6 +57,10 @@ namespace dotSpace.Objects.Network.Protocols
             }
             return null;
         }
+
+        /// <summary>
+        /// Encodes the message and writes it to the underlying tcpclient as a stringbased message.
+        /// </summary>
         public override void Send(IMessage message, IEncoder encoder)
         {
             try
@@ -60,6 +73,10 @@ namespace dotSpace.Objects.Network.Protocols
                 this.client.Close();
             }
         }
+
+        /// <summary>
+        /// Closes the underlying tcpclient.
+        /// </summary>
         public override void Close()
         {
             if (this.client.Connected)

@@ -64,6 +64,7 @@
     <Compile Include="Interfaces\IMessage.cs" />
     <Compile Include="Interfaces\IWriteRequest.cs" />
     <Compile Include="Interfaces\IReadRequest.cs" />
+    <Compile Include="Objects\Network\ConnectionModes\Pull.cs" />
     <Compile Include="Objects\Network\Gates\GateFactory.cs" />
     <Compile Include="Objects\Network\Protocols\Udp.cs" />
     <Compile Include="Objects\Network\Gates\UdpGate.cs" />

@@ -1,4 +1,5 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.Enumerations;
 using dotSpace.Interfaces;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
@@ -6,17 +7,18 @@ using dotSpace.Objects.Network.Messages.Responses;
 namespace dotSpace.Objects.Network.ConnectionModes
 {
     /// <summary>
-    /// Implements the mechanisms to support the CONN connection scheme.
+    /// Implements the mechanisms to support the PULL connection scheme.
+    /// This connection mode is incomplete, and is thus not supported.
     /// </summary>
-    public sealed class Conn : ConnectionModeBase
+    public sealed class Pull : ConnectionModeBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
         /// <summary>
-        /// Initializes a new instance of the Conn class.
+        /// Initializes a new instance of the Pull class. 
         /// </summary>
-        public Conn(IProtocol protocol, IEncoder encoder) : base(protocol, encoder)
+        public Pull(IProtocol protocol, IEncoder encoder) : base(protocol, encoder)
         {
         }
 
@@ -26,28 +28,21 @@ namespace dotSpace.Objects.Network.ConnectionModes
         #region // Public Methods
 
         /// <summary>
-        /// Waits for an incoming message, then executes the corresponding operation and transmits a response.
+        /// Not implemented.
         /// </summary>
         public override void ProcessRequest(IOperationMap operationMap)
         {
-            BasicRequest request = (BasicRequest)this.protocol.Receive(this.encoder);
-            request = (BasicRequest)this.ValidateRequest(request);
-            BasicResponse response = (BasicResponse)operationMap.Execute(request);
-            this.protocol.Send(response, this.encoder);
         }
         /// <summary>
-        /// Sends a request and waits for a response. Finally, it closes the connection and returns the received message.
-        /// This is a blocking operation.
+        /// Not implemented.
         /// </summary>
         public override T PerformRequest<T>(IMessage request)
         {
-            this.protocol.Send(request, this.encoder);
-            MessageBase message = (MessageBase)protocol.Receive(this.encoder);
+            IMessage message = new BasicResponse(request.Actiontype, request.Source, request.Session, request.Target, StatusCode.NOT_IMPLEMENTED, StatusMessage.NOT_IMPLEMENTED);
             this.protocol.Close();
             return (T)this.ValidateResponse(message);
-        } 
+        }
 
         #endregion
-
     }
 }

@@ -35,6 +35,7 @@ namespace Example6
                     agents.Add(new Philosopher("Dave", 4, 5, remotespace));
                     agents.Add(new Philosopher("Homer", 5, 5, remotespace));
                     agents.ForEach(a => a.Start());
+                    Console.Read();
                     return;
                 }
             }

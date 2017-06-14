@@ -8,7 +8,7 @@ using System;
 namespace dotSpace.BaseClasses
 {
     /// <summary>
-    /// Provides basic functionality for validating messages. This is an abstract class.
+    /// Provides basic functionality for supporting multiple connectionschemes, and validating messages. This is an abstract class.
     /// </summary>
     public abstract class ConnectionModeBase : IConnectionMode
     {

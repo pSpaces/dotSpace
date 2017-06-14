@@ -7,7 +7,11 @@ using System.Text;
 
 namespace dotSpace.Objects.Network.Protocols
 {
-    public sealed class Udp : ProtocolBase
+    /// <summary>
+    /// This classes represents a wrapper for a UDP socket, allowing it to encode and decode the stringbased messages using a provided encoder.
+    /// This class has not been fully implemented and as such UDP is not supported.
+    /// </summary>
+    internal sealed class Udp : ProtocolBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -20,6 +24,9 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
+        /// <summary>
+        /// Initializes a new instances of the Udp class.
+        /// </summary>
         public Udp(string host, int port)
         {
             throw new Exception("The UDP gate is not supported.");
@@ -31,6 +38,10 @@ namespace dotSpace.Objects.Network.Protocols
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        /// <summary>
+        /// This method has not been fully completed.
+        /// Reads a single stringbased message from the underlying Tcpclient, and returns the decoded message.
+        /// </summary>
         public override IMessage Receive(IEncoder encoder)
         {
             try
@@ -45,6 +56,11 @@ namespace dotSpace.Objects.Network.Protocols
             }
             return null;
         }
+
+        /// <summary>
+        /// This method has not been fully completed.
+        /// Encodes the message and writes it to the underlying tcpclient as a stringbased message.
+        /// </summary>
         public override void Send(IMessage message, IEncoder encoder)
         {
             try
@@ -58,6 +74,10 @@ namespace dotSpace.Objects.Network.Protocols
                 this.client.Close();
             }
         }
+
+        /// <summary>
+        /// Closes the underlying udp socket.
+        /// </summary>
         public override void Close()
         {
 

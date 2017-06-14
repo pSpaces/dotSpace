@@ -9,6 +9,10 @@ using System.Linq;
 
 namespace dotSpace.Objects.Network
 {
+    /// <summary>
+    /// Concrete implementation of the IOperationMap interface.
+    /// Provides basic functionality to map requests with operations on a space repository.
+    /// </summary>
     internal sealed class OperationMap : IOperationMap
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,6 +26,9 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
+        /// <summary>
+        /// Initializes a new instances of the OperationMap class.
+        /// </summary>
         public OperationMap(IRepository repository)
         {
             this.repository = repository;
@@ -40,6 +47,9 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        /// <summary>
+        /// Executes an operation defined within the request. Followingly, the response is returned.
+        /// </summary>
         public IMessage Execute(IMessage request)
         {
             Type requestType = request.GetType();

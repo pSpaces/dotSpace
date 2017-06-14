@@ -1,4 +1,5 @@
 ﻿using dotSpace.Interfaces;
+using dotSpace.Objects.Json;
 using System;
 using System.Web.Script.Serialization;
 
@@ -20,6 +21,7 @@ namespace dotSpace.BaseClasses
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             return serializer.Deserialize<T>(json);
         }
+
         /// <summary>
         /// Decomposes the passed object into a json string.
         /// </summary>
@@ -28,14 +30,21 @@ namespace dotSpace.BaseClasses
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             return serializer.Serialize(message);
         }
+
+        /// <summary>
+        /// Boxes and serializes the passed message into interoperable types specified as a json string.
+        /// </summary>
+        public string Encode(IMessage message)
+        {
+            TypeConverter.Box(message);
+            return this.Serialize(message);
+        }
+
         /// <summary>
         /// Template method for deserializing and unboxing the interoperable types specified in json into valid .NET primitive types.
         /// </summary>
         public abstract IMessage Decode(string msg);
-        /// <summary>
-        /// Template method for serializing and boxing the passed message into interoperable types specified as a json string.
-        /// </summary>
-        public abstract string Encode(IMessage message);
+
 
         #endregion
     }

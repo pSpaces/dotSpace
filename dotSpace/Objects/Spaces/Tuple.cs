@@ -2,11 +2,18 @@
 
 namespace dotSpace.Objects.Spaces
 {
+    /// <summary>
+    /// Concrete implementation of a tuple.
+    /// Provides the primitives required to define a tuple. 
+    /// </summary>
     public sealed class Tuple : ITuple
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
+        /// <summary>
+        /// Initializes a new instance of a Tuple class.
+        /// </summary>
         public Tuple(params object[] fields)
         {
             this.Fields = fields;
@@ -17,8 +24,19 @@ namespace dotSpace.Objects.Spaces
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Properties
 
+        /// <summary>
+        /// Gets or sets the underlying array of values representing the tuple.
+        /// </summary>
         public object[] Fields { get; set; }
+
+        /// <summary>
+        /// Returns the size of the tuple.
+        /// </summary>
         public int Size { get { return Fields.Length; } }
+
+        /// <summary>
+        /// Gets or sets the i'th element of the tuple.
+        /// </summary>
         public object this[int idx] { get { return this.Fields[idx]; } set { this.Fields[idx] = value; } }
 
         #endregion

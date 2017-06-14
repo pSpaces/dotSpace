@@ -6,7 +6,7 @@ using System.Web.Script.Serialization;
 namespace dotSpace.BaseClasses
 {
     /// <summary>
-    /// Toplevel entity containing the minimal properties any message contain. This is an abstract class
+    /// Toplevel entity containing the minimal properties any message contain. This is an abstract class.
     /// </summary>
     public abstract class MessageBase : IMessage
     {

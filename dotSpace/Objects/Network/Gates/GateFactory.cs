@@ -3,8 +3,14 @@ using dotSpace.Interfaces;
 
 namespace dotSpace.Objects.Network.Gates
 {
+    /// <summary>
+    /// This class constitutes a factory pattern for instantiation of gates.
+    /// </summary>
     public class GateFactory
     {
+        /// <summary>
+        /// Returns a new instance of a gate based on the provided connectionstring.
+        /// </summary>
         public IGate CreateGate(string uri, IEncoder encoder)
         {
             ConnectionString connectionString = new ConnectionString(uri);

@@ -41,10 +41,12 @@ namespace dotSpace.BaseClasses
         /// function is executed.
         /// </summary>
         public abstract void Start(Action<IConnectionMode> callback);
+
         /// <summary>
         /// Stops the gate from reacting on incoming connections.
         /// </summary>
         public abstract void Stop();
+
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,10 +59,10 @@ namespace dotSpace.BaseClasses
         {
             switch (connectionmode)
             {
-                case ConnectionMode.CONN: return new Conn(protocol, this.encoder);
                 case ConnectionMode.KEEP: return new Keep(protocol, this.encoder);
-                case ConnectionMode.PULL: return null;
-                case ConnectionMode.PUSH: return null;
+                case ConnectionMode.CONN: return new Conn(protocol, this.encoder);
+                case ConnectionMode.PUSH: return new Push(protocol, this.encoder);
+                case ConnectionMode.PULL: return new Pull(protocol, this.encoder);
                 default: return null;
             }
         } 

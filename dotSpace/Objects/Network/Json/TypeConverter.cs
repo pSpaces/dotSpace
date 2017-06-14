@@ -5,7 +5,12 @@ using System.Collections.Generic;
 
 namespace dotSpace.Objects.Json
 {
-    public class TypeConverter
+    /// <summary>
+    /// Provdes functionaly to convert .NET objects into json strings and back. 
+    /// Furthermore, it supports language independent typeconversion by boxing and unboxing of values through the use of a
+    /// type map.
+    /// </summary>
+    internal class TypeConverter
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -18,6 +23,9 @@ namespace dotSpace.Objects.Json
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the PatternValue class.
+        /// </summary>
         static TypeConverter()
         {
             unboxedTypes = new Dictionary<string, Type>();
@@ -37,6 +45,9 @@ namespace dotSpace.Objects.Json
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        /// <summary>
+        /// Boxes the message contents from native .NET primitive types into language independent textual representations. 
+        /// </summary>
         public static void Box(IMessage message)
         {
             if (message is IResult)
@@ -67,6 +78,9 @@ namespace dotSpace.Objects.Json
             }
         }
 
+        /// <summary>
+        /// Unboxes the message contents from language independent textual representations into native .NET primitive types. 
+        /// </summary>
         public static void Unbox(MessageBase message)
         {
             if (message is IResult)

@@ -1,11 +1,15 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Interfaces;
-using dotSpace.Objects.Network;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace dotSpace.Objects.Utility
 {
+    /// <summary>
+    /// A threadsafe data structure that facilitates message parsing.
+    /// It allows threads to wait and signal through querying specific messages similar to that of the 
+    /// tuplespace datastructure.
+    /// </summary>
     internal sealed class MessageQueue
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,6 +23,9 @@ namespace dotSpace.Objects.Utility
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the MessageQueue class.
+        /// </summary>
         public MessageQueue()
         {
             this.messages = new Dictionary<string, IMessage>();
@@ -30,6 +37,11 @@ namespace dotSpace.Objects.Utility
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        /// <summary>
+        /// Blocks the calling thread until a message arrives with a matching sessions id.
+        /// The message is returned once it arrives.
+        /// If the message already exists, the message is dequeued and returned.
+        /// </summary>
         public IMessage Get(string key)
         {
             MessageBase t = (MessageBase)this.WaitForSession(key);
@@ -40,6 +52,9 @@ namespace dotSpace.Objects.Utility
             return successs ? t : null;
         }
 
+        /// <summary>
+        /// Inserts a message into the underlying set, thereby awaking any waiting threads.
+        /// </summary>
         public void Put(IMessage message)
         {
             rwLock.EnterWriteLock();

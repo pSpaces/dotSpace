@@ -29,6 +29,7 @@ namespace Example8
                     AgentBase charlie = new Charlie("Charlie", remotespace);
                     bob.Start();
                     charlie.Start();
+                    Console.Read();
                     return;
                 }
             }

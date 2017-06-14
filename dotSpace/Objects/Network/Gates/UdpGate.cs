@@ -7,7 +7,11 @@ using System.Threading;
 
 namespace dotSpace.Objects.Network.Gates
 {
-    public sealed class UdpGate : GateBase
+    /// <summary>
+    /// Provides mechanisms for listening of incoming UDP messages, and delegates the clientinformation back through a callback function.
+    /// This class has not been fully implemented and as such UDP is not supported.
+    /// </summary>
+    internal sealed class UdpGate : GateBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -20,6 +24,9 @@ namespace dotSpace.Objects.Network.Gates
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
+        /// <summary>
+        /// Initializes a new instances of the UdpGate class.
+        /// </summary>
         public UdpGate(IEncoder encoder, ConnectionString connectionString) : base(encoder, connectionString)
         {
             throw new Exception("The UDP gate is not supported.");
@@ -32,6 +39,9 @@ namespace dotSpace.Objects.Network.Gates
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        /// <summary>
+        /// Initializes a udpclient with the specified host and port. The callback function is then invoked with the initialized client.
+        /// </summary>
         public override void Start(Action<IConnectionMode> callback)
         {
             if (!this.listening)
@@ -42,6 +52,9 @@ namespace dotSpace.Objects.Network.Gates
             }
         }
 
+        /// <summary>
+        /// Allows the udp gate to reinitialize.
+        /// </summary>
         public override void Stop()
         {
             this.listening = false;

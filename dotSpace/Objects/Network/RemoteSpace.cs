@@ -1,5 +1,4 @@
-﻿using dotSpace.BaseClasses;
-using dotSpace.Enumerations;
+﻿using dotSpace.Enumerations;
 using dotSpace.Interfaces;
 using dotSpace.Objects.Network.ConnectionModes;
 using dotSpace.Objects.Network.Messages.Requests;
@@ -12,6 +11,9 @@ using System.Net.Sockets;
 
 namespace dotSpace.Objects.Network
 {
+    /// <summary>
+    /// Provides networked access to a remote space, using any supported protocol and mode.
+    /// </summary>
     public sealed class RemoteSpace : ISpace
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,6 +28,9 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
+        /// <summary>
+        /// Initializes a new instances of the RemoteSpace class.
+        /// </summary>
         public RemoteSpace(string uri)
         {
             this.connectionString = new ConnectionString(uri);
@@ -41,70 +46,125 @@ namespace dotSpace.Objects.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
+        /// <summary>
+        /// Retrieves and removes the first tuple from the space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Get(IPattern pattern)
         {
             return this.Get(pattern.Fields);
         }
+
+        /// <summary>
+        /// Retrieves and removes the first tuple from the space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Get(params object[] pattern)
         {
             GetRequest request = new GetRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             GetResponse response = this.GetMode()?.PerformRequest<GetResponse>(request);
             return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
         }
+
+        /// <summary>
+        /// Retrieves and removes the first tuple from the space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
+        /// </summary>
         public ITuple GetP(IPattern pattern)
         {
             return this.GetP(pattern.Fields);
         }
+
+        /// <summary>
+        /// Retrieves and removes the first tuple from the space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
+        /// </summary>
         public ITuple GetP(params object[] pattern)
         {
             GetPRequest request = new GetPRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             GetPResponse response = this.GetMode()?.PerformRequest<GetPResponse>(request);
             return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
         }
+
+        /// <summary>
+        /// Retrieves and removes all tuples from the space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> GetAll(IPattern pattern)
         {
             return this.GetAll(pattern.Fields);
         }
+
+        /// <summary>
+        /// Retrieves and removes all tuples from the space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> GetAll(params object[] pattern)
         {
             GetAllRequest request = new GetAllRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             GetAllResponse response = this.GetMode()?.PerformRequest<GetAllResponse>(request);
             return response.Result == null ? null : response.Result.Select(x => new Objects.Spaces.Tuple(x));
         }
+
+        /// <summary>
+        /// Retrieves the first tuple from the space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Query(IPattern pattern)
         {
             return this.Query(pattern.Fields);
         }
+
+        /// <summary>
+        /// Retrieves the first tuple from the space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Query(params object[] pattern)
         {
             QueryRequest request = new QueryRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             QueryResponse response = this.GetMode()?.PerformRequest<QueryResponse>(request);
             return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
         }
+
+        /// <summary>
+        /// Retrieves the first tuple from the space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
+        /// </summary>
         public ITuple QueryP(IPattern pattern)
         {
             return this.QueryP(pattern.Fields);
         }
+
+        /// <summary>
+        /// Retrieves the first tuple from the space, matching the specified pattern.The operation is non-blocking.The operation will return null if no elements match.
+        /// </summary>
         public ITuple QueryP(params object[] pattern)
         {
             QueryPRequest request = new QueryPRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             QueryPResponse response = this.GetMode()?.PerformRequest<QueryPResponse>(request);
             return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
         }
+
+        /// <summary>
+        /// Retrieves all tuples from the space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> QueryAll(IPattern pattern)
         {
             return this.QueryAll(pattern.Fields);
         }
+
+        /// <summary>
+        /// Retrieves all tuples from the space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> QueryAll(params object[] pattern)
         {
             QueryAllRequest request = new QueryAllRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             QueryAllResponse response = this.GetMode()?.PerformRequest<QueryAllResponse>(request);
             return response.Result == null ? null : response.Result.Select(x => new Objects.Spaces.Tuple(x));
         }
+
+        /// <summary>
+        /// Inserts the tuple passed as argument into the space.
+        /// </summary>
         public void Put(ITuple tuple)
         {
             this.Put(tuple.Fields);
         }
+
+        /// <summary>
+        /// Inserts the tuple passed as argument into the space.
+        /// </summary>
         public void Put(params object[] tuple)
         {
             PutRequest request = new PutRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, tuple);
@@ -130,8 +190,8 @@ namespace dotSpace.Objects.Network
             {
                 case ConnectionMode.KEEP: lock (this.connectionString) { this.mode = this.mode ?? new Keep(this.GetProtocol(), this.encoder); } break;
                 case ConnectionMode.CONN: return new Conn(this.GetProtocol(), this.encoder);
-                case ConnectionMode.PULL: return new Conn(this.GetProtocol(), this.encoder);
-                case ConnectionMode.PUSH: return new Conn(this.GetProtocol(), this.encoder);
+                case ConnectionMode.PUSH: return new Push(this.GetProtocol(), this.encoder);
+                case ConnectionMode.PULL: return new Pull(this.GetProtocol(), this.encoder);
                 default: return null;
             }
             return this.mode;
