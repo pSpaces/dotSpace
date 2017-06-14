@@ -4,14 +4,24 @@ using System.Web.Script.Serialization;
 
 namespace dotSpace.BaseClasses
 {
+    /// <summary>
+    /// Toplevel entity containing the minimal properties any message contain. This is an abstract class
+    /// </summary>
     public abstract class MessageBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
+
+        /// <summary>
+        /// Initializes a new instances of the MessageBase class.
+        /// </summary>
         public MessageBase()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instances of the MessageBase class.
+        /// </summary>
         public MessageBase(ActionType action, string source, string session, string target)
         {
             this.Actiontype = action;
@@ -25,13 +35,26 @@ namespace dotSpace.BaseClasses
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Properties
 
+        /// <summary>
+        /// Gets or sets the identify of the original requester.
+        /// </summary>
         public string Source { get; set; }
+        /// <summary>
+        /// Gets or sets the unique session identifier used by the source to distinguish requests.
+        /// </summary>
         public string Session { get; set; }
+        /// <summary>
+        /// Gets or sets the global identifier that identifies the target space.
+        /// </summary>
         public string Target { get; set; }
-
+        /// <summary>
+        ///  Gets or sets the action to be executed by the remote space.
+        /// </summary>
         [ScriptIgnore]
         public ActionType Actiontype { get; set; }
-
+        /// <summary>
+        /// See Actiontype. Specified due to json.
+        /// </summary>
         public string Action
         {
             get { return this.Actiontype.ToString(); }

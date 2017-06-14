@@ -19,7 +19,7 @@ namespace dotSpace.Objects.Network
 
         private IConnectionMode mode;
         private IEncoder encoder;
-        private GateInfo gateInfo;
+        private ConnectionString connectionString;
 
         #endregion
 
@@ -28,9 +28,9 @@ namespace dotSpace.Objects.Network
 
         public RemoteSpace(string uri)
         {
-            this.gateInfo = new GateInfo(uri);
+            this.connectionString = new ConnectionString(uri);
             this.encoder = new RequestEncoder();
-            if (string.IsNullOrEmpty(this.gateInfo.Target))
+            if (string.IsNullOrEmpty(this.connectionString.Target))
             {
                 throw new Exception("Must specify valid target.");
             }
@@ -47,7 +47,7 @@ namespace dotSpace.Objects.Network
         }
         public ITuple Get(params object[] pattern)
         {
-            GetRequest request = new GetRequest(this.GetSource(), this.GetSessionId(), this.gateInfo.Target, pattern);
+            GetRequest request = new GetRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             GetResponse response = this.GetMode()?.PerformRequest<GetResponse>(request);
             return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
         }
@@ -57,7 +57,7 @@ namespace dotSpace.Objects.Network
         }
         public ITuple GetP(params object[] pattern)
         {
-            GetPRequest request = new GetPRequest(this.GetSource(), this.GetSessionId(), this.gateInfo.Target, pattern);
+            GetPRequest request = new GetPRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             GetPResponse response = this.GetMode()?.PerformRequest<GetPResponse>(request);
             return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
         }
@@ -67,7 +67,7 @@ namespace dotSpace.Objects.Network
         }
         public IEnumerable<ITuple> GetAll(params object[] pattern)
         {
-            GetAllRequest request = new GetAllRequest(this.GetSource(), this.GetSessionId(), this.gateInfo.Target, pattern);
+            GetAllRequest request = new GetAllRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             GetAllResponse response = this.GetMode()?.PerformRequest<GetAllResponse>(request);
             return response.Result == null ? null : response.Result.Select(x => new Objects.Spaces.Tuple(x));
         }
@@ -77,7 +77,7 @@ namespace dotSpace.Objects.Network
         }
         public ITuple Query(params object[] pattern)
         {
-            QueryRequest request = new QueryRequest(this.GetSource(), this.GetSessionId(), this.gateInfo.Target, pattern);
+            QueryRequest request = new QueryRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             QueryResponse response = this.GetMode()?.PerformRequest<QueryResponse>(request);
             return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
         }
@@ -87,7 +87,7 @@ namespace dotSpace.Objects.Network
         }
         public ITuple QueryP(params object[] pattern)
         {
-            QueryPRequest request = new QueryPRequest(this.GetSource(), this.GetSessionId(), this.gateInfo.Target, pattern);
+            QueryPRequest request = new QueryPRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             QueryPResponse response = this.GetMode()?.PerformRequest<QueryPResponse>(request);
             return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
         }
@@ -97,7 +97,7 @@ namespace dotSpace.Objects.Network
         }
         public IEnumerable<ITuple> QueryAll(params object[] pattern)
         {
-            QueryAllRequest request = new QueryAllRequest(this.GetSource(), this.GetSessionId(), this.gateInfo.Target, pattern);
+            QueryAllRequest request = new QueryAllRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             QueryAllResponse response = this.GetMode()?.PerformRequest<QueryAllResponse>(request);
             return response.Result == null ? null : response.Result.Select(x => new Objects.Spaces.Tuple(x));
         }
@@ -107,7 +107,7 @@ namespace dotSpace.Objects.Network
         }
         public void Put(params object[] tuple)
         {
-            PutRequest request = new PutRequest(this.GetSource(), this.GetSessionId(), this.gateInfo.Target, tuple);
+            PutRequest request = new PutRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, tuple);
             this.GetMode()?.PerformRequest<PutResponse>(request);
         }
 
@@ -126,9 +126,9 @@ namespace dotSpace.Objects.Network
         }
         private IConnectionMode GetMode()
         {
-            switch (this.gateInfo.Mode)
+            switch (this.connectionString.Mode)
             {
-                case ConnectionMode.KEEP: lock (this.gateInfo) { this.mode = this.mode ?? new Keep(this.GetProtocol(), this.encoder); } break;
+                case ConnectionMode.KEEP: lock (this.connectionString) { this.mode = this.mode ?? new Keep(this.GetProtocol(), this.encoder); } break;
                 case ConnectionMode.CONN: return new Conn(this.GetProtocol(), this.encoder);
                 case ConnectionMode.PULL: return new Conn(this.GetProtocol(), this.encoder);
                 case ConnectionMode.PUSH: return new Conn(this.GetProtocol(), this.encoder);
@@ -138,10 +138,10 @@ namespace dotSpace.Objects.Network
         }
         private IProtocol GetProtocol()
         {
-            switch (this.gateInfo.Protocol)
+            switch (this.connectionString.Protocol)
             {
-                case Protocol.TCP: return new Tcp(new TcpClient(this.gateInfo.Host, this.gateInfo.Port));
-                case Protocol.UDP: return new Udp(this.gateInfo.Host, this.gateInfo.Port);
+                case Protocol.TCP: return new Tcp(new TcpClient(this.connectionString.Host, this.connectionString.Port));
+                case Protocol.UDP: return new Udp(this.connectionString.Host, this.connectionString.Port);
                 default: return null;
             }
         }

@@ -7,12 +7,12 @@ namespace dotSpace.Objects.Network.Gates
     {
         public IGate CreateGate(string uri, IEncoder encoder)
         {
-            GateInfo gateInfo = new GateInfo(uri);
+            ConnectionString connectionString = new ConnectionString(uri);
             IGate gate = null;
-            switch (gateInfo.Protocol)
+            switch (connectionString.Protocol)
             {
-                case Protocol.TCP: gate = new TcpGate(encoder, gateInfo); break;
-                case Protocol.UDP: gate = new UdpGate(encoder, gateInfo); break;
+                case Protocol.TCP: gate = new TcpGate(encoder, connectionString); break;
+                case Protocol.UDP: gate = new UdpGate(encoder, connectionString); break;
                 default: break;
             }
 

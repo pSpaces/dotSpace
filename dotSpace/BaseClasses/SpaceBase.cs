@@ -8,6 +8,12 @@ using System.Threading;
 
 namespace dotSpace.BaseClasses
 {
+    /// <summary>
+    /// Provides the basic functionality for a tuplespace datastructure. 
+    /// Represents a strongly typed set of tuples that can be access through pattern matching. Provides methods to query and manipulate the set.
+    /// This class does not impose ordering on the underlying tuples.
+    /// This is an abstract class.
+    /// </summary>
     public abstract class SpaceBase : ISpace
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,7 +27,10 @@ namespace dotSpace.BaseClasses
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
-
+        
+        /// <summary>
+        /// Initializes a new instance of the SpaceBase class.
+        /// </summary>
         public SpaceBase()
         {
             this.buckets = new Dictionary<ulong, List<ITuple>>();
@@ -33,11 +42,16 @@ namespace dotSpace.BaseClasses
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
-
+        /// <summary>
+        /// Retrieves and removes the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Get(IPattern pattern)
         {
             return this.Get(pattern.Fields);
         }
+        /// <summary>
+        /// Retrieves and removes the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Get(params object[] pattern)
         {
             ulong hash = this.ComputeHash(pattern);
@@ -54,10 +68,16 @@ namespace dotSpace.BaseClasses
             bucketLock.ExitWriteLock();
             return successs ? t : null;
         }
+        /// <summary>
+        /// Retrieves and removes the first tuple from the Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
+        /// </summary>
         public ITuple GetP(IPattern pattern)
         {
             return this.GetP(pattern.Fields);
         }
+        /// <summary>
+        /// Retrieves and removes the first tuple from the Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
+        /// </summary>
         public ITuple GetP(params object[] pattern)
         {
             ulong hash = this.ComputeHash(pattern);
@@ -77,10 +97,16 @@ namespace dotSpace.BaseClasses
             }
             return success ? t : null;
         }
+        /// <summary>
+        /// Retrieves and removes all tuples from the Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> GetAll(IPattern pattern)
         {
             return this.GetAll(pattern.Fields);
         }
+        /// <summary>
+        /// Retrieves and removes all tuples from the Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> GetAll(params object[] pattern)
         {
             ulong hash = this.ComputeHash(pattern);
@@ -99,10 +125,16 @@ namespace dotSpace.BaseClasses
             }
             return t;
         }
+        /// <summary>
+        /// Retrieves the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Query(IPattern pattern)
         {
             return this.Query(pattern.Fields);
         }
+        /// <summary>
+        /// Retrieves the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Query(params object[] pattern)
         {
             ulong hash = this.ComputeHash(pattern);
@@ -113,10 +145,16 @@ namespace dotSpace.BaseClasses
 
             return this.WaitUntilMatch(bucket, bucketLock, pattern);
         }
+        /// <summary>
+        /// Retrieves the first tuple from the Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
+        /// </summary>
         public ITuple QueryP(IPattern pattern)
         {
             return this.QueryP(pattern.Fields);
         }
+        /// <summary>
+        /// Retrieves the first tuple from the Space, matching the specified pattern.The operation is non-blocking.The operation will return null if no elements match.
+        /// </summary>
         public ITuple QueryP(params object[] pattern)
         {
             ulong hash = this.ComputeHash(pattern);
@@ -126,10 +164,16 @@ namespace dotSpace.BaseClasses
             Monitor.Exit(this.bucketAccess);
             return this.Find(bucket, bucketLock, pattern);
         }
+        /// <summary>
+        /// Retrieves all tuples from the Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> QueryAll(IPattern pattern)
         {
             return this.QueryAll(pattern.Fields);
         }
+        /// <summary>
+        /// Retrieves all tuples from the Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> QueryAll(params object[] pattern)
         {
             ulong hash = this.ComputeHash(pattern);
@@ -139,10 +183,16 @@ namespace dotSpace.BaseClasses
             Monitor.Exit(this.bucketAccess);
             return this.FindAll(bucket, bucketLock, pattern);
         }
+        /// <summary>
+        /// Inserts the tuple passed as argument into the Space.
+        /// </summary>
         public void Put(ITuple t)
         {
             this.Put(t.Fields);
         }
+        /// <summary>
+        /// Inserts the tuple passed as argument into the Space.
+        /// </summary>
         public void Put(params object[] values)
         {
             ulong hash = this.ComputeHash(values);
@@ -158,16 +208,20 @@ namespace dotSpace.BaseClasses
         }
 
         #endregion
+
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Protected Methods
-
+        
+        /// <summary>
+        /// Template method returning the index of where to insert a tuple.
+        /// This method constitutes the ordering of the space.
+        /// </summary>
         protected abstract int GetIndex(int size); 
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Private Methods
-
 
         private ulong ComputeHash(object[] values)
         {

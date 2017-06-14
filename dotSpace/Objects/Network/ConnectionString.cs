@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace dotSpace.Objects.Network
 {
-    public class GateInfo
+    public class ConnectionString
     {
-        public GateInfo(string uri)
+        public ConnectionString(string uri)
         {
             Match match = new Regex(@"^(.+://){0,1}(.[^:\/\?]+)(:[0-9]+){0,1}(\/[a-zA-Z]+){0,1}(\?[a-zA-Z]+){0,1}$").Match(uri);
             if (match.Success && match.Groups.Count == 6)

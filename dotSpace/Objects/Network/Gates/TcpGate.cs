@@ -23,10 +23,10 @@ namespace dotSpace.Objects.Network.Gates
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
-        public TcpGate(IEncoder encoder, GateInfo gateInfo) : base(encoder, gateInfo)
+        public TcpGate(IEncoder encoder, ConnectionString connectionstring) : base(encoder, connectionstring)
         {
-            this.ipAddress = IPAddress.Parse(gateInfo.Host);
-            this.listener = new TcpListener(ipAddress, this.gateInfo.Port);
+            this.ipAddress = IPAddress.Parse(connectionstring.Host);
+            this.listener = new TcpListener(ipAddress, this.connectionString.Port);
         }
 
         #endregion
@@ -58,7 +58,7 @@ namespace dotSpace.Objects.Network.Gates
         private void Listen()
         {
             this.listener.Start(121);
-            Console.WriteLine("Current endpoint: {0}:{1}", this.ipAddress.ToString(), this.gateInfo.Port);
+            Console.WriteLine("Current endpoint: {0}:{1}", this.ipAddress.ToString(), this.connectionString.Port);
             Console.WriteLine("Begin listening...");
             try
             {
@@ -66,7 +66,7 @@ namespace dotSpace.Objects.Network.Gates
                 {
                     TcpClient client = listener.AcceptTcpClient();
                     Tcp protocol = new Tcp(client);
-                    IConnectionMode mode = this.GetMode(this.gateInfo.Mode, protocol);
+                    IConnectionMode mode = this.GetMode(this.connectionString.Mode, protocol);
                     new Thread(() => { this.callBack(mode); }).Start();
                 }
             }

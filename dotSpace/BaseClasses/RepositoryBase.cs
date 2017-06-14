@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace dotSpace.BaseClasses
 {
+    /// <summary>
+    /// Provides the basic functionality for supporting multiple distributed spaces. This is an abstract class.
+    /// The RepositoryBase class allows direct access to the contained spaces through their respective identifies.
+    /// Additionally, RepositoryBase facilitates distributed access to the underlying spaces through Gates. 
+    /// </summary>
     public abstract class RepositoryBase : IRepository
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,7 +24,10 @@ namespace dotSpace.BaseClasses
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
-
+        
+        /// <summary>
+        /// Initializes a new instance of the RepositoryBase class.
+        /// </summary>
         public RepositoryBase()
         {
             this.spaces = new Dictionary<string, ISpace>();
@@ -32,16 +40,22 @@ namespace dotSpace.BaseClasses
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
-
-        public void AddGate(string uri)
+        
+        /// <summary>
+        /// Adds a new Gate to the repository based on the provided connectionstring.
+        /// </summary>
+        public void AddGate(string connectionstring)
         {
-            IGate gate = this.gateFactory.CreateGate(uri, this.encoder);
+            IGate gate = this.gateFactory.CreateGate(connectionstring, this.encoder);
             if (gate != null)
             {
                 this.gates.Add(gate);
                 gate.Start(this.OnConnect);
             }
         }
+        /// <summary>
+        /// Adds a new Space to the repository, identified by the specified parameter.
+        /// </summary>
         public void AddSpace(string identifier, ISpace tuplespace)
         {
             if (!this.spaces.ContainsKey(identifier))
@@ -49,66 +63,111 @@ namespace dotSpace.BaseClasses
                 this.spaces.Add(identifier, tuplespace);
             }
         }
-        public ISpace GetSpace(string target)
+        /// <summary>
+        /// Returns the local instance of the space identified by the parameter.
+        /// </summary>
+        public ISpace GetSpace(string identifier)
         {
-            if (this.spaces.ContainsKey(target))
+            if (this.spaces.ContainsKey(identifier))
             {
-                return this.spaces[target];
+                return this.spaces[identifier];
             }
             return null;
         }
+        /// <summary>
+        /// Retrieves and removes the first tuple from the target Space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Get(string target, IPattern pattern)
         {
             return this.GetSpace(target)?.Get(pattern);
         }
+        /// <summary>
+        /// Retrieves and removes the first tuple from the target Space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Get(string target, params object[] pattern)
         {
             return this.GetSpace(target)?.Get(pattern);
         }
+        /// <summary>
+        /// Retrieves and removes the first tuple from the target Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
+        /// </summary>
         public ITuple GetP(string target, IPattern pattern)
         {
             return this.GetSpace(target)?.GetP(pattern);
         }
+        /// <summary>
+        /// Retrieves and removes the first tuple from the target Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
+        /// </summary>
         public ITuple GetP(string target, params object[] pattern)
         {
             return this.GetSpace(target)?.GetP(pattern);
         }
+        /// <summary>
+        /// Retrieves and removes all tuples from the target Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> GetAll(string target, IPattern pattern)
         {
             return this.GetSpace(target)?.GetAll(pattern);
         }
+        /// <summary>
+        /// Retrieves and removes all tuples from the target Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> GetAll(string target, params object[] pattern)
         {
             return this.GetSpace(target)?.GetAll(pattern);
         }
+        /// <summary>
+        /// Retrieves the first tuple from the target Space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Query(string target, IPattern pattern)
         {
             return this.GetSpace(target)?.Query(pattern);
         }
+        /// <summary>
+        /// Retrieves the first tuple from the target Space, matching the specified pattern. The operation will block if no elements match.
+        /// </summary>
         public ITuple Query(string target, params object[] pattern)
         {
             return this.GetSpace(target)?.Query(pattern);
         }
+        /// <summary>
+        /// Retrieves the first tuple from the target Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
+        /// </summary>
         public ITuple QueryP(string target, IPattern pattern)
         {
             return this.GetSpace(target)?.QueryP(pattern);
         }
+        /// <summary>
+        /// Retrieves the first tuple from the target Space, matching the specified pattern.The operation is non-blocking.The operation will return null if no elements match.
+        /// </summary>
         public ITuple QueryP(string target, params object[] pattern)
         {
             return this.GetSpace(target)?.QueryP(pattern);
         }
+        /// <summary>
+        /// Retrieves all tuples from the target Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> QueryAll(string target, IPattern pattern)
         {
             return this.GetSpace(target)?.QueryAll(pattern);
         }
+        /// <summary>
+        /// Retrieves all tuples from the target Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// </summary>
         public IEnumerable<ITuple> QueryAll(string target, params object[] pattern)
         {
             return this.GetSpace(target)?.QueryAll(pattern);
         }
+        /// <summary>
+        /// Inserts the tuple passed as argument into the target Space.
+        /// </summary>
         public void Put(string target, ITuple tuple)
         {
             this.GetSpace(target)?.Put(tuple);
         }
+        /// <summary>
+        /// Inserts the tuple passed as argument into the target Space.
+        /// </summary>
         public void Put(string target, params object[] tuple)
         {
             this.GetSpace(target)?.Put(tuple);
@@ -118,7 +177,11 @@ namespace dotSpace.BaseClasses
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Protected Methods
-
+        
+        /// <summary>
+        /// Template method that is called when the repository receives an incoming connection.
+        /// </summary>
+        /// <param name="mode"></param>
         protected abstract void OnConnect(IConnectionMode mode);
 
         #endregion
