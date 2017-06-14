@@ -62,11 +62,11 @@ namespace dotSpace.BaseClasses
 
             ITuple t = this.WaitUntilMatch(bucket, bucketLock, pattern);
             // Guard against duplication from retrieval
-            bool successs = true;
+            bool success = true;
             bucketLock.EnterWriteLock();
-            successs = bucket.Remove(t);
+            success = bucket.Remove(t);
             bucketLock.ExitWriteLock();
-            return successs ? t : null;
+            return success ? t : this.Get(pattern);
         }
         /// <summary>
         /// Retrieves and removes the first tuple from the Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.

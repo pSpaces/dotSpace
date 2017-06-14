@@ -16,7 +16,7 @@ namespace Example6
                 if (args[0] == "table")
                 {
                     SpaceRepository repository = new SpaceRepository();
-                    repository.AddGate("tcp://127.0.0.1:123?CONN");
+                    repository.AddGate("tcp://127.0.0.1:123?KEEP");
                     repository.AddSpace("DiningTable", new FifoSpace());
                     repository.Put("DiningTable", "FORK", 1);
                     repository.Put("DiningTable", "FORK", 2);
@@ -27,7 +27,7 @@ namespace Example6
                 }
                 else if (args[0] == "philosopher")
                 {
-                    ISpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/DiningTable?CONN");
+                    ISpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/DiningTable?KEEP");
                     List<AgentBase> agents = new List<AgentBase>();
                     agents.Add(new Philosopher("Alice", 1, 5, remotespace));
                     agents.Add(new Philosopher("Charlie", 2, 5, remotespace));
