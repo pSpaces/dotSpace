@@ -1,2 +1,3 @@
 
-Please go to dotSpace's wiki page for an in depth documentation: [Documentation](https://github.com/pSpaces/dotSpace/wiki)
+# dotSpace #
+Please go to dotSpace's [wiki page](https://github.com/pSpaces/dotSpace/wiki) for an in depth documentation.
