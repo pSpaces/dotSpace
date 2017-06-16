@@ -13,5 +13,10 @@
         /// Gets or sets the i'th element of the tuple.
         /// </summary>
         object this[int idx] { get; set; }
+
+        /// <summary>
+        /// Returns a deep copy of the instance. 
+        /// </summary>
+        ITuple Clone();
     }
 }

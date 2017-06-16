@@ -27,7 +27,7 @@ namespace dotSpace.BaseClasses
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
-        
+
         /// <summary>
         /// Initializes a new instance of the SpaceBase class.
         /// </summary>
@@ -115,15 +115,14 @@ namespace dotSpace.BaseClasses
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
             Monitor.Exit(this.bucketAccess);
 
-            IEnumerable<ITuple> t = this.FindAll(bucket, bucketLock, pattern);
-
-            if (t != null)
+            IEnumerable<ITuple> results = this.FindAll(bucket, bucketLock, pattern);
+            if (results != null)
             {
                 bucketLock.EnterWriteLock();
-                t.Apply(x => bucket.Remove(x));
+                results = results.Where(x => bucket.Remove(x)).ToList();
                 bucketLock.ExitWriteLock();
             }
-            return t;
+            return results;
         }
         /// <summary>
         /// Retrieves the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.
@@ -143,7 +142,7 @@ namespace dotSpace.BaseClasses
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
             Monitor.Exit(this.bucketAccess);
 
-            return this.WaitUntilMatch(bucket, bucketLock, pattern);
+            return this.WaitUntilMatch(bucket, bucketLock, pattern).Clone();
         }
         /// <summary>
         /// Retrieves the first tuple from the Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
@@ -162,7 +161,7 @@ namespace dotSpace.BaseClasses
             List<ITuple> bucket = this.GetBucket(hash);
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
             Monitor.Exit(this.bucketAccess);
-            return this.Find(bucket, bucketLock, pattern);
+            return this.Find(bucket, bucketLock, pattern)?.Clone();
         }
         /// <summary>
         /// Retrieves all tuples from the Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
@@ -181,7 +180,7 @@ namespace dotSpace.BaseClasses
             List<ITuple> bucket = this.GetBucket(hash);
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
             Monitor.Exit(this.bucketAccess);
-            return this.FindAll(bucket, bucketLock, pattern);
+            return this.FindAll(bucket, bucketLock, pattern).Select(x => x.Clone());
         }
         /// <summary>
         /// Inserts the tuple passed as argument into the Space.
@@ -211,12 +210,12 @@ namespace dotSpace.BaseClasses
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Protected Methods
-        
+
         /// <summary>
         /// Template method returning the index of where to insert a tuple.
         /// This method constitutes the ordering of the space.
         /// </summary>
-        protected abstract int GetIndex(int size); 
+        protected abstract int GetIndex(int size);
 
         #endregion
 
