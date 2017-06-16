@@ -1,4 +1,7 @@
 ﻿using dotSpace.Interfaces;
+using System;
+using System.Linq;
+using System.Text;
 
 namespace dotSpace.Objects.Spaces
 {
@@ -41,5 +44,17 @@ namespace dotSpace.Objects.Spaces
 
         #endregion
 
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
+
+        /// <summary>
+        /// Returns a textual representation of the underlying tuple values.
+        /// </summary>
+        public override string ToString()
+        {
+            return string.Format("<{0}>", String.Join(",", this.Fields.Select(x=>x.ToString())));
+        }
+
+        #endregion
     };
 }
