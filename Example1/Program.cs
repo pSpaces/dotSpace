@@ -10,7 +10,7 @@ namespace Example1
         static void Main(string[] args)
         {
             ISpace dtu = new FifoSpace();
-            dtu.Put("Hello world!");
+            dtu.Put("Hello student!");
             AgentBase student = new Student("sxxxxxx", dtu);
             student.Start();
             ITuple tuple = dtu.Get(typeof(string), typeof(string));
