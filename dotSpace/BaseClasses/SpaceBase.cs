@@ -42,6 +42,7 @@ namespace dotSpace.BaseClasses
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
+
         /// <summary>
         /// Retrieves and removes the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.
         /// </summary>
@@ -49,6 +50,7 @@ namespace dotSpace.BaseClasses
         {
             return this.Get(pattern.Fields);
         }
+
         /// <summary>
         /// Retrieves and removes the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.
         /// </summary>
@@ -68,6 +70,7 @@ namespace dotSpace.BaseClasses
             bucketLock.ExitWriteLock();
             return success ? t : this.Get(pattern);
         }
+
         /// <summary>
         /// Retrieves and removes the first tuple from the Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
         /// </summary>
@@ -75,6 +78,7 @@ namespace dotSpace.BaseClasses
         {
             return this.GetP(pattern.Fields);
         }
+
         /// <summary>
         /// Retrieves and removes the first tuple from the Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
         /// </summary>
@@ -97,6 +101,7 @@ namespace dotSpace.BaseClasses
             }
             return success ? t : null;
         }
+
         /// <summary>
         /// Retrieves and removes all tuples from the Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
         /// </summary>
@@ -104,6 +109,7 @@ namespace dotSpace.BaseClasses
         {
             return this.GetAll(pattern.Fields);
         }
+
         /// <summary>
         /// Retrieves and removes all tuples from the Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
         /// </summary>
@@ -124,15 +130,17 @@ namespace dotSpace.BaseClasses
             }
             return results;
         }
+
         /// <summary>
-        /// Retrieves the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.
+        /// Retrieves a clone of the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.
         /// </summary>
         public ITuple Query(IPattern pattern)
         {
             return this.Query(pattern.Fields);
         }
+
         /// <summary>
-        /// Retrieves the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.
+        /// Retrieves a clone of the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.
         /// </summary>
         public ITuple Query(params object[] pattern)
         {
@@ -144,15 +152,17 @@ namespace dotSpace.BaseClasses
 
             return this.WaitUntilMatch(bucket, bucketLock, pattern).Clone();
         }
+
         /// <summary>
-        /// Retrieves the first tuple from the Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
+        /// Retrieves a clone of the first tuple from the Space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
         /// </summary>
         public ITuple QueryP(IPattern pattern)
         {
             return this.QueryP(pattern.Fields);
         }
+
         /// <summary>
-        /// Retrieves the first tuple from the Space, matching the specified pattern.The operation is non-blocking.The operation will return null if no elements match.
+        /// Retrieves a clone of the first tuple from the Space, matching the specified pattern.The operation is non-blocking.The operation will return null if no elements match.
         /// </summary>
         public ITuple QueryP(params object[] pattern)
         {
@@ -163,15 +173,17 @@ namespace dotSpace.BaseClasses
             Monitor.Exit(this.bucketAccess);
             return this.Find(bucket, bucketLock, pattern)?.Clone();
         }
+
         /// <summary>
-        /// Retrieves all tuples from the Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// Retrieves clones of all tuples from the Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
         /// </summary>
         public IEnumerable<ITuple> QueryAll(IPattern pattern)
         {
             return this.QueryAll(pattern.Fields);
         }
+
         /// <summary>
-        /// Retrieves all tuples from the Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// Retrieves clones of all tuples from the Space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
         /// </summary>
         public IEnumerable<ITuple> QueryAll(params object[] pattern)
         {
@@ -182,6 +194,7 @@ namespace dotSpace.BaseClasses
             Monitor.Exit(this.bucketAccess);
             return this.FindAll(bucket, bucketLock, pattern).Select(x => x.Clone());
         }
+
         /// <summary>
         /// Inserts the tuple passed as argument into the Space.
         /// </summary>
@@ -189,6 +202,7 @@ namespace dotSpace.BaseClasses
         {
             this.Put(t.Fields);
         }
+
         /// <summary>
         /// Inserts the tuple passed as argument into the Space.
         /// </summary>

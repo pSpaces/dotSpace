@@ -38,32 +38,32 @@ namespace dotSpace.Interfaces
         IEnumerable<ITuple> GetAll(params object[] pattern);
 
         /// <summary>
-        /// Retrieves the first tuple from the space, matching the specified pattern. The operation will block if no elements match.
+        /// Retrieves a clone of the first tuple from the space matching the specified pattern. The operation will block if no elements match.
         /// </summary>
         ITuple Query(IPattern pattern);
 
         /// <summary>
-        /// Retrieves the first tuple from the space, matching the specified pattern. The operation will block if no elements match.
+        /// Retrieves a clone of the first tuple from the space matching the specified pattern. The operation will block if no elements match.
         /// </summary>
         ITuple Query(params object[] pattern);
 
         /// <summary>
-        /// Retrieves the first tuple from the space, matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
+        /// Retrieves a clone of the first tuple from the space matching the specified pattern. The operation is non-blocking. The operation will return null if no elements match.
         /// </summary>
         ITuple QueryP(IPattern pattern);
 
         /// <summary>
-        /// Retrieves the first tuple from the space, matching the specified pattern.The operation is non-blocking.The operation will return null if no elements match.
+        /// Retrieves a clone of the first tuple from the space matching the specified pattern.The operation is non-blocking.The operation will return null if no elements match.
         /// </summary>
         ITuple QueryP(params object[] pattern);
 
         /// <summary>
-        /// Retrieves all tuples from the space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// Retrieves clones of all tuples from the space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
         /// </summary>
         IEnumerable<ITuple> QueryAll(IPattern pattern);
 
         /// <summary>
-        /// Retrieves all tuples from the space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
+        /// Retrieves clones of all tuples from the space matching the specified pattern. The operation is non-blocking. The operation will return an empty set if no elements match.
         /// </summary>
         IEnumerable<ITuple> QueryAll(params object[] pattern);
 
