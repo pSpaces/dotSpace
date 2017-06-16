@@ -2,7 +2,7 @@
 using dotSpace.Interfaces;
 using System;
 
-namespace Example7
+namespace Example8
 {
     public class Producer : AgentBase
     {

@@ -3,6 +3,7 @@ using dotSpace.Interfaces;
 using dotSpace.Objects.Network;
 using dotSpace.Objects.Spaces;
 using System;
+using System.Collections.Generic;
 
 namespace Example8
 {
@@ -12,30 +13,29 @@ namespace Example8
         {
             if (args.Length == 1)
             {
-                string arg = args[0].ToString();
-                if (arg == "alice")
+                if (args[0] == "producer")
                 {
                     SpaceRepository repository = new SpaceRepository();
                     repository.AddGate("tcp://127.0.0.1:123?CONN");
                     repository.AddSpace("fridge", new FifoSpace());
-                    AgentBase alice = new Alice("Alice", repository.GetSpace("fridge"));
+                    AgentBase alice = new Producer("Alice", repository.GetSpace("fridge"));
                     alice.Start();
                     return;
                 }
-                else if (arg == "b+c")
+                else if (args[0] == "consumer")
                 {
                     ISpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/fridge?CONN");
-                    AgentBase bob = new Bob("Bob", remotespace);
-                    AgentBase charlie = new Charlie("Charlie", remotespace);
-                    bob.Start();
-                    charlie.Start();
+                    List<AgentBase> agents = new List<AgentBase>();
+                    agents.Add(new FoodConsumer("Bob", remotespace));
+                    agents.Add(new FoodConsumer("Charlie", remotespace));
+                    agents.Add(new DrugConsumer("Dave", remotespace));
+                    agents.ForEach(a => a.Start());
                     Console.Read();
                     return;
                 }
             }
-            Console.WriteLine("Please specify [Alice|B+C]");
+            Console.WriteLine("Please specify [producer|consumer]");
             Console.Read();
-
         }
     }
 }

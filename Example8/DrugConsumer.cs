@@ -5,20 +5,21 @@ using System;
 
 namespace Example8
 {
-    public class Bob : AgentBase
+    public class DrugConsumer : AgentBase
     {
-        public Bob(string name, ISpace ts) : base(name, ts)
+
+        public DrugConsumer(string name, ISpace ts) : base(name, ts)
         {
         }
 
         protected override void DoWork()
         {
-            Pattern what = new Pattern(typeof(string), typeof(int));
-            Pattern go = new Pattern("shop!");
+            // Note how templates are created in dotSpace
+            Pattern what = new Pattern(typeof(string), typeof(int), "drug");
+            // The tuple is necessary to capture the result of a get operation
             ITuple t;
             try
             {
-                this.Query(go);
                 while (true)
                 {
                     // The get operation returns a tuple, that we save into t
@@ -29,8 +30,7 @@ namespace Example8
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.StackTrace);
-
+                Console.Write(e.StackTrace);
             }
         }
 

@@ -3,7 +3,7 @@ using dotSpace.Interfaces;
 using dotSpace.Objects.Spaces;
 using System;
 
-namespace Example3
+namespace Example8
 {
 
     public class AnyConsumer : AgentBase

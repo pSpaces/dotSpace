@@ -4,7 +4,7 @@ using dotSpace.Objects.Spaces;
 using System;
 using System.Collections.Generic;
 
-namespace Example7
+namespace Example8
 {
     public class FoodConsumer : AgentBase
     {

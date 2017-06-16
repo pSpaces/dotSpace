@@ -1,7 +1,6 @@
-﻿using dotSpace.BaseClasses;
-using dotSpace.Interfaces;
+﻿using dotSpace.Interfaces;
 using dotSpace.Objects.Spaces;
-using System.Collections.Generic;
+using System;
 
 namespace Example3
 {
@@ -9,17 +8,13 @@ namespace Example3
     {
         static void Main(string[] args)
         {
-            ISpace ts = new FifoSpace();
-            List<AgentBase> agents = new List<AgentBase>();
-
-            // We create Alice and Bob as Producer/Consumer agents
-            // The constructor of agents takes the name of the agent as argument
-            agents.Add(new Producer("Alice", ts));
-            agents.Add(new FoodConsumer("Bob", ts));
-            agents.Add(new FoodConsumer("Charlie", ts));
-            agents.Add(new DrugConsumer("Dave", ts));
-            // We start the agents
-            agents.ForEach(a => a.Start());
+            ISpace pingpongTable = new FifoSpace();
+            pingpongTable.Put("ping", 0);
+            PingPong a1 = new PingPong("ping", "pong", pingpongTable);
+            PingPong a2 = new PingPong("pong", "ping", pingpongTable);
+            a1.Start();
+            a2.Start();
+            Console.Read();
         }
     }
 }

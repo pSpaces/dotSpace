@@ -1,6 +1,7 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Interfaces;
 using dotSpace.Objects.Spaces;
+using System;
 using System.Collections.Generic;
 
 namespace Example4
@@ -14,11 +15,13 @@ namespace Example4
 
             // We create Alice and Bob as Producer/Consumer agents
             // The constructor of agents takes the name of the agent as argument
-            agents.Add(new Alice("Alice", ts));
-            agents.Add(new Bob("Bob", ts));
-            agents.Add(new Charlie("Charlie", ts));
+            agents.Add(new Producer("Alice", ts));
+            agents.Add(new FoodConsumer("Bob", ts));
+            agents.Add(new FoodConsumer("Charlie", ts));
+            agents.Add(new DrugConsumer("Dave", ts));
             // We start the agents
             agents.ForEach(a => a.Start());
+            Console.Read();
         }
     }
 }

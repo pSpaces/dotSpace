@@ -1,9 +1,6 @@
-﻿using dotSpace.BaseClasses;
-using dotSpace.Interfaces;
-using dotSpace.Objects.Network;
+﻿using dotSpace.Objects.Network;
 using dotSpace.Objects.Spaces;
 using System;
-using System.Collections.Generic;
 
 namespace Example7
 {
@@ -11,31 +8,27 @@ namespace Example7
     {
         static void Main(string[] args)
         {
-            if (args.Length == 1)
+            try
             {
-                if (args[0] == "producer")
-                {
-                    SpaceRepository repository = new SpaceRepository();
-                    repository.AddGate("tcp://127.0.0.1:123?CONN");
-                    repository.AddSpace("fridge", new FifoSpace());
-                    AgentBase alice = new Producer("Alice", repository.GetSpace("fridge"));
-                    alice.Start();
-                    return;
-                }
-                else if (args[0] == "consumer")
-                {
-                    ISpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/fridge?CONN");
-                    List<AgentBase> agents = new List<AgentBase>();
-                    agents.Add(new FoodConsumer("Bob", remotespace));
-                    agents.Add(new FoodConsumer("Charlie", remotespace));
-                    agents.Add(new DrugConsumer("Dave", remotespace));
-                    agents.ForEach(a => a.Start());
-                    Console.Read();
-                    return;
-                }
+                SpaceRepository repository = new SpaceRepository();
+                repository.AddGate("tcp://127.0.0.1:123?KEEP");
+                repository.AddGate("tcp://127.0.0.1:124?KEEP");
+                repository.AddSpace("pingpong", new RandomSpace());
+                repository.Put("pingpong", "ping", 0);
+
+                RemoteSpace remotespace1 = new RemoteSpace("tcp://127.0.0.1:123/pingpong?KEEP");
+                PingPong a1 = new PingPong("ping", "pong", remotespace1);
+
+                RemoteSpace remotespace2 = new RemoteSpace("tcp://127.0.0.1:124/pingpong?KEEP");
+                PingPong a2 = new PingPong("pong", "ping", remotespace2);
+                a1.Start();
+                a2.Start();
+                Console.Read();
             }
-            Console.WriteLine("Please specify [producer|consumer]");
-            Console.Read();
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

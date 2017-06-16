@@ -21,6 +21,5 @@ namespace Example1
             Console.WriteLine(string.Format("{0} you are attending course {1}", tuple[0], tuple[1]));
             Console.Read();
         }
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Interfaces;
 using dotSpace.Objects.Spaces;
+using System;
 using System.Collections.Generic;
 
 namespace Example2
@@ -23,6 +24,7 @@ namespace Example2
             agents.Add(new Philosopher("Dave", 4, 5, ts));
             agents.Add(new Philosopher("Homer", 5, 5, ts));
             agents.ForEach(a => a.Start());
+            Console.Read();
         }
     }
 }

@@ -43,10 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnyConsumer.cs" />
-    <Compile Include="DrugConsumer.cs" />
-    <Compile Include="FoodConsumer.cs" />
-    <Compile Include="Producer.cs" />
+    <Compile Include="PingPong.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
