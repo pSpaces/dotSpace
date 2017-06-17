@@ -64,7 +64,7 @@ namespace dotSpace.BaseClasses
 
             ITuple t = this.WaitUntilMatch(bucket, bucketLock, pattern);
             // Guard against duplication from retrieval
-            bool success = true;
+            bool success = false;
             bucketLock.EnterWriteLock();
             success = bucket.Remove(t);
             bucketLock.ExitWriteLock();
@@ -92,7 +92,7 @@ namespace dotSpace.BaseClasses
 
             ITuple t = this.Find(bucket, bucketLock, pattern);
             // Guard against duplication from retrieval
-            bool success = true;
+            bool success = false;
             if (t != null)
             {
                 bucketLock.EnterWriteLock();
@@ -215,7 +215,7 @@ namespace dotSpace.BaseClasses
             Monitor.Exit(this.bucketAccess);
 
             bucketLock.EnterWriteLock();
-            bucket.Insert(this.GetIndex(bucket.Count), new Objects.Spaces.Tuple(values));
+            bucket.Insert(this.GetIndex(bucket.Count), this.Create(values));
             bucketLock.ExitWriteLock();
             this.Awake(bucket);
         }
@@ -235,6 +235,18 @@ namespace dotSpace.BaseClasses
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Private Methods
+
+        private object[] CopyFields(object[] fields)
+        {
+            object[] newFields = new object[fields.Length];
+            Array.Copy(fields, newFields, fields.Length);
+            return newFields;
+        }
+
+        private ITuple Create(object[] fields)
+        {
+            return new Objects.Spaces.Tuple(this.CopyFields(fields));
+        }
 
         private ulong ComputeHash(object[] values)
         {
