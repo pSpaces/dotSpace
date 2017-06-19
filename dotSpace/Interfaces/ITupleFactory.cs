@@ -1,7 +1,7 @@
 ﻿namespace dotSpace.Interfaces
 {
     /// <summary>
-    /// Defines the operations neccessary to create custom tuples used in the implemented spaces.
+    /// Defines the operations neccessary to create custom tuples used by the concrete spaces.
     /// </summary>
     public interface ITupleFactory
     {

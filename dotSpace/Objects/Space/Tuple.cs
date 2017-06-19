@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace dotSpace.Objects.Spaces
+namespace dotSpace.Objects.Space
 {
     /// <summary>
     /// Concrete implementation of a tuple.

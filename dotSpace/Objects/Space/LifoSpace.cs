@@ -1,24 +1,23 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Interfaces;
-using System;
 
-namespace dotSpace.Objects.Spaces
+namespace dotSpace.Objects.Space
 {
-
     /// <summary>
     /// Concrete implementation of a tuplespace datastructure.
     /// Represents a strongly typed set of tuples that can be access through pattern matching. Provides methods to query and manipulate the set.
-    /// This class does not impose ordering on the underlying tuples, as they are inserted randomly into the underlying set.
+    /// This class imposes lifo ordering on the underlying tuples.
     /// </summary>
-    public sealed class RandomSpace : SpaceBase
+    public sealed class LifoSpace : SpaceBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
         /// <summary>
-        /// Initializes a new instance of the FifoSpace class.
+        /// Initializes a new instance of the FifoSpace class. All tuples will be created using the provided tuple factory;
+        /// if none is provided the default TupleFactory will be used.
         /// </summary>
-        public RandomSpace(ITupleFactory tuplefactory = null) : base(tuplefactory ?? new TupleFactory())
+        public LifoSpace(ITupleFactory tuplefactory = null) : base(tuplefactory ?? new TupleFactory())
         {
         }
 
@@ -28,11 +27,11 @@ namespace dotSpace.Objects.Spaces
         #region // Protected Methods
 
         /// <summary>
-        /// Returns a random index of where the tuple must be inserted.
+        /// Returns the last index contained within the space to force lifo ordering.
         /// </summary>
         protected override int GetIndex(int size)
         {
-            return Environment.TickCount % (size+1);
+            return 0;
         }
 
         #endregion

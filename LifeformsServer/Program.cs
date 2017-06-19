@@ -1,5 +1,5 @@
 ﻿using dotSpace.Objects.Network;
-using dotSpace.Objects.Spaces;
+using dotSpace.Objects.Space;
 using System;
 
 namespace LifeformsServer

@@ -1,5 +1,5 @@
 ﻿using dotSpace.Interfaces;
-using dotSpace.Objects.Spaces;
+using dotSpace.Objects.Space;
 using Pong;
 using System;
 

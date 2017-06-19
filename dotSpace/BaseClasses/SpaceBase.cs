@@ -30,7 +30,7 @@ namespace dotSpace.BaseClasses
         #region // Constructors
 
         /// <summary>
-        /// Initializes a new instance of the SpaceBase class.
+        /// Initializes a new instance of the SpaceBase class. All tuples will be created using the provided tuple factory.
         /// </summary>
         public SpaceBase(ITupleFactory tupleFactory)
         {

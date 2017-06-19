@@ -2,7 +2,7 @@
 using dotSpace.Interfaces;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
-using dotSpace.Objects.Spaces;
+using dotSpace.Objects.Space;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,7 +138,7 @@ namespace dotSpace.Objects.Network
             if (ts != null)
             {
                 PutRequest putReq = (PutRequest)request;
-                ts.Put(new Objects.Spaces.Tuple(putReq.Tuple));
+                ts.Put(new Objects.Space.Tuple(putReq.Tuple));
                 return new PutResponse(request.Source, request.Session, request.Target, StatusCode.OK, StatusMessage.OK);
             }
             return new PutResponse(request.Source, request.Session, request.Target, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);

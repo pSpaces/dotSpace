@@ -4,7 +4,7 @@ using dotSpace.Objects.Network.ConnectionModes;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
 using dotSpace.Objects.Network.Protocols;
-using dotSpace.Objects.Spaces;
+using dotSpace.Objects.Space;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +31,8 @@ namespace dotSpace.Objects.Network
         #region // Constructors
 
         /// <summary>
-        /// Initializes a new instances of the RemoteSpace class.
+        /// Initializes a new instances of the RemoteSpace class providing networked access to a space repository. All tuples will be created using the provided tuple factory;
+        /// if none is provided the default TupleFactory will be used.
         /// </summary>
         public RemoteSpace(string uri, ITupleFactory tuplefactory = null)
         {

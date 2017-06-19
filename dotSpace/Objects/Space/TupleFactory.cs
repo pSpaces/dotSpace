@@ -1,10 +1,10 @@
 ﻿using dotSpace.Interfaces;
 
-namespace dotSpace.Objects.Spaces
+namespace dotSpace.Objects.Space
 {
     /// <summary>
     /// Concrete implementation of a tuple factory using dotSpace's tuple class.
-    /// Provides the primitives required to define a tuple. 
+    /// Provides the primitives required to instantiate a tuple. 
     /// </summary>
     public sealed class TupleFactory : ITupleFactory
     {

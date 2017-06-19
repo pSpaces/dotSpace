@@ -1,6 +1,6 @@
 ﻿using dotSpace.Interfaces;
 
-namespace dotSpace.Objects.Spaces
+namespace dotSpace.Objects.Space
 {
     /// <summary>
     /// Concrete implementation of a pattern.
