@@ -13,19 +13,18 @@ namespace Lifeforms
         private int height;
         private Random rng;
 
-        private string id;
         private int roamX;
         private int roamY;
         private int nrChildren;
         private int maxSpeedgain;
         private int breedingCost;
         private int maxFood;
-        private ITuple targetMate;
-        private ITuple targetFood;
+        private Position targetMate;
+        private Food targetFood;
 
-        public Lifeform(long genom, long p1genom, long p2genom, int life, int food, int x, int y, int generation, int visualRange, int maxNrChildren, int speed, int width, int height, ISpace ts) : base(genom.ToString(), ts)
+        public Lifeform(SpawnLifeform spawn, int width, int height, ISpace ts) : base(spawn.Genom.ToString(), ts)
         {
-            this.id = Guid.NewGuid().ToString();
+            string id = Guid.NewGuid().ToString();
             this.rng = new Random(Environment.TickCount);
             this.nrChildren = 0;
             this.maxSpeedgain = 40;
@@ -33,70 +32,51 @@ namespace Lifeforms
             this.maxFood = this.breedingCost * 2;
             this.targetMate = null;
             this.targetFood = null;
-            this.Genom = genom;
-            this.P1Genom = p1genom;
-            this.P2Genom = p2genom;
-            this.InitialLife = life;
-            this.Life = life;
-            this.Food = food;
-            this.X = x;
-            this.Y = y;
             this.width = width;
             this.height = height;
-            this.Generation = generation;
-            this.VisualRange = visualRange;
-            this.MaxNrChildren = maxNrChildren;
-            this.Speed = Math.Min(this.maxSpeedgain, speed);
+            this.Stats = new LifeformStats(id, this.maxSpeedgain, spawn);
+            this.Position = new Position(id, spawn.X, spawn.Y);
+            this.FoodAmount = spawn.Food;
         }
 
-        private long Genom { get; set; }
-        private long P1Genom { get; set; }
-        private long P2Genom { get; set; }
-        private int InitialLife { get; set; }
-        private int Life { get; set; }
-        private int Food { get; set; }
-        private int X { get; set; }
-        private int Y { get; set; }
-        private int Generation { get; set; }
-        private int VisualRange { get; set; }
-        private int MaxNrChildren { get; set; }
-        private int Speed { get; set; }
+        private LifeformStats Stats { get; set; }
+        private Position Position { get; set; }
+        private int FoodAmount { get; set; }
 
         protected override void DoWork()
         {
             // Wait until we can start
-            this.Query("start");
-            this.Put("lifeform", this.id, this.X, this.Y);
-            this.Put("lifeformProperties", this.id, this.Genom, this.P1Genom, this.P2Genom, this.InitialLife, this.Generation, this.VisualRange, this.MaxNrChildren, this.Speed);
+            this.Query(EntityType.SIGNAL, "start");
+            this.Put(this.Position);
+            this.Put(this.Stats);
             this.roamX = (this.rng.Next() % (this.width - 3)) + 1;
             this.roamY = (this.rng.Next() % (this.height - 3)) + 1;
             // Keep iterating while the state is 'running'
-            while (this.QueryP("running", true) != null && this.Life > 0)
+            while (this.QueryP(EntityType.SIGNAL, "running", true) != null && this.Stats.Life > 0)
             {
                 // if the lifeform has more food than the cost to breed, then find a mate
-                if (this.Food > this.breedingCost && nrChildren < this.MaxNrChildren)
+                if (this.FoodAmount > this.breedingCost && nrChildren < this.Stats.MaxNrChildren)
                 {
                     // is the mate close by?
-                    if (targetMate != null && this.IsNearby((int)targetMate[2], (int)targetMate[3]))
+                    if (this.targetMate != null && this.IsNearby(this.targetMate.X, this.targetMate.Y))
                     {
-                        this.Breed(targetMate);
-                        targetMate = null;
+                        this.Breed(this.targetMate);
                     }
                     else
                     {
-                        // We have no mate, so try to find one.
-                        if (targetMate == null)
+                        // We have no mate, so try to find one.'
+                        if (this.targetMate == null)
                         {
-                            targetMate = this.FindMate();
+                            this.targetMate = this.FindMate();
                         }
 
                         // if we found one, then move towards it
-                        if (targetMate != null)
+                        if (this.targetMate != null)
                         {
                             // update the mate's location
-                            if ((targetMate = this.QueryP("lifeform", (string)targetMate[1], typeof(int), typeof(int))) != null)
+                            if ((this.targetMate = (Position)this.QueryP(EntityType.POSITION, this.targetMate.Id, typeof(int), typeof(int))) != null)
                             {
-                                this.Move((int)targetMate[2], (int)targetMate[3]);
+                                this.Move(this.targetMate.X, this.targetMate.Y);
                             }
                         }
                         // otherwise roam
@@ -109,20 +89,19 @@ namespace Lifeforms
                 // otherwise search for food
                 else
                 {
-                    if (targetFood != null && this.IsNearby((int)targetFood[3], (int)targetFood[4]))
+                    if (this.targetFood != null && this.IsNearby(this.targetFood.X, this.targetFood.Y))
                     {
-                        this.Eat(targetFood);
-                        targetFood = null;
+                        this.Eat();
                     }
                     else
                     {
-                        if (targetFood == null)
+                        if (this.targetFood == null)
                         {
-                            targetFood = this.FindFood();
+                            this.targetFood = this.FindFood();
                         }
-                        if (targetFood != null)
+                        if (this.targetFood != null)
                         {
-                            this.Move((int)targetFood[3], (int)targetFood[4]);
+                            this.Move(this.targetFood.X, this.targetFood.Y);
                         }
                         // otherwise roam
                         else
@@ -132,19 +111,19 @@ namespace Lifeforms
                     }
                 }
 
-                this.Food = Math.Max(this.Food - 1, 0);
-                if (this.Food == 0)
+                this.FoodAmount = Math.Max(this.FoodAmount - 1, 0);
+                if (this.FoodAmount == 0)
                 {
-                    this.Life--;
+                    this.Stats.Life--;
                 }
-                Thread.Sleep(50 - this.Speed);
+                Thread.Sleep(50 - this.Stats.Speed);
             }
-            this.Get("lifeform", this.id, typeof(int), typeof(int));
-            this.Get("lifeformProperties", this.id, typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+            this.Get(EntityType.POSITION, this.Stats.Id, typeof(int), typeof(int));
+            this.Get(EntityType.LIFEFORM_STATS, this.Stats.Id, typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
         }
         private void Roam()
         {
-            if (this.X == this.roamX && this.Y == this.roamY)
+            if (this.Position.X == this.roamX && this.Position.Y == this.roamY)
             {
                 this.roamX = (this.rng.Next() % (this.width - 3)) + 1;
                 this.roamY = (this.rng.Next() % (this.height - 3)) + 1;
@@ -153,45 +132,46 @@ namespace Lifeforms
         }
         private bool IsNearby(int x, int y)
         {
-            return Math.Abs(this.X - x) <= 1 && Math.Abs(this.Y - y) <= 1;
+            return Math.Abs(this.Position.X - x) <= 1 && Math.Abs(this.Position.Y - y) <= 1;
         }
-        private void Eat(ITuple food)
+        private void Eat()
         {
-            if ((food = this.GetP("food", food[1], typeof(int), food[3], food[4])) != null)
+            Food food = (Food)this.GetP(EntityType.FOOD, this.targetFood.Amount, typeof(int), this.targetFood.X, this.targetFood.Y);
+            if (food != null)
             {
-                int amount = (int)food[1];
-                int foodDiff = this.maxFood - this.Food;
+                int foodDiff = this.maxFood - this.FoodAmount;
                 if (foodDiff > 0)
                 {
-                    int eat = Math.Min(foodDiff, amount);
-                    this.Food += eat;
-                    amount -= eat;
+                    int eat = Math.Min(foodDiff, food.Amount);
+                    this.FoodAmount += eat;
+                    food.Amount -= eat;
 
-                    if (amount > 0)
+                    if (food.Amount > 0)
                     {
-                        this.Put("food", amount, (int)food[2], (int)food[3], (int)food[4]);
+                        this.Put(food);
                     }
                     else
                     {
-                        this.Put("foodEaten");
+                        this.Put(EntityType.SIGNAL, "foodEaten");
                     }
                 }
             }
+            this.targetFood = null;
         }
-        private ITuple FindMate()
+        private Position FindMate()
         {
-            IEnumerable<ITuple> targetmates = this.QueryAll("lifeform", typeof(string), typeof(int), typeof(int));
-            targetmates = targetmates.Where(lf => this.CanSee((int)lf[2], (int)lf[3]) && this.CanBreed(lf)).ToList();
+            IEnumerable<Position> targetmates = this.QueryAll(EntityType.POSITION, typeof(string), typeof(int), typeof(int)).Cast<Position>();
+            targetmates = targetmates.Where(lf => this.CanSee(lf.X, lf.Y) && this.CanBreed(lf)).ToList();
             if (targetmates.Count() > 0)
             {
                 return targetmates.ElementAt(rng.Next() % targetmates.Count());
             }
             return null;
         }
-        private ITuple FindFood()
+        private Food FindFood()
         {
-            IEnumerable<ITuple> targetFoods = this.QueryAll("food", typeof(int), typeof(int), typeof(int), typeof(int));
-            targetFoods = targetFoods.Where(f => this.CanSee((int)f[3], (int)f[4]));
+            IEnumerable<Food> targetFoods = this.QueryAll(EntityType.FOOD, typeof(int), typeof(int), typeof(int), typeof(int)).Cast<Food>();
+            targetFoods = targetFoods.Where(f => this.CanSee(f.X, f.Y));
             if (targetFoods.Count() > 0)
             {
                 return targetFoods.ElementAt(rng.Next() % targetFoods.Count());
@@ -200,135 +180,126 @@ namespace Lifeforms
         }
         private void Move(int x, int y)
         {
-            int deltaX = Math.Abs(this.X - x);
-            int deltaY = Math.Abs(this.Y - y);
-            this.Get("lifeform", this.id, typeof(int), typeof(int));
+            int deltaX = Math.Abs(this.Position.X - x);
+            int deltaY = Math.Abs(this.Position.Y - y);
+            this.Get(EntityType.POSITION, this.Stats.Id, typeof(int), typeof(int));
 
             if (deltaX > deltaY)
             {
-                if (this.X > x)
+                if (this.Position.X > x)
                 {
-                    this.X--;
+                    this.Position.X--;
                 }
-                else if (this.X < x)
+                else if (this.Position.X < x)
                 {
-                    this.X++;
+                    this.Position.X++;
                 }
             }
             else
             {
-                if (this.Y < y)
+                if (this.Position.Y < y)
                 {
-                    this.Y++;
+                    this.Position.Y++;
                 }
-                else if (this.Y > y)
+                else if (this.Position.Y > y)
                 {
-                    this.Y--;
+                    this.Position.Y--;
                 }
             }
-            this.X = Math.Min(this.X, this.width - 2);
-            this.X = Math.Max(this.X, 1);
-            this.Y = Math.Min(this.Y, this.height - 2);
-            this.Y = Math.Max(this.Y, 1);
-
-            this.Put("lifeform", this.id, this.X, this.Y);
+            this.Position.X = Math.Min(this.Position.X, this.width - 2);
+            this.Position.X = Math.Max(this.Position.X, 1);
+            this.Position.Y = Math.Min(this.Position.Y, this.height - 2);
+            this.Position.Y = Math.Max(this.Position.Y, 1);
+            this.Put(this.Position);
         }
         private bool CanSee(int x, int y)
         {
-            int deltaX = Math.Abs(this.X - x);
-            int deltaY = Math.Abs(this.Y - y);
+            int deltaX = Math.Abs(this.Position.X - x);
+            int deltaY = Math.Abs(this.Position.Y - y);
             int dist = (int)Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
-            return dist <= this.VisualRange;
+            return dist <= this.Stats.VisualRange;
         }
         private void GetFreeAdjacentCell(out int x, out int y)
         {
-            ITuple adjacent = this.QueryP("lifeform", typeof(string), this.X, this.Y + 1);
+            ITuple adjacent = this.QueryP(EntityType.POSITION, typeof(string), this.Position.X, this.Position.Y + 1);
             if (adjacent == null)
             {
-                adjacent = this.QueryP("lifeform", typeof(string), this.X + 1, this.Y);
+                adjacent = this.QueryP(EntityType.POSITION, typeof(string), this.Position.X + 1, this.Position.Y);
                 if (adjacent == null)
                 {
-                    adjacent = this.QueryP("lifeform", typeof(string), this.X - 1, this.Y);
+                    adjacent = this.QueryP(EntityType.POSITION, typeof(string), this.Position.X - 1, this.Position.Y);
                     if (adjacent == null)
                     {
-                        adjacent = this.QueryP("lifeform", typeof(string), this.X, this.Y - 1);
+                        adjacent = this.QueryP(EntityType.POSITION, typeof(string), this.Position.X, this.Position.Y - 1);
                         if (adjacent == null)
                         {
                             x = -1;
                             y = -1;
                         }
-                        x = this.X;
-                        y = this.Y - 1;
+                        x = this.Position.X;
+                        y = this.Position.Y - 1;
                     }
-                    x = this.X;
-                    y = this.Y - 1;
+                    x = this.Position.X;
+                    y = this.Position.Y - 1;
                 }
-                x = this.X + 1;
-                y = this.Y;
+                x = this.Position.X + 1;
+                y = this.Position.Y;
             }
-            x = this.X;
-            y = this.Y + 1;
+            x = this.Position.X;
+            y = this.Position.Y + 1;
         }
-        private bool CanBreed(ITuple other)
+        private bool CanBreed(Position other)
         {
             if (other == null)
             {
                 return false;
             }
-            ITuple lifeformProperties = this.QueryP("lifeformProperties", other[1], typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
-            if (lifeformProperties == null)
+            LifeformStats stats = (LifeformStats)this.QueryP(EntityType.LIFEFORM_STATS, other.Id, typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+            if (stats == null)
             {
                 return false;
             }
-            long otherGenom = (long)lifeformProperties[2];
-            long otherP1genom = (long)lifeformProperties[3];
-            long otherP2genom = (long)lifeformProperties[4];
 
-            return (this.Genom != otherP1genom && this.Genom != otherP2genom) &&
-                   (this.P1Genom != otherP1genom && this.P1Genom != otherP2genom) &&
-                   (this.P2Genom != otherP1genom && this.P2Genom != otherP2genom);
+            return (this.Stats.Genom != stats.P1Genom && this.Stats.Genom != stats.P2Genom) &&
+                   (this.Stats.P1Genom != stats.P1Genom && this.Stats.P1Genom != stats.P2Genom) &&
+                   (this.Stats.P2Genom != stats.P1Genom && this.Stats.P2Genom != stats.P2Genom);
         }
-        private void Breed(ITuple other)
+        private void Breed(Position other)
         {
             int x = -1;
             int y = -1;
             this.GetFreeAdjacentCell(out x, out y);
             if (x > 0 && y > 0)
             {
-                ITuple mateProperties = this.QueryP("lifeformProperties", other[1], typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
-                if (mateProperties != null)
+                LifeformStats mate = (LifeformStats)this.QueryP(EntityType.LIFEFORM_STATS, this.targetMate.Id, typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+                if (mate != null)
                 {
-                    x = x == this.width ? this.X - 1 : X;
-                    y = y == this.width ? this.Y - 1 : Y;
+                    x = x == this.width ? this.Position.X - 1 : this.Position.X;
+                    y = y == this.width ? this.Position.Y - 1 : this.Position.Y;
 
-                    this.Life -= this.InitialLife / this.MaxNrChildren;
-                    this.Food -= this.breedingCost;
-                    long otherGenom = (long)mateProperties[2];
-                    int otherInitialLife = (int)mateProperties[5];
-                    int otherGeneration = (int)mateProperties[6];
-                    int otherVisualRange = (int)mateProperties[7];
-                    int othermaxNrChildren = (int)mateProperties[8];
-                    int otherSpeed = (int)mateProperties[9];
+                    this.Stats.Life -= this.Stats.InitialLife / this.Stats.MaxNrChildren;
+                    this.FoodAmount -= this.breedingCost;
 
-                    long genom = 31 + this.Genom;
-                    genom = (genom * 31) + otherGenom;
+                    long genom = 31 + this.Stats.Genom;
+                    genom = (genom * 31) + mate.Genom;
 
-                    int initiallife = (this.InitialLife + otherInitialLife) / 2;
+                    int initiallife = (this.Stats.InitialLife + mate.InitialLife) / 2;
                     initiallife += (this.rng.Next() % (initiallife / 2)) - (initiallife / 4);
 
                     int food = 0;
-                    int generation = Math.Max(this.Generation, otherGeneration) + 1;
+                    int generation = Math.Max(this.Stats.Generation, mate.Generation) + 1;
 
-                    int visualRange = (this.VisualRange + otherVisualRange) / 2;
+                    int visualRange = (this.Stats.VisualRange + mate.VisualRange) / 2;
                     visualRange += (this.rng.Next() % visualRange) - ((visualRange - 1) / 2);
 
-                    int maxNrChildren = ((this.MaxNrChildren + othermaxNrChildren) / 2) + (this.rng.Next() % 5) - 2;
-                    int speed = Math.Max(this.Speed, otherSpeed) + (this.rng.Next() % 5) - 2;
+                    int maxNrChildren = ((this.Stats.MaxNrChildren + mate.MaxNrChildren) / 2) + (this.rng.Next() % 5) - 2;
+                    int speed = Math.Max(this.Stats.Speed, mate.Speed) + (this.rng.Next() % 5) - 2;
 
-                    this.Put("spawn", genom, this.Genom, otherGenom, initiallife, food, x, y, generation, visualRange, maxNrChildren, speed);
+                    this.Put(EntityType.SPAWN, genom, this.Stats.Genom, mate.Genom, initiallife, food, x, y, generation, visualRange, maxNrChildren, speed);
                     this.nrChildren++;
                 }
             }
+            this.targetMate = null;
         }
     }
 }

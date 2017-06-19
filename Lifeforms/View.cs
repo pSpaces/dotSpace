@@ -29,6 +29,7 @@ namespace Lifeforms
         private int maxSpeed;
         private int avgSpeed;
         private int minSpeed;
+
         public View(int width, int height, ISpace ts) : base("view", ts)
         {
             this.width = width;
@@ -41,21 +42,20 @@ namespace Lifeforms
         protected override void DoWork()
         {
             // Wait until we can start
-            this.Query("start");
+            this.Query(EntityType.SIGNAL, "start");
 
             // Keep iterating while the state is 'running'
-            while (this.Query("running", true) != null)
+            while (this.Query(EntityType.SIGNAL, "running", true) != null)
             {
-                this.ShowLifeforms();
-                this.ShowFood();
+                this.ShowEntities();
+                this.CalculateStats();
                 this.Show();
                 Thread.Sleep(10);
             }
         }
 
-        private void ShowLifeforms()
+        private void CalculateStats()
         {
-            IEnumerable<ITuple> lifeforms = this.QueryAll("lifeform", typeof(string), typeof(int), typeof(int));
             this.maxGenerations = 0;
             this.maxLife = 0;
             this.avgLife = 0;
@@ -69,31 +69,25 @@ namespace Lifeforms
             this.maxSpeed = 0;
             this.avgSpeed = 0;
             this.minSpeed = 10000;
-            foreach (ITuple lifeform in lifeforms)
+
+            IEnumerable<LifeformStats> lifeformProperties = this.QueryAll(EntityType.LIFEFORM_STATS, typeof(string), typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int)).Cast<LifeformStats>();
+            foreach (LifeformStats lifeformStat in lifeformProperties)
             {
-                int x = (int)lifeform[2];
-                int y = (int)lifeform[3];
-                this.screenBuffer[x, y] = '¤';
-            }
-            IEnumerable<ITuple> lifeformProperties = this.QueryAll("lifeformProperties", typeof(string), typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
-            foreach (ITuple lifeformProperty in lifeformProperties)
-            {
-                this.maxLife = Math.Max(this.maxLife, (int)lifeformProperty[5]);
-                this.avgLife += (int)lifeformProperty[5];
-                this.minLife = Math.Min(this.minLife, (int)lifeformProperty[5]);
-                this.maxGenerations = Math.Max(this.maxGenerations, (int)lifeformProperty[6]);
-                this.maxVisualRange = Math.Max(this.maxVisualRange, (int)lifeformProperty[7]);
-                this.avgVisualRange += (int)lifeformProperty[7];
-                this.minVisualRange = Math.Min(this.minVisualRange, (int)lifeformProperty[7]);
-                this.maxNrChildren = Math.Max(this.maxNrChildren, (int)lifeformProperty[8]);
-                this.avgNrChildren += (int)lifeformProperty[8];
-                this.minNrChildren = Math.Min(this.minNrChildren, (int)lifeformProperty[8]);
-                this.maxSpeed = Math.Max(this.maxSpeed, (int)lifeformProperty[9]);
-                this.avgSpeed += (int)lifeformProperty[9];
-                this.minSpeed = Math.Min(this.minSpeed, (int)lifeformProperty[9]);
+                this.maxLife = Math.Max(this.maxLife, lifeformStat.InitialLife);
+                this.avgLife += lifeformStat.InitialLife;
+                this.minLife = Math.Min(this.minLife, lifeformStat.InitialLife);
+                this.maxGenerations = Math.Max(this.maxGenerations, lifeformStat.Generation);
+                this.maxVisualRange = Math.Max(this.maxVisualRange, lifeformStat.VisualRange);
+                this.avgVisualRange += lifeformStat.VisualRange;
+                this.minVisualRange = Math.Min(this.minVisualRange, lifeformStat.VisualRange);
+                this.maxNrChildren = Math.Max(this.maxNrChildren, lifeformStat.MaxNrChildren);
+                this.avgNrChildren += lifeformStat.MaxNrChildren;
+                this.minNrChildren = Math.Min(this.minNrChildren, lifeformStat.MaxNrChildren);
+                this.maxSpeed = Math.Max(this.maxSpeed, lifeformStat.Speed);
+                this.avgSpeed += lifeformStat.Speed;
+                this.minSpeed = Math.Min(this.minSpeed, lifeformStat.Speed);
             }
 
-            this.numberLifeforms = lifeforms.Count();
             if (this.numberLifeforms > 0)
             {
                 this.avgLife = this.avgLife / this.numberLifeforms;
@@ -103,15 +97,20 @@ namespace Lifeforms
             }
         }
 
-        private void ShowFood()
+        private void ShowEntities()
         {
-            IEnumerable<ITuple> foods = this.QueryAll("food", typeof(int), typeof(int), typeof(int), typeof(int));
-            foreach (ITuple food in foods)
+            IEnumerable<Position> lifeforms = this.QueryAll(EntityType.POSITION, typeof(string), typeof(int), typeof(int)).Cast<Position>();
+            foreach (Position lifeform in lifeforms)
             {
-                int x = (int)food[3];
-                int y = (int)food[4];
-                this.screenBuffer[x, y] = '@';
+                this.screenBuffer[lifeform.X, lifeform.Y] = '¤';
             }
+
+            IEnumerable<Food> foods = this.QueryAll(EntityType.FOOD, typeof(int), typeof(int), typeof(int), typeof(int)).Cast<Food>();
+            foreach (Food food in foods)
+            {
+                this.screenBuffer[food.X, food.Y] = '@';
+            }
+            this.numberLifeforms = lifeforms.Count();
             this.numberFoods = foods.Count();
         }
 

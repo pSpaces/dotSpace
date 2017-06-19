@@ -1,5 +1,6 @@
 ﻿using dotSpace.BaseClasses;
 using dotSpace.Interfaces;
+using Lifeforms;
 using System;
 using Test;
 
@@ -28,19 +29,19 @@ namespace LifeformsClient
             int y = (this.rng.Next() % (this.height - 2)) + 1;
             int life = (this.rng.Next() % 100) + 350;
             int food = (this.rng.Next() % 20) + 50;
-            this.ts.Put("spawn", genom, genom, genom, life, food, x, y, 0, 12, 4, 0);
+            this.ts.Put(EntityType.SPAWN, genom, genom, genom, life, food, x, y, 0, 12, 4, 0);
         }
 
         public void Run()
         {
-            this.ts.Put("running", true);
+            this.ts.Put(EntityType.SIGNAL, "running", true);
             this.lifeformDispatcher.Start();
-            this.ts.Put("start");
+            this.ts.Put(EntityType.SIGNAL, "start");
         }
 
         public void Stop()
         {
-            this.ts.Get("running", true);
+            this.ts.Get(EntityType.SIGNAL, "running", true);
         }
     }
 }

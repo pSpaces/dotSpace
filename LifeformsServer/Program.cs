@@ -1,5 +1,6 @@
 ﻿using dotSpace.Objects.Network;
 using dotSpace.Objects.Space;
+using Lifeforms;
 using System;
 
 namespace LifeformsServer
@@ -10,7 +11,7 @@ namespace LifeformsServer
         {
             SpaceRepository repository = new SpaceRepository();
             repository.AddGate("tcp://127.0.0.1:123?KEEP");
-            repository.AddSpace("lifeforms", new FifoSpace());
+            repository.AddSpace("lifeforms", new FifoSpace(new EntityFactory()));
             int width = 80;
             int height = 25;
             Game lifeforms = new Game(width, height, repository.GetSpace("lifeforms"));

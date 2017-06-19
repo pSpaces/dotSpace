@@ -22,7 +22,7 @@ namespace LocalLifeforms
             this.ts = ts;
             this.width = width;
             this.height = height;
-            this.food = new Food(ts, width, height);
+            this.food = new FoodDispenser(ts, width, height);
             this.view = new View(width, height, ts);
             this.lifeformDispatcher = new LifeformDispatcher(this.width, this.height, this.ts);
         }
@@ -31,21 +31,21 @@ namespace LocalLifeforms
         {
             int x = (this.rng.Next() % (this.width - 2)) + 1;
             int y = (this.rng.Next() % (this.height - 2)) + 1;
-            this.ts.Put("spawn", genom, genom, genom, life, food, x, y, 0, 12, 4, 0);
+            this.ts.Put(EntityType.SPAWN, genom, genom, genom, life, food, x, y, 0, 12, 4, 0);
         }
 
         public void Run()
         {
-            this.ts.Put("running", true);
+            this.ts.Put(EntityType.SIGNAL, "running", true);
             this.view.Start();
             this.food.Start();
             this.lifeformDispatcher.Start();
-            this.ts.Put("start");
+            this.ts.Put(EntityType.SIGNAL, "start");
         }
 
         public void Stop()
         {
-            this.ts.Get("running", true);
+            this.ts.Get(EntityType.SIGNAL, "running", true);
         }
     }
 }

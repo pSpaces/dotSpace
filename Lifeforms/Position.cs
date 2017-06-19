@@ -2,19 +2,19 @@
 
 namespace Lifeforms
 {
-    public class Food : ITuple
+    public class Position : ITuple
     {
-        public Food(string id, int amount, int timeleft, int x, int y)
+
+        public Position(string id, int x, int y)
         {
-            this.Fields = new object[5];
+            this.Fields = new object[4];
             this.Fields[0] = EntityType.POSITION;
-            this.Amount = amount;
-            this.TimeLeft = timeleft;
+            this.Id = id;
             this.X = x;
             this.Y = y;
         }
 
-        public Food(params object[] fields)
+        public Position(params object[] fields)
         {
             this.Fields = fields;
         }
@@ -27,27 +27,20 @@ namespace Lifeforms
         public object[] Fields { get; set; }
         public int Size { get { return this.Fields.Length; } }
 
-        public int Amount
+        public string Id
         {
-            get { return (int)this.Fields[1]; }
+            get { return (string)this.Fields[1]; }
             set { this.Fields[1] = value; }
         }
-
-        public int TimeLeft
+        public int X
         {
             get { return (int)this.Fields[2]; }
             set { this.Fields[2] = value; }
         }
-
-        public int X
+        public int Y
         {
             get { return (int)this.Fields[3]; }
             set { this.Fields[3] = value; }
-        }
-        public int Y
-        {
-            get { return (int)this.Fields[4]; }
-            set { this.Fields[4] = value; }
         }
 
     }

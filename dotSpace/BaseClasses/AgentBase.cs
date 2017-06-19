@@ -1,5 +1,6 @@
 ﻿using dotSpace.Interfaces;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace dotSpace.BaseClasses
@@ -39,7 +40,8 @@ namespace dotSpace.BaseClasses
         /// </summary>
         public void Start()
         {
-            var t = Task.Factory.StartNew(this.DoWork);
+            new Thread(this.DoWork).Start();
+            //var t = Task.Factory.StartNew(this.DoWork);
         }
         /// <summary>
         /// Retrieves and removes the first tuple from the Space, matching the specified pattern. The operation will block if no elements match.

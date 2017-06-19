@@ -1,5 +1,6 @@
 ﻿using dotSpace.Enumerations;
 using dotSpace.Objects.Network;
+using Lifeforms;
 using System;
 
 namespace LifeformsClient
@@ -8,7 +9,7 @@ namespace LifeformsClient
     {
         static void Main(string[] args)
         {
-            RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/lifeforms?KEEP");
+            RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/lifeforms?KEEP", new EntityFactory());
             int width = 80;
             int height = 25;
             Game lifeforms = new Game(width, height, remotespace);

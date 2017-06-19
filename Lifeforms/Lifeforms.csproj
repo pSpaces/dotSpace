@@ -40,10 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Food.cs" />
+    <Compile Include="EntityType.cs" />
+    <Compile Include="FoodDispenser.cs" />
     <Compile Include="Lifeform.cs" />
     <Compile Include="LifeformDispatcher.cs" />
+    <Compile Include="LifeformStats.cs" />
+    <Compile Include="Food.cs" />
+    <Compile Include="SpawnLifeform.cs" />
+    <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EntityFactory .cs" />
     <Compile Include="View.cs" />
   </ItemGroup>
   <ItemGroup>

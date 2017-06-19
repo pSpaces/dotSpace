@@ -22,20 +22,20 @@ namespace LifeformsServer
             this.width = width;
             this.height = height;
             this.view = new View(width, height, ts);
-            this.food = new Food(ts, width, height);
+            this.food = new FoodDispenser(ts, width, height);
         }
 
         public void Run()
         {
-            this.ts.Put("running", true);
+            this.ts.Put(EntityType.SIGNAL, "running", true);
             this.food.Start();
             this.view.Start();
-            this.ts.Put("start");
+            this.ts.Put(EntityType.SIGNAL,"start");
         }
 
         public void Stop()
         {
-            this.ts.Get("running", true);
+            this.ts.Get(EntityType.SIGNAL, "running", true);
         }
     }
 }
