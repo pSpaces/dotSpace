@@ -54,6 +54,7 @@
     <Compile Include="BaseClasses\SpaceBase.cs" />
     <Compile Include="Enumerations\Protocol.cs" />
     <Compile Include="Enumerations\StatusCode.cs" />
+    <Compile Include="Interfaces\ITupleFactory.cs" />
     <Compile Include="Interfaces\IOperationMap.cs" />
     <Compile Include="Interfaces\IConnectionMode.cs" />
     <Compile Include="Interfaces\IEncoder.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Objects\Network\SpaceRepository.cs" />
     <Compile Include="Objects\Network\Protocols\Tcp.cs" />
     <Compile Include="Objects\Spaces\Pattern.cs" />
+    <Compile Include="Objects\Spaces\TupleFactory.cs" />
     <Compile Include="Objects\Utility\MessageQueue.cs" />
     <Compile Include="Objects\Network\StatusMessage.cs" />
     <Compile Include="Objects\Network\OperationMap.cs" />

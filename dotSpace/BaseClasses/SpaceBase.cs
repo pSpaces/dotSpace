@@ -22,6 +22,7 @@ namespace dotSpace.BaseClasses
         private readonly Dictionary<ulong, List<ITuple>> buckets;
         private readonly Dictionary<ulong, ReaderWriterLockSlim> bucketLocks;
         private readonly object bucketAccess;
+        private readonly ITupleFactory tupleFactory;
 
         #endregion
 
@@ -31,11 +32,16 @@ namespace dotSpace.BaseClasses
         /// <summary>
         /// Initializes a new instance of the SpaceBase class.
         /// </summary>
-        public SpaceBase()
+        public SpaceBase(ITupleFactory tupleFactory)
         {
             this.buckets = new Dictionary<ulong, List<ITuple>>();
             this.bucketLocks = new Dictionary<ulong, ReaderWriterLockSlim>();
             this.bucketAccess = new object();
+            this.tupleFactory = tupleFactory;
+            if (this.tupleFactory == null)
+            {
+                throw new Exception("Must use a valid TupleFactory.");
+            }
         }
 
         #endregion
@@ -150,7 +156,7 @@ namespace dotSpace.BaseClasses
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
             Monitor.Exit(this.bucketAccess);
 
-            return this.WaitUntilMatch(bucket, bucketLock, pattern).Clone();
+            return this.Copy(this.WaitUntilMatch(bucket, bucketLock, pattern));
         }
 
         /// <summary>
@@ -171,7 +177,7 @@ namespace dotSpace.BaseClasses
             List<ITuple> bucket = this.GetBucket(hash);
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
             Monitor.Exit(this.bucketAccess);
-            return this.Find(bucket, bucketLock, pattern)?.Clone();
+            return this.Copy(this.Find(bucket, bucketLock, pattern));
         }
 
         /// <summary>
@@ -192,7 +198,7 @@ namespace dotSpace.BaseClasses
             List<ITuple> bucket = this.GetBucket(hash);
             ReaderWriterLockSlim bucketLock = this.GetBucketLock(hash);
             Monitor.Exit(this.bucketAccess);
-            return this.FindAll(bucket, bucketLock, pattern).Select(x => x.Clone());
+            return this.FindAll(bucket, bucketLock, pattern).Select(x => this.Copy(x));
         }
 
         /// <summary>
@@ -215,7 +221,7 @@ namespace dotSpace.BaseClasses
             Monitor.Exit(this.bucketAccess);
 
             bucketLock.EnterWriteLock();
-            bucket.Insert(this.GetIndex(bucket.Count), this.Create(values));
+            bucket.Insert(this.GetIndex(bucket.Count), this.Copy(values));
             bucketLock.ExitWriteLock();
             this.Awake(bucket);
         }
@@ -243,9 +249,14 @@ namespace dotSpace.BaseClasses
             return newFields;
         }
 
-        private ITuple Create(object[] fields)
+        private ITuple Copy(object[] fields)
         {
-            return new Objects.Spaces.Tuple(this.CopyFields(fields));
+            return this.tupleFactory.Create(this.CopyFields(fields));
+        }
+
+        private ITuple Copy(ITuple tuple)
+        {
+            return tuple != null ? this.tupleFactory.Create(this.CopyFields(tuple.Fields)) : null; 
         }
 
         private ulong ComputeHash(object[] values)

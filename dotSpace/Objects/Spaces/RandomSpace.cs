@@ -1,4 +1,5 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.Interfaces;
 using System;
 
 namespace dotSpace.Objects.Spaces
@@ -11,6 +12,18 @@ namespace dotSpace.Objects.Spaces
     /// </summary>
     public sealed class RandomSpace : SpaceBase
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the FifoSpace class.
+        /// </summary>
+        public RandomSpace(ITupleFactory tuplefactory = null) : base(tuplefactory ?? new TupleFactory())
+        {
+        }
+
+        #endregion
+
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Protected Methods
 

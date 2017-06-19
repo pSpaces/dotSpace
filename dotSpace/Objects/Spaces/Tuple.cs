@@ -55,16 +55,6 @@ namespace dotSpace.Objects.Spaces
             return string.Format("<{0}>", String.Join(",", this.Fields.Select(x=>x.ToString())));
         }
 
-        /// <summary>
-        /// Returns a deep copy of the Tuple. 
-        /// </summary>
-        public ITuple Clone()
-        {
-            object[] values = new object[this.Size];
-            Array.Copy(this.Fields, values, this.Size);
-            return new Tuple(values);
-        }
-
         #endregion
     };
 }

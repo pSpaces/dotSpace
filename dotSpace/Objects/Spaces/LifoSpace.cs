@@ -1,4 +1,5 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.Interfaces;
 
 namespace dotSpace.Objects.Spaces
 {
@@ -9,6 +10,18 @@ namespace dotSpace.Objects.Spaces
     /// </summary>
     public sealed class LifoSpace : SpaceBase
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the FifoSpace class.
+        /// </summary>
+        public LifoSpace(ITupleFactory tuplefactory = null) : base(tuplefactory ?? new TupleFactory())
+        {
+        }
+
+        #endregion
+
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Protected Methods
 
