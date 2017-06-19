@@ -4,6 +4,7 @@ using dotSpace.Objects.Network.ConnectionModes;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
 using dotSpace.Objects.Network.Protocols;
+using dotSpace.Objects.Spaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace dotSpace.Objects.Network
         private IConnectionMode mode;
         private IEncoder encoder;
         private ConnectionString connectionString;
+        private ITupleFactory tupleFactory;
 
         #endregion
 
@@ -31,10 +33,11 @@ namespace dotSpace.Objects.Network
         /// <summary>
         /// Initializes a new instances of the RemoteSpace class.
         /// </summary>
-        public RemoteSpace(string uri)
+        public RemoteSpace(string uri, ITupleFactory tuplefactory = null)
         {
             this.connectionString = new ConnectionString(uri);
             this.encoder = new RequestEncoder();
+            this.tupleFactory = tuplefactory ?? new TupleFactory();
             if (string.IsNullOrEmpty(this.connectionString.Target))
             {
                 throw new Exception("Must specify valid target.");
@@ -61,7 +64,7 @@ namespace dotSpace.Objects.Network
         {
             GetRequest request = new GetRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             GetResponse response = this.GetMode()?.PerformRequest<GetResponse>(request);
-            return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
+            return response.Result == null ? null : this.tupleFactory.Create(response.Result);
         }
 
         /// <summary>
@@ -79,7 +82,7 @@ namespace dotSpace.Objects.Network
         {
             GetPRequest request = new GetPRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             GetPResponse response = this.GetMode()?.PerformRequest<GetPResponse>(request);
-            return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
+            return response.Result == null ? null : this.tupleFactory.Create(response.Result);
         }
 
         /// <summary>
@@ -97,7 +100,7 @@ namespace dotSpace.Objects.Network
         {
             GetAllRequest request = new GetAllRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             GetAllResponse response = this.GetMode()?.PerformRequest<GetAllResponse>(request);
-            return response.Result == null ? null : response.Result.Select(x => new Objects.Spaces.Tuple(x));
+            return response.Result == null ? null : response.Result.Select(x => this.tupleFactory.Create(x));
         }
 
         /// <summary>
@@ -115,7 +118,7 @@ namespace dotSpace.Objects.Network
         {
             QueryRequest request = new QueryRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             QueryResponse response = this.GetMode()?.PerformRequest<QueryResponse>(request);
-            return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
+            return response.Result == null ? null : this.tupleFactory.Create(response.Result);
         }
 
         /// <summary>
@@ -133,7 +136,7 @@ namespace dotSpace.Objects.Network
         {
             QueryPRequest request = new QueryPRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             QueryPResponse response = this.GetMode()?.PerformRequest<QueryPResponse>(request);
-            return response.Result == null ? null : new Objects.Spaces.Tuple(response.Result);
+            return response.Result == null ? null : this.tupleFactory.Create(response.Result);
         }
 
         /// <summary>
@@ -151,7 +154,7 @@ namespace dotSpace.Objects.Network
         {
             QueryAllRequest request = new QueryAllRequest(this.GetSource(), this.GetSessionId(), this.connectionString.Target, pattern);
             QueryAllResponse response = this.GetMode()?.PerformRequest<QueryAllResponse>(request);
-            return response.Result == null ? null : response.Result.Select(x => new Objects.Spaces.Tuple(x));
+            return response.Result == null ? null : response.Result.Select(x => this.tupleFactory.Create(x));
         }
 
         /// <summary>
