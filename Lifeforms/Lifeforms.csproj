@@ -49,7 +49,7 @@
     <Compile Include="SpawnLifeform.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EntityFactory .cs" />
+    <Compile Include="EntityFactory.cs" />
     <Compile Include="View.cs" />
   </ItemGroup>
   <ItemGroup>

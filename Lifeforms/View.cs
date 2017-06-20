@@ -44,7 +44,7 @@ namespace Lifeforms
             // Wait until we can start
             this.Query(EntityType.SIGNAL, "start");
 
-            // Keep iterating while the state is 'running'
+            // Keep running while the state is 'running'
             while (this.Query(EntityType.SIGNAL, "running", true) != null)
             {
                 this.ShowEntities();

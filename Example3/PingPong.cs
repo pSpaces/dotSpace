@@ -18,9 +18,10 @@ namespace Example3
                 while (true)
                 {
                     ITuple t = this.Get(this.other, typeof(int));
-                    int value = (int)t[1] + 1;
-                    Console.WriteLine(string.Format("{0}: {1}", this.name, value));
-                    this.Put(this.name, value);
+                    t[0] = this.name;
+                    t[1] = (int)t[1]+1;
+                    Console.WriteLine(t);
+                    this.Put(t);
                 }
             }
             catch (Exception e)

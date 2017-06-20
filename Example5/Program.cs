@@ -12,7 +12,7 @@ namespace Example5
         {
             if (args.Length != 1)
             {
-                Console.WriteLine("Please specify your student number");
+                Console.WriteLine("Please specify your name");
             }
             SpaceRepository repository = new SpaceRepository();
             repository.AddGate("tcp://127.0.0.1:123?CONN");
@@ -23,7 +23,7 @@ namespace Example5
             AgentBase student = new Student(args[0], remotespace);
             student.Start();
             ITuple tuple = repository.Get("dtu",typeof(string), typeof(string));
-            Console.WriteLine(string.Format("{0} is attending course {1}", tuple[0], tuple[1]));
+            Console.WriteLine(string.Format("{0}, you are attending course {1}", tuple[0], tuple[1]));
             Console.Read();
         }
     }

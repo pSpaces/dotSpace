@@ -11,14 +11,14 @@ namespace Example1
         {
             if(args.Length!=1)
             {
-                Console.WriteLine("Please specify your student number");
+                Console.WriteLine("Please specify your name");
             }
             ISpace dtu = new FifoSpace();
             dtu.Put("Hello student!");
             AgentBase student = new Student(args[0], dtu);
             student.Start();
             ITuple tuple = dtu.Get(typeof(string), typeof(string));
-            Console.WriteLine(string.Format("{0} you are attending course {1}", tuple[0], tuple[1]));
+            Console.WriteLine(string.Format("{0}, you are attending course {1}", tuple[0], tuple[1]));
             Console.Read();
         }
     }
