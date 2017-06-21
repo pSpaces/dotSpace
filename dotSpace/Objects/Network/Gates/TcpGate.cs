@@ -20,6 +20,7 @@ namespace dotSpace.Objects.Network.Gates
         private TcpListener listener;
         private bool listening;
         private Action<IConnectionMode> callBack;
+        private readonly int backlog;
 
         #endregion
 
@@ -31,6 +32,7 @@ namespace dotSpace.Objects.Network.Gates
         /// </summary>
         public TcpGate(IEncoder encoder, ConnectionString connectionstring) : base(encoder, connectionstring)
         {
+            this.backlog = 50;
             this.ipAddress = IPAddress.Parse(connectionstring.Host);
             this.listener = new TcpListener(ipAddress, this.connectionString.Port);
         }
@@ -69,7 +71,7 @@ namespace dotSpace.Objects.Network.Gates
 
         private void Listen()
         {
-            this.listener.Start(121);
+            this.listener.Start(this.backlog);
             Console.WriteLine("Current endpoint: {0}:{1}", this.ipAddress.ToString(), this.connectionString.Port);
             Console.WriteLine("Begin listening...");
             try
