@@ -17,9 +17,14 @@ namespace Example7
             {
                 while (true)
                 {
+                    // Retrieve the "ping" or "pong".
                     ITuple t = this.Get(this.other, typeof(int));
+
+                    // Set the tuple values to our name, and increment the counter.
                     t[0] = this.name;
                     t[1] = (int)t[1] + 1;
+
+                    // Display the tuple, and put it back.
                     Console.WriteLine(t);
                     this.Put(t);
                 }

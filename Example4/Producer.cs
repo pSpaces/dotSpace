@@ -6,13 +6,10 @@ namespace Example4
 {
     public class Producer : AgentBase
     {
-
-        // This constructor records the name of the agent
         public Producer(string name, ISpace ts) : base(name, ts)
         {
         }
 
-        // This is the function invoked when the agent starts running in a node
         protected override void DoWork()
         {
             try

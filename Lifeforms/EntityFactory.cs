@@ -2,6 +2,9 @@
 
 namespace Lifeforms
 {
+    /// <summary>
+    /// Creates custom tuples based on the entity type.
+    /// </summary>
     public class EntityFactory : ITupleFactory
     {
         public ITuple Create(params object[] fields)

@@ -2,6 +2,9 @@
 
 namespace Lifeforms
 {
+    /// <summary>
+    /// Custom tuple, representing the food domain object.
+    /// </summary>
     public class Food : ITuple
     {
         public Food(string id, int amount, int timeleft, int x, int y)

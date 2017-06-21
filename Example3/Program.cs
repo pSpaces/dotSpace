@@ -8,8 +8,13 @@ namespace Example3
     {
         static void Main(string[] args)
         {
+            // Instantiate a new Fifobased tuplespace.
             ISpace pingpongTable = new FifoSpace();
+            
+            // Insert the ping.
             pingpongTable.Put("ping", 0);
+            
+            // Create two PingPong agents and start them.
             PingPong a1 = new PingPong("ping", "pong", pingpongTable);
             PingPong a2 = new PingPong("pong", "ping", pingpongTable);
             a1.Start();

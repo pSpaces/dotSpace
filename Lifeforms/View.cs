@@ -8,6 +8,9 @@ using System.Threading;
 
 namespace Lifeforms
 {
+    /// <summary>
+    /// This class presents the lifeform game.
+    /// </summary>
     public class View : AgentBase
     {
         private char[,] screenBuffer;

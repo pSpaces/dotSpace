@@ -24,9 +24,13 @@ namespace Example6
             {
                 while (true)
                 {
-                    // The get operation returns a tuple
+                    // Take the left fork.
                     lf = this.Get("FORK", this.leftId);
+
+                    // Try to take the right fork.
                     rf = this.GetP("FORK", this.rightId);
+                    
+                    // If we got the right fork, then eat and put back the forks.
                     if (rf != null)
                     {
                         Console.WriteLine(this.name + ": I AM EATING WITH BOTH MY HANDS: " + this.seatIndex);
@@ -34,6 +38,7 @@ namespace Example6
                         this.Put(lf);
                         Console.WriteLine("Done eating: " + this.seatIndex);
                     }
+                    // Otherwise put back the left.
                     else
                     {
                         this.Put(lf);

@@ -5,6 +5,9 @@ using System.Threading;
 
 namespace Test
 {
+    /// <summary>
+    /// This class creates new offspring.
+    /// </summary>
     public class LifeformDispatcher : AgentBase
     {
         protected int width;

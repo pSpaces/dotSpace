@@ -15,15 +15,22 @@ namespace Example8
             {
                 if (args[0] == "producer")
                 {
+                    // Create a new space repository, and add a new gate to it. 
+                    // The gate is using CONN, meaning the connection is NOT persistent.
                     SpaceRepository repository = new SpaceRepository();
                     repository.AddGate("tcp://127.0.0.1:123?CONN");
+                    
+                    // Add a new fifo based space
                     repository.AddSpace("fridge", new FifoSpace());
+                    
+                    // Create a new agent, and let the agent use the local tuple space instead of a networked remotespace.
                     AgentBase alice = new Producer("Alice", repository.GetSpace("fridge"));
                     alice.Start();
                     return;
                 }
                 else if (args[0] == "consumer")
                 {
+                    // The consumers use a remote space to access the space repository.
                     ISpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/fridge?CONN");
                     List<AgentBase> agents = new List<AgentBase>();
                     agents.Add(new FoodConsumer("Bob", remotespace));

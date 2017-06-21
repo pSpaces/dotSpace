@@ -16,6 +16,7 @@ namespace Example4
         {
             // Note how templates are created in dotSpace
             Pattern what = new Pattern(typeof(string), typeof(int), "drug");
+            
             // The tuple is necessary to capture the result of a get operation
             ITuple t;
             try
@@ -24,6 +25,7 @@ namespace Example4
                 {
                     // The get operation returns a tuple, that we save into t
                     t = this.Get(what);
+
                     // Note how the fields of the tuple t are accessed
                     Console.WriteLine(name + " shopping " + t[1] + " units of " + t[0] + "...");
                 }

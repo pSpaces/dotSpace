@@ -2,6 +2,9 @@
 
 namespace Lifeforms
 {
+    /// <summary>
+    /// Custom tuple, representing the offspring domain object.
+    /// </summary>
     public class SpawnLifeform : ITuple
     {
         public SpawnLifeform(long genom, long p1genom, long p2genom, int life, int food, int x, int y, int generation, int visualRange, int maxNrChildren, int speed)

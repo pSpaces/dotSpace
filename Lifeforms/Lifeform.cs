@@ -7,6 +7,9 @@ using System.Threading;
 
 namespace Lifeforms
 {
+    /// <summary>
+    /// This entity represents the domain object of a lifeform.
+    /// </summary>
     public sealed class Lifeform : AgentBase
     {
         private int width;
@@ -57,7 +60,7 @@ namespace Lifeforms
                 // if the lifeform has more food than the cost to breed, then find a mate
                 if (this.FoodAmount > this.breedingCost && nrChildren < this.Stats.MaxNrChildren)
                 {
-                    // is the mate close by?
+                    // Do we have a target mate and is it close by?
                     if (this.targetMate != null && this.IsNearby(this.targetMate.X, this.targetMate.Y))
                     {
                         this.Breed(this.targetMate);
@@ -89,16 +92,19 @@ namespace Lifeforms
                 // otherwise search for food
                 else
                 {
+                    // If we have a food as target, and it is close enough then eat it.
                     if (this.targetFood != null && this.IsNearby(this.targetFood.X, this.targetFood.Y))
                     {
                         this.Eat();
                     }
                     else
                     {
+                        // If we dont have a food as target, then try to find one.
                         if (this.targetFood == null)
                         {
                             this.targetFood = this.FindFood();
                         }
+                        // If we have have a food as target, then move closer to it.
                         if (this.targetFood != null)
                         {
                             this.Move(this.targetFood.X, this.targetFood.Y);
@@ -110,7 +116,7 @@ namespace Lifeforms
                         }
                     }
                 }
-
+                // Consume one food for this round.
                 this.FoodAmount = Math.Max(this.FoodAmount - 1, 0);
                 if (this.FoodAmount == 0)
                 {
@@ -118,6 +124,7 @@ namespace Lifeforms
                 }
                 Thread.Sleep(50 - this.Stats.Speed);
             }
+            // Lifeform died, so remove it.
             this.Get(EntityType.POSITION, this.Stats.Id, typeof(int), typeof(int));
             this.Get(EntityType.LIFEFORM_STATS, this.Stats.Id, typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
         }
@@ -160,8 +167,13 @@ namespace Lifeforms
         }
         private Position FindMate()
         {
+            // Retrive all positions of lifeforms
             IEnumerable<Position> targetmates = this.QueryAll(EntityType.POSITION, typeof(string), typeof(int), typeof(int)).Cast<Position>();
+
+            // Select those that are within the visual range, and is bredable.
             targetmates = targetmates.Where(lf => this.CanSee(lf.X, lf.Y) && this.CanBreed(lf)).ToList();
+
+            // Chose a random one
             if (targetmates.Count() > 0)
             {
                 return targetmates.ElementAt(rng.Next() % targetmates.Count());
@@ -170,8 +182,13 @@ namespace Lifeforms
         }
         private Food FindFood()
         {
+            // Retrieve all foods
             IEnumerable<Food> targetFoods = this.QueryAll(EntityType.FOOD, typeof(int), typeof(int), typeof(int), typeof(int)).Cast<Food>();
+
+            // Select those that are within the visual range
             targetFoods = targetFoods.Where(f => this.CanSee(f.X, f.Y));
+
+            // Chose a random one
             if (targetFoods.Count() > 0)
             {
                 return targetFoods.ElementAt(rng.Next() % targetFoods.Count());
@@ -219,35 +236,6 @@ namespace Lifeforms
             int dist = (int)Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
             return dist <= this.Stats.VisualRange;
         }
-        private void GetFreeAdjacentCell(out int x, out int y)
-        {
-            ITuple adjacent = this.QueryP(EntityType.POSITION, typeof(string), this.Position.X, this.Position.Y + 1);
-            if (adjacent == null)
-            {
-                adjacent = this.QueryP(EntityType.POSITION, typeof(string), this.Position.X + 1, this.Position.Y);
-                if (adjacent == null)
-                {
-                    adjacent = this.QueryP(EntityType.POSITION, typeof(string), this.Position.X - 1, this.Position.Y);
-                    if (adjacent == null)
-                    {
-                        adjacent = this.QueryP(EntityType.POSITION, typeof(string), this.Position.X, this.Position.Y - 1);
-                        if (adjacent == null)
-                        {
-                            x = -1;
-                            y = -1;
-                        }
-                        x = this.Position.X;
-                        y = this.Position.Y - 1;
-                    }
-                    x = this.Position.X;
-                    y = this.Position.Y - 1;
-                }
-                x = this.Position.X + 1;
-                y = this.Position.Y;
-            }
-            x = this.Position.X;
-            y = this.Position.Y + 1;
-        }
         private bool CanBreed(Position other)
         {
             if (other == null)
@@ -266,38 +254,31 @@ namespace Lifeforms
         }
         private void Breed(Position other)
         {
-            int x = -1;
-            int y = -1;
-            this.GetFreeAdjacentCell(out x, out y);
-            if (x > 0 && y > 0)
+            // Retrieve the target mate stats to mate
+            LifeformStats mate = (LifeformStats)this.QueryP(EntityType.LIFEFORM_STATS, this.targetMate.Id, typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
+            if (mate != null)
             {
-                LifeformStats mate = (LifeformStats)this.QueryP(EntityType.LIFEFORM_STATS, this.targetMate.Id, typeof(long), typeof(long), typeof(long), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int));
-                if (mate != null)
-                {
-                    x = x == this.width ? this.Position.X - 1 : this.Position.X;
-                    y = y == this.width ? this.Position.Y - 1 : this.Position.Y;
+                this.Stats.Life -= this.Stats.InitialLife / this.Stats.MaxNrChildren;
+                this.FoodAmount -= this.breedingCost;
 
-                    this.Stats.Life -= this.Stats.InitialLife / this.Stats.MaxNrChildren;
-                    this.FoodAmount -= this.breedingCost;
+                long genom = 31 + this.Stats.Genom;
+                genom = (genom * 31) + mate.Genom;
 
-                    long genom = 31 + this.Stats.Genom;
-                    genom = (genom * 31) + mate.Genom;
+                int initiallife = (this.Stats.InitialLife + mate.InitialLife) / 2;
+                initiallife += (this.rng.Next() % (initiallife / 2)) - (initiallife / 4);
 
-                    int initiallife = (this.Stats.InitialLife + mate.InitialLife) / 2;
-                    initiallife += (this.rng.Next() % (initiallife / 2)) - (initiallife / 4);
+                int food = 0;
+                int generation = Math.Max(this.Stats.Generation, mate.Generation) + 1;
 
-                    int food = 0;
-                    int generation = Math.Max(this.Stats.Generation, mate.Generation) + 1;
+                int visualRange = (this.Stats.VisualRange + mate.VisualRange) / 2;
+                visualRange += (this.rng.Next() % visualRange) - ((visualRange - 1) / 2);
 
-                    int visualRange = (this.Stats.VisualRange + mate.VisualRange) / 2;
-                    visualRange += (this.rng.Next() % visualRange) - ((visualRange - 1) / 2);
+                int maxNrChildren = ((this.Stats.MaxNrChildren + mate.MaxNrChildren) / 2) + (this.rng.Next() % 5) - 2;
+                int speed = Math.Max(this.Stats.Speed, mate.Speed) + (this.rng.Next() % 5) - 2;
 
-                    int maxNrChildren = ((this.Stats.MaxNrChildren + mate.MaxNrChildren) / 2) + (this.rng.Next() % 5) - 2;
-                    int speed = Math.Max(this.Stats.Speed, mate.Speed) + (this.rng.Next() % 5) - 2;
-
-                    this.Put(EntityType.SPAWN, genom, this.Stats.Genom, mate.Genom, initiallife, food, x, y, generation, visualRange, maxNrChildren, speed);
-                    this.nrChildren++;
-                }
+                // Spawn a new offspring
+                this.Put(EntityType.SPAWN, genom, this.Stats.Genom, mate.Genom, initiallife, food, this.Position.X, this.Position.Y, generation, visualRange, maxNrChildren, speed);
+                this.nrChildren++;
             }
             this.targetMate = null;
         }

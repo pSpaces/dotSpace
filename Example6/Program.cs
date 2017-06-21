@@ -15,9 +15,14 @@ namespace Example6
             {
                 if (args[0] == "table")
                 {
+                    // Instantiate a new space repository and add a gate to it.
                     SpaceRepository repository = new SpaceRepository();
                     repository.AddGate("tcp://127.0.0.1:123?KEEP");
+
+                    // Add a new Fifo based space to the repository.
                     repository.AddSpace("DiningTable", new FifoSpace());
+                    
+                    // Insert the forks that the philosophers must share.
                     repository.Put("DiningTable", "FORK", 1);
                     repository.Put("DiningTable", "FORK", 2);
                     repository.Put("DiningTable", "FORK", 3);
@@ -27,13 +32,18 @@ namespace Example6
                 }
                 else if (args[0] == "philosopher")
                 {
+                    // Instantiate a new remote space, thereby allowing a persistant networked connection to the repository.
                     ISpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/DiningTable?KEEP");
+
+                    // Instantiate the philosopher agents and let them use the same connection to access the repository. 
                     List<AgentBase> agents = new List<AgentBase>();
                     agents.Add(new Philosopher("Alice", 1, 5, remotespace));
                     agents.Add(new Philosopher("Charlie", 2, 5, remotespace));
                     agents.Add(new Philosopher("Bob", 3, 5, remotespace));
                     agents.Add(new Philosopher("Dave", 4, 5, remotespace));
                     agents.Add(new Philosopher("Homer", 5, 5, remotespace));
+                    
+                    // Let the philosophers eat.
                     agents.ForEach(a => a.Start());
                     Console.Read();
                     return;

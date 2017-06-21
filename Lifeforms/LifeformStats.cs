@@ -3,6 +3,9 @@ using System;
 
 namespace Lifeforms
 {
+    /// <summary>
+    /// Custom tuple, representing the stats of a lifeform domain object.
+    /// </summary>
     public class LifeformStats : ITuple
     {
         public LifeformStats(string id, int maxSpeedgain, SpawnLifeform spawn)

@@ -13,11 +13,20 @@ namespace Example1
             {
                 Console.WriteLine("Please specify your name");
             }
+            // Instantiate a new Fifobased tuple space.
             ISpace dtu = new FifoSpace();
+            
+            // Insert a tuple with a message.
             dtu.Put("Hello student!");
+            
+            // Instantiate a new agent, assign the tuple space and start it.
             AgentBase student = new Student(args[0], dtu);
             student.Start();
+
+            // Wait and retrieve the message from the agent.
             ITuple tuple = dtu.Get(typeof(string), typeof(string));
+
+            // Print the contents to the console.
             Console.WriteLine(string.Format("{0}, you are attending course {1}", tuple[0], tuple[1]));
             Console.Read();
         }

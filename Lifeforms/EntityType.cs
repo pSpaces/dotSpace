@@ -1,5 +1,8 @@
 ﻿namespace Lifeforms
 {
+    /// <summary>
+    /// Contains type definitions of different tuple types.
+    /// </summary>
     public static class EntityType
     {
         public const int POSITION = 1;

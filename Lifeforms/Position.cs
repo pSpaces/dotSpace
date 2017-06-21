@@ -2,6 +2,9 @@
 
 namespace Lifeforms
 {
+    /// <summary>
+    /// Custom tuple, representing the position domain object.
+    /// </summary>
     public class Position : ITuple
     {
 

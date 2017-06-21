@@ -21,6 +21,7 @@ namespace Example4
         {
             // Note how templates are created in dotSpace
             Pattern what = new Pattern(typeof(string), typeof(int), "food");
+            
             // The tuple is necessary to capture the result of a get operation
             ITuple t;
             try
@@ -28,6 +29,7 @@ namespace Example4
                 while (true)
                 {
                     bool goShop = false;
+
                     // The get operation returns a tuple, that we save into t
                     t = this.GetP(what);
                     if (t != null)
