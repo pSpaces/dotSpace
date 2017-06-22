@@ -9,7 +9,7 @@ namespace LocalPong
     {
         static void Main(string[] args)
         {
-            ISpace ts = new FifoSpace();
+            ISpace ts = new FifoSpace(new EntityFactory());
             int width = 80;
             int height = 25;
             Game pongGame = new Game(width, height, ts);

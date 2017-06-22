@@ -1,5 +1,6 @@
 ﻿using dotSpace.Objects.Network;
 using dotSpace.Objects.Space;
+using Pong;
 using System;
 
 namespace PongServer
@@ -10,7 +11,7 @@ namespace PongServer
         {
             SpaceRepository repository = new SpaceRepository();
             repository.AddGate("tcp://127.0.0.1:123?KEEP");
-            repository.AddSpace("pong", new FifoSpace());
+            repository.AddSpace("pong", new FifoSpace(new EntityFactory()));
             int width = 80;
             int height = 25;
             Game pongGame = new Game(width, height, repository.GetSpace("pong"));

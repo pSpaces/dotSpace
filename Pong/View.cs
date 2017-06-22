@@ -10,8 +10,6 @@ namespace Pong
         private char[,] screenBuffer;
         private readonly int width;
         private readonly int height;
-        private string playerLeft;
-        private string playerRight;
         private ConsoleColor currentColor;
 
         public View(int width, int height, ISpace ts) : base("view", ts)
@@ -25,15 +23,10 @@ namespace Pong
         protected override void DoWork()
         {
             // Wait until we can start
-            this.Query("start");
-            // Read the player names
-            ITuple leftplayer = this.Query(1, typeof(string));
-            ITuple rightplayer = this.Query(2, typeof(string));
-            this.playerLeft = (string)leftplayer[1];
-            this.playerRight = (string)rightplayer[1];
+            this.Query(EntityType.SIGNAL, "start");
 
             // Keep iterating while the state is 'running'
-            while (this.Query("running", true) != null)
+            while (this.Query(EntityType.SIGNAL, "running", true) != null)
             {
                 this.SetPongPosition();
                 this.SetPlayerPosition(1);
@@ -45,27 +38,25 @@ namespace Pong
 
         private void SetPongPosition()
         {
-            ITuple pong = this.Query("pong", typeof(double), typeof(double), typeof(double), typeof(double), typeof(double));
-            int x = (int)(double)pong[1];
-            int y = (int)(double)pong[2];
+            Pong pong = (Pong)this.Query(EntityType.PONG, typeof(double), typeof(double), typeof(double), typeof(double), typeof(double));
+            int x = (int)pong.Position.X;
+            int y = (int)pong.Position.Y;
             screenBuffer[x, y] = 'o';
         }
 
         private void SetPlayerPosition(int playerId)
         {
-            ITuple playerPosition = this.Query(playerId, typeof(double), typeof(double));
-            int x = (int)(double)playerPosition[1];
-            int y = (int)(double)playerPosition[2];
+            Position playerPosition = (Position)this.Query(EntityType.POSITION, playerId, typeof(double), typeof(double));
+            int x = (int)playerPosition.X;
+            int y = (int)playerPosition.Y;
             screenBuffer[x, y] = '|';
         }
 
         private string ShowPlayerScores()
         {
-            ITuple playerAScore = this.Query(this.playerLeft, typeof(int));
-            int scoreA = (int)playerAScore[1];
-            ITuple playerBScore = this.Query(this.playerRight, typeof(int));
-            int scoreB = (int)playerBScore[1];
-            return string.Format("{0}: {1} - {2}: {3}", playerLeft, scoreA, playerRight, scoreB);
+            PlayerInfo leftplayer = (PlayerInfo)this.Query(EntityType.PLAYERINFO, 1, typeof(string), typeof(int));
+            PlayerInfo rightplayer = (PlayerInfo)this.Query(EntityType.PLAYERINFO, 2, typeof(string), typeof(int));
+            return string.Format("{0}: {1} - {2}: {3}", leftplayer.Name, leftplayer.Score, rightplayer.Name, rightplayer.Score);
         }
 
         private void SetForegroundColor(char c)

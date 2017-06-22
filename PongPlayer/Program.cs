@@ -17,7 +17,7 @@ namespace PongPlayer
             }
             int playerId = int.Parse(args[0]);
 
-            RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/pong?KEEP");
+            RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/pong?KEEP", new EntityFactory());
             int width = 80;
             int height = 25;
             Game pongGame = new Game(width, height, remotespace);

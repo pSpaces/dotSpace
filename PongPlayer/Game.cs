@@ -1,12 +1,11 @@
 ﻿using dotSpace.Interfaces;
 using Pong;
-using Pong.BaseClasses;
 
 namespace PongPlayer
 {
     public class Game
     {
-        private PlayerBase player;
+        private AIPlayer player;
         private View view;
         private ISpace ts;
         private int height;
@@ -33,7 +32,7 @@ namespace PongPlayer
 
         public void Stop()
         {
-            this.ts.Get("running", true);
+            this.ts.Get(EntityType.SIGNAL, "running", true);
         }
     }
 }

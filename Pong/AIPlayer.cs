@@ -1,48 +1,77 @@
-﻿using dotSpace.Interfaces;
-using Pong.BaseClasses;
+﻿using dotSpace.BaseClasses;
+using dotSpace.Interfaces;
 using System;
 using System.Threading;
-using System.Windows;
 
 namespace Pong
 {
-    public class AIPlayer : PlayerBase
+    public sealed class AIPlayer : AgentBase
     {
-        public AIPlayer(int playerId, string playername, int width, int height, ISpace ts) : base(playerId, playername, width, height, ts)
+        private Random rng;
+        private int width;
+        private int height;
+        private double initialX;
+        private double initialY;
+
+        public AIPlayer(int playerId, string playerName, int width, int height, ISpace ts) : base(playerName, ts)
         {
+            this.width = width;
+            this.height = height;
+            this.rng = new Random(Environment.TickCount);
+            this.PlayerId = playerId;
+            this.Name = playerName;
+            this.Put(EntityType.PLAYERINFO, playerId, playerName, 0);
+            this.initialX = this.PlayerId == 1 ? 0d : (double)(width - 1d);
+            this.initialY = (double)(height / 2d);
+            this.Put(EntityType.POSITION, this.PlayerId, this.initialX, this.initialY);
         }
+
+        public int PlayerId { get; set; }
+        public string Name { get; set; }
 
         protected override void DoWork()
         {
             // Wait until we can start
-            this.Query("start");
+            this.Query(EntityType.SIGNAL, "start");
+
             // Keep iterating while the state is 'running'
-            while (this.QueryP("running", true) != null)
+            while (this.QueryP(EntityType.SIGNAL, "running", true) != null)
             {
                 // Get the player position
-                ITuple playerPosition = this.Get(this.PlayerId, typeof(double), typeof(double));
+                Position playerPosition = (Position)this.Get(EntityType.POSITION, this.PlayerId, typeof(double), typeof(double));
+
                 // Check if we have to serve, if so reset the player position and serve
-                if (this.GetP("serving", this.Name) != null)
+                if (this.GetP(EntityType.SIGNAL, "serving", this.Name) != null)
                 {
-                    playerPosition[2] = this.initialY;
-                    this.Serve(new Vector((double)playerPosition[1], (double)playerPosition[2]));
+                    playerPosition.Y = this.initialY;
+                    this.Serve(playerPosition.X, playerPosition.Y);
                 }
+
                 // Try to read the latest position, direction and speed of the pong.
-                // position: (x,y), direction(x,y), speed: f
-                ITuple pong = this.QueryP("pong", typeof(double), typeof(double), typeof(double), typeof(double), typeof(double));
+                Pong pong = (Pong)this.QueryP(EntityType.PONG, typeof(double), typeof(double), typeof(double), typeof(double), typeof(double));
                 if (pong != null)
                 {
                     // We know the pong information, so let the AI move towards the pong and attempt to catch it.
-                    double playerY = (double)playerPosition[2];
-                    double pongY = (double)pong[2];
+                    double playerY = playerPosition.Y;
+                    double pongY = pong.Position.Y;
                     playerY += (playerY < pongY) ? 0.5d : -0.5d;
                     playerY = Math.Max(playerY, 0d);
                     playerY = Math.Min(playerY, (double)(this.height - 1));
-                    playerPosition[2] = playerY;
+                    playerPosition.Y = playerY;
                 }
                 this.Put(playerPosition);
                 Thread.Sleep(40);
             }
+        }
+
+        private void Serve(double x, double y)
+        {
+            this.Put(EntityType.PONG, x, y, this.GetServeDirection(), (this.rng.NextDouble() * 0.51d) - 0.25d, 2.5d);
+        }
+
+        private double GetServeDirection()
+        {
+            return PlayerId == 1 ? 1d : -1d;
         }
     }
 }
