@@ -6,6 +6,9 @@ using System.Windows;
 
 namespace Pong
 {
+    /// <summary>
+    /// This class controls the trajectory of the pong.
+    /// </summary>
     public class PongController : AgentBase
     {
         private Random rng;

@@ -5,6 +5,9 @@ using System.Threading;
 
 namespace Pong
 {
+    /// <summary>
+    /// This class represents an AI controlled pad.
+    /// </summary>
     public sealed class AIPlayer : AgentBase
     {
         private Random rng;

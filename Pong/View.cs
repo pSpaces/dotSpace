@@ -5,6 +5,9 @@ using System.Threading;
 
 namespace Pong
 {
+    /// <summary>
+    /// This class is a console based presenter.
+    /// </summary>
     public class View : AgentBase
     {
         private char[,] screenBuffer;
