@@ -121,7 +121,7 @@ namespace Lifeforms
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(this.LeftAlign(string.Format("#Lifeforms: {0,-5} ", this.numberLifeforms),
-                string.Format("Max #generations: {0,-5} ", this.maxGenerations),
+                string.Format("#Generation: {0,-5} ", this.maxGenerations),
                 string.Format("#Foods: {0,-5}", this.numberFoods)));
 
             sb.Append(this.LeftAlign(string.Format("Max life: {0,-5} ", this.maxLife),
