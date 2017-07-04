@@ -120,21 +120,21 @@ namespace Lifeforms
         private string ShowInfo()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(this.LeftAlign(string.Format("Number lifeforms: {0,-5} ", this.numberLifeforms),
-                string.Format("Max generations count: {0,-5} ", this.maxGenerations),
-                string.Format("Number foods: {0,-5}", this.numberFoods)));
+            sb.Append(this.LeftAlign(string.Format("#Lifeforms: {0,-5} ", this.numberLifeforms),
+                string.Format("Max #generations: {0,-5} ", this.maxGenerations),
+                string.Format("#Foods: {0,-5}", this.numberFoods)));
 
             sb.Append(this.LeftAlign(string.Format("Max life: {0,-5} ", this.maxLife),
                 string.Format("Average life: {0,-4} ", this.avgLife),
                 string.Format("Min life: {0,-5}", this.minLife)));
 
-            sb.Append(this.LeftAlign(string.Format("Max visual range: {0,-5} ", this.maxVisualRange),
-                string.Format("Average visual range: {0,-5} ", this.avgVisualRange),
-                string.Format("Min visual range: {0,-5}", this.minVisualRange)));
+            sb.Append(this.LeftAlign(string.Format("Max visual range: {0,-3} ", this.maxVisualRange),
+                string.Format("Average visual range: {0,-3} ", this.avgVisualRange),
+                string.Format("Min visual range: {0,-3}", this.minVisualRange)));
 
-            sb.Append(this.LeftAlign(string.Format("Max number of children: {0,-5}", this.maxNrChildren),
-                string.Format("Average number of children: {0,-5} ", this.avgNrChildren),
-                string.Format("Min number of children: {0,-5}", this.minNrChildren)));
+            sb.Append(this.LeftAlign(string.Format("Max #children: {0,-5}", this.maxNrChildren),
+                string.Format("Average #children: {0,-5} ", this.avgNrChildren),
+                string.Format("Min #children: {0,-5}", this.minNrChildren)));
 
             sb.Append(this.LeftAlign(string.Format("Max speed: {0,-5} ", this.maxSpeed),
                 string.Format("Average Speed: {0,-5} ", this.avgSpeed),
@@ -145,7 +145,7 @@ namespace Lifeforms
         private string LeftAlign(string text1, string text2, string text3)
 
         {
-            return string.Format("{0,-35} {1,-35} {2,-35}\n", text1, text2, text3);
+            return string.Format("{0,-26} {1,-26} {2,-26}\n", text1, text2, text3);
         }
 
         private void SetForegroundColor(char c)
