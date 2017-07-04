@@ -10,8 +10,9 @@ namespace LocalPong
         static void Main(string[] args)
         {
             ISpace ts = new FifoSpace(new EntityFactory());
-            int width = 80;
-            int height = 25;
+            int width = Math.Min(80, Console.BufferWidth);
+            int height = Math.Min(25, Console.BufferHeight); 
+
             Game pongGame = new Game(width, height, ts);
             pongGame.AddPlayer(new AIPlayer(1, "AI1", width, height, ts));
             pongGame.AddPlayer(new AIPlayer(2, "AI2", width, height, ts));

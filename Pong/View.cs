@@ -17,13 +17,11 @@ namespace Pong
 
         public View(int width, int height, ISpace ts) : base("view", ts)
         {
-            this.width = Math.Min(width, Console.BufferWidth);
-            this.height = Math.Min(Console.BufferHeight, height);
+            this.width = width;
+            this.height = height;
             this.screenBuffer = new char[this.width, this.height];
             Console.CursorVisible = false;
             Console.SetWindowSize(this.width + 1, this.height + 1);
-            //Console.BufferWidth = this.width + 1;
-            //Console.BufferHeight = this.height + 1;
         }
 
         protected override void DoWork()
@@ -89,8 +87,8 @@ namespace Pong
                 for (int x = 0; x < width; x++)
                 {
                     Console.SetCursorPosition(x, y);
-                    this.SetForegroundColor(screenBuffer[x, y]);
-                    Console.Write(screenBuffer[x, y]);
+                    this.SetForegroundColor(this.screenBuffer[x, y]);
+                    Console.Write(this.screenBuffer[x, y]);
                 }
             }
             Console.SetCursorPosition(0, this.height);
@@ -99,10 +97,10 @@ namespace Pong
             {
                 for (int x = 0; x < width; x++)
                 {
-                    screenBuffer[x, y] = ' ';
+                    this.screenBuffer[x, y] = ' ';
                     if (y == 0 || y == this.height - 1)
                     {
-                        screenBuffer[x, y] = '_';
+                        this.screenBuffer[x, y] = '_';
                     }
                 }
             }

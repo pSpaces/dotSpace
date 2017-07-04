@@ -12,8 +12,8 @@ namespace LifeformsServer
             SpaceRepository repository = new SpaceRepository();
             repository.AddGate("tcp://127.0.0.1:123?KEEP");
             repository.AddSpace("lifeforms", new FifoSpace(new EntityFactory()));
-            int width = 80;
-            int height = 25;
+            int width = Math.Min(80, Console.BufferWidth);
+            int height = Math.Min(25, Console.BufferHeight);
             Game lifeforms = new Game(width, height, repository.GetSpace("lifeforms"));
             lifeforms.Run();
             Console.ReadKey();

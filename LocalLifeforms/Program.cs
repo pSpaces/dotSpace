@@ -10,8 +10,9 @@ namespace LocalLifeforms
         static void Main(string[] args)
         {
             ISpace ts = new FifoSpace(new EntityFactory());
-            int width = 110;
-            int height = 25;
+            int width = Math.Min(80, Console.BufferWidth);
+            int height = Math.Min(25, Console.BufferHeight);
+
             Game lifeforms = new Game(width, height, ts);
             lifeforms.AddLifeform(3, 100, 25);
             lifeforms.AddLifeform(5, 150, 25);
