@@ -21,6 +21,9 @@ namespace Pong
             this.height = height;
             this.screenBuffer = new char[this.width, this.height];
             Console.CursorVisible = false;
+            Console.SetWindowSize(this.width + 1, this.height + 1);
+            Console.BufferWidth = this.width + 1;
+            Console.BufferHeight = this.height + 1;
         }
 
         protected override void DoWork()

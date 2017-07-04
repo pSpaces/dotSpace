@@ -38,8 +38,10 @@ namespace Lifeforms
             this.width = width;
             this.height = height;
             this.screenBuffer = new char[this.width, this.height];
-            Console.CursorVisible = false;
-            Console.SetWindowSize(Console.BufferWidth, this.height + 6);
+            Console.CursorVisible = false;           
+            Console.SetWindowSize(this.width + 1, this.height + 6);
+            Console.BufferWidth = this.width + 1;
+            Console.BufferHeight = this.height + 6;
         }
 
         protected override void DoWork()
