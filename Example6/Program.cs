@@ -33,7 +33,7 @@ namespace Example6
                 else if (args[0] == "philosopher")
                 {
                     // Instantiate a new remote space, thereby allowing a persistant networked connection to the repository.
-                    ISpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/DiningTable?KEEP");
+                    ISpace remotespace = new RemoteSpace("tcp://127.0.0.1:3145/DiningTable?KEEP");
 
                     // Instantiate the philosopher agents and let them use the same connection to access the repository. 
                     List<AgentBase> agents = new List<AgentBase>();
