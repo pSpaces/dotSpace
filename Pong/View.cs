@@ -17,13 +17,13 @@ namespace Pong
 
         public View(int width, int height, ISpace ts) : base("view", ts)
         {
-            this.width = width;
-            this.height = height;
+            this.width = Math.Min(width, Console.BufferWidth);
+            this.height = Math.Min(Console.BufferHeight, height);
             this.screenBuffer = new char[this.width, this.height];
             Console.CursorVisible = false;
             Console.SetWindowSize(this.width + 1, this.height + 1);
-            Console.BufferWidth = this.width + 1;
-            Console.BufferHeight = this.height + 1;
+            //Console.BufferWidth = this.width + 1;
+            //Console.BufferHeight = this.height + 1;
         }
 
         protected override void DoWork()
