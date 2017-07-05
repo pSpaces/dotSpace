@@ -11,21 +11,21 @@ namespace Pong
     public sealed class AIPlayer : AgentBase
     {
         private Random rng;
-        private int width;
-        private int height;
         private double initialX;
         private double initialY;
+        private readonly int height;
+        private readonly int width;
 
-        public AIPlayer(int playerId, string playerName, int width, int height, ISpace ts) : base(playerName, ts)
+        public AIPlayer(int playerId, string playerName, ISpace ts) : base(playerName, ts)
         {
-            this.width = width;
-            this.height = height;
+            this.width = TerminalInfo.GameboardColumns;
+            this.height = TerminalInfo.GameboardRows;
             this.rng = new Random(Environment.TickCount);
             this.PlayerId = playerId;
             this.Name = playerName;
             this.Put(EntityType.PLAYERINFO, playerId, playerName, 0);
-            this.initialX = this.PlayerId == 1 ? 0d : (double)(width - 1d);
-            this.initialY = (double)(height / 2d);
+            this.initialX = this.PlayerId == 1 ? 0d : (double)(this.width - 1d);
+            this.initialY = (double)(this.height / 2d);
             this.Put(EntityType.POSITION, this.PlayerId, this.initialX, this.initialY);
         }
 

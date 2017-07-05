@@ -13,10 +13,10 @@ namespace Test
         protected int width;
         protected int height;
 
-        public LifeformDispatcher(int width, int height, ISpace ts) : base("dispatcher", ts)
+        public LifeformDispatcher(ISpace ts) : base("dispatcher", ts)
         {
-            this.width = width;
-            this.height = height;
+            this.width = TerminalInfo.GameboardColumns;
+            this.height = TerminalInfo.GameboardRows;
         }
 
 

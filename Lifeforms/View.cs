@@ -33,13 +33,13 @@ namespace Lifeforms
         private int avgSpeed;
         private int minSpeed;
 
-        public View(int width, int height, ISpace ts) : base("view", ts)
+        public View(ISpace ts) : base("view", ts)
         {
-            this.width = width;
-            this.height = height;
+            this.width = TerminalInfo.GameboardColumns;
+            this.height = TerminalInfo.GameboardRows;
             this.screenBuffer = new char[this.width, this.height];
             Console.CursorVisible = false;           
-            Console.SetWindowSize(this.width + 1, this.height + 6);
+            Console.SetWindowSize(this.width, this.height + 6);
         }
 
         protected override void DoWork()

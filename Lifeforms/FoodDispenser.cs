@@ -14,10 +14,10 @@ namespace Lifeforms
         private int width;
         private int height;
 
-        public FoodDispenser(ISpace ts, int width, int height) : base(string.Empty, ts)
+        public FoodDispenser(ISpace ts) : base(string.Empty, ts)
         {
-            this.width = width;
-            this.height = height;
+            this.width = TerminalInfo.GameboardColumns;
+            this.height = TerminalInfo.GameboardRows;
             this.rng = new Random(Environment.TickCount);
         }
 

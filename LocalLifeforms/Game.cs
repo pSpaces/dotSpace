@@ -13,18 +13,18 @@ namespace LocalLifeforms
         private View view;
         private AgentBase lifeformDispatcher;
         private ISpace ts;
-        private int height;
-        private int width;
+        private readonly int width;
+        private readonly int height;
 
-        public Game(int width, int height, ISpace ts)
+        public Game(ISpace ts)
         {
+            this.width = TerminalInfo.GameboardColumns;
+            this.height = TerminalInfo.GameboardRows;
             this.rng = new Random(Environment.TickCount);
             this.ts = ts;
-            this.width = width;
-            this.height = height;
-            this.food = new FoodDispenser(ts, width, height);
-            this.view = new View(width, height, ts);
-            this.lifeformDispatcher = new LifeformDispatcher(this.width, this.height, this.ts);
+            this.food = new FoodDispenser(ts);
+            this.view = new View(ts);
+            this.lifeformDispatcher = new LifeformDispatcher(this.ts);
         }
 
         public void AddLifeform(long genom, int life, int food)

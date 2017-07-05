@@ -8,15 +8,11 @@ namespace PongServer
     {
         private AgentBase pong;
         private ISpace ts;
-        private int height;
-        private int width;
 
-        public Game(int width, int height, ISpace ts)
+        public Game(ISpace ts)
         {
             this.ts = ts;
-            this.width = width;
-            this.height = height;
-            this.pong = new PongController(ts, width, height);
+            this.pong = new PongController(ts);
         }
 
         public void Run()

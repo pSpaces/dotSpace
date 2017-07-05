@@ -14,13 +14,13 @@ namespace LifeformsClient
         private int height;
         private int width;
 
-        public Game(int width, int height, ISpace ts)
+        public Game(ISpace ts)
         {
             this.rng = new Random(Environment.TickCount);
             this.ts = ts;
-            this.width = width;
-            this.height = height;
-            this.lifeformDispatcher = new LifeformDispatcher(this.width, this.height, this.ts);
+            this.width = TerminalInfo.GameboardColumns;
+            this.height = TerminalInfo.GameboardRows;
+            this.lifeformDispatcher = new LifeformDispatcher(this.ts);
         }
 
         public void AddLifeform(long genom)

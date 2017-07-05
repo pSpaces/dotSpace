@@ -15,10 +15,10 @@ namespace Pong
         private int width;
         private int height;
 
-        public PongController(ISpace ts, int width, int height) : base(string.Empty, ts)
+        public PongController(ISpace ts) : base(string.Empty, ts)
         {
-            this.width = width;
-            this.height = height;
+            this.width = TerminalInfo.GameboardColumns;
+            this.height = TerminalInfo.GameboardRows;
             this.rng = new Random(Environment.TickCount);
         }
 

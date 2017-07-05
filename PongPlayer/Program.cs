@@ -18,9 +18,8 @@ namespace PongPlayer
             int playerId = int.Parse(args[0]);
 
             RemoteSpace remotespace = new RemoteSpace("tcp://127.0.0.1:123/pong?KEEP", new EntityFactory());
-            int width = Math.Min(80, Console.BufferWidth);
-            int height = Math.Min(25, Console.BufferHeight);
-            Game pongGame = new Game(width, height, remotespace);
+            TerminalInfo.Initialize(80, 24);
+            Game pongGame = new Game(remotespace);
             pongGame.SetPlayer(playerId, "AI" + playerId);
             pongGame.Run();
             Console.ReadKey();

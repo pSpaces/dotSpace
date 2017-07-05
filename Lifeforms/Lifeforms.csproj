@@ -50,6 +50,7 @@
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EntityFactory.cs" />
+    <Compile Include="TerminalInfo.cs" />
     <Compile Include="View.cs" />
   </ItemGroup>
   <ItemGroup>

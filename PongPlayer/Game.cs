@@ -8,20 +8,16 @@ namespace PongPlayer
         private AIPlayer player;
         private View view;
         private ISpace ts;
-        private int height;
-        private int width;
 
-        public Game(int width, int height, ISpace ts)
+        public Game(ISpace ts)
         {
             this.ts = ts;
-            this.width = width;
-            this.height = height;
-            this.view = new View(width, height, ts);
+            this.view = new View(ts);
         }
 
         public void SetPlayer(int playerId, string playername)
         {
-            this.player = new AIPlayer(playerId, playername, this.width, this.height, this.ts);
+            this.player = new AIPlayer(playerId, playername, this.ts);
         }
 
         public void Run()

@@ -15,10 +15,10 @@ namespace Pong
         private readonly int height;
         private ConsoleColor currentColor;
 
-        public View(int width, int height, ISpace ts) : base("view", ts)
+        public View(ISpace ts) : base("view", ts)
         {
-            this.width = width;
-            this.height = height;
+            this.width = TerminalInfo.GameboardColumns;
+            this.height = TerminalInfo.GameboardRows;
             this.screenBuffer = new char[this.width, this.height];
             Console.CursorVisible = false;
             Console.SetWindowSize(this.width + 1, this.height + 1);
