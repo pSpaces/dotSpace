@@ -1,10 +1,11 @@
 ﻿using dotSpace.Enumerations;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
 using dotSpace.Objects.Network;
 using dotSpace.Objects.Network.ConnectionModes;
 using System;
 
-namespace dotSpace.BaseClasses
+namespace dotSpace.BaseClasses.Network
 {
     /// <summary>
     /// Provides basic functionality for defining the typical behavior of a Gate. This is an abstract class.

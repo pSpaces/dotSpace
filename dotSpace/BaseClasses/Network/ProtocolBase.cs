@@ -1,6 +1,7 @@
 ﻿using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
 
-namespace dotSpace.BaseClasses
+namespace dotSpace.BaseClasses.Network
 {
     /// <summary>
     /// Provides a basic template for communication primitives. This is an abstract class.

@@ -1,9 +1,11 @@
 ﻿using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
+using dotSpace.Interfaces.Space;
 using dotSpace.Objects.Network;
 using dotSpace.Objects.Network.Gates;
 using System.Collections.Generic;
 
-namespace dotSpace.BaseClasses
+namespace dotSpace.BaseClasses.Network
 {
     /// <summary>
     /// Provides the basic functionality for supporting multiple distributed spaces. This is an abstract class.

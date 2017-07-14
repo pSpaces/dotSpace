@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using dotSpace.Interfaces.Space;
+using System.Collections.Generic;
 
-namespace dotSpace.Interfaces
+namespace dotSpace.Interfaces.Network
 {
     /// <summary>
     /// Defines the methods that allow operations on multiple tuple spaces.

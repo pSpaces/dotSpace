@@ -1,5 +1,8 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.BaseClasses.Network;
+using dotSpace.BaseClasses.Network.Messages;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
 using System;
 using System.IO;
 using System.Net.Sockets;

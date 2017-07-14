@@ -1,7 +1,6 @@
-﻿using dotSpace.BaseClasses;
-using System;
+﻿using System;
 
-namespace dotSpace.Interfaces
+namespace dotSpace.Interfaces.Network
 {
     /// <summary>
     /// Defines the operations required to support encoding and decoding messages from objects to a string representation.

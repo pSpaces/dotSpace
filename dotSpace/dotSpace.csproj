@@ -45,27 +45,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseClasses\AgentBase.cs" />
-    <Compile Include="BaseClasses\EncoderBase.cs" />
-    <Compile Include="BaseClasses\GateBase.cs" />
-    <Compile Include="BaseClasses\RepositoryBase.cs" />
-    <Compile Include="BaseClasses\ConnectionModeBase.cs" />
-    <Compile Include="BaseClasses\ProtocolBase.cs" />
-    <Compile Include="BaseClasses\SpaceBase.cs" />
+    <Compile Include="BaseClasses\Space\AgentBase.cs" />
+    <Compile Include="BaseClasses\Network\Messages\RequestBase.cs" />
+    <Compile Include="BaseClasses\Network\Messages\ResponseBase.cs" />
+    <Compile Include="BaseClasses\Network\EncoderBase.cs" />
+    <Compile Include="BaseClasses\Network\GateBase.cs" />
+    <Compile Include="BaseClasses\Network\RepositoryBase.cs" />
+    <Compile Include="BaseClasses\Network\ConnectionModeBase.cs" />
+    <Compile Include="BaseClasses\Network\ProtocolBase.cs" />
+    <Compile Include="BaseClasses\Space\SpaceBase.cs" />
     <Compile Include="Enumerations\Protocol.cs" />
     <Compile Include="Enumerations\StatusCode.cs" />
-    <Compile Include="Interfaces\ITupleFactory.cs" />
-    <Compile Include="Interfaces\IOperationMap.cs" />
-    <Compile Include="Interfaces\IConnectionMode.cs" />
-    <Compile Include="Interfaces\IEncoder.cs" />
-    <Compile Include="Interfaces\IGate.cs" />
-    <Compile Include="Interfaces\IRepository.cs" />
-    <Compile Include="Interfaces\IEnumerableResult.cs" />
-    <Compile Include="Interfaces\IResult.cs" />
-    <Compile Include="Interfaces\IProtocol.cs" />
-    <Compile Include="Interfaces\IMessage.cs" />
-    <Compile Include="Interfaces\IWriteRequest.cs" />
-    <Compile Include="Interfaces\IReadRequest.cs" />
+    <Compile Include="Interfaces\Space\ITupleFactory.cs" />
+    <Compile Include="Interfaces\Network\IOperationMap.cs" />
+    <Compile Include="Interfaces\Network\IConnectionMode.cs" />
+    <Compile Include="Interfaces\Network\IEncoder.cs" />
+    <Compile Include="Interfaces\Network\IGate.cs" />
+    <Compile Include="Interfaces\Network\IRepository.cs" />
+    <Compile Include="Interfaces\Network\IProtocol.cs" />
+    <Compile Include="Interfaces\Network\IMessage.cs" />
     <Compile Include="Objects\Network\ConnectionModes\Pull.cs" />
     <Compile Include="Objects\Network\Gates\GateFactory.cs" />
     <Compile Include="Objects\Network\Protocols\Udp.cs" />
@@ -94,11 +92,11 @@
     <Compile Include="Objects\Network\Messages\Responses\BasicResponse.cs" />
     <Compile Include="Enumerations\Action.cs" />
     <Compile Include="Enumerations\ConnectionMode.cs" />
-    <Compile Include="Interfaces\IFields.cs" />
-    <Compile Include="Interfaces\IPattern.cs" />
-    <Compile Include="Interfaces\ITuple.cs" />
-    <Compile Include="Interfaces\ISpace.cs" />
-    <Compile Include="BaseClasses\MessageBase.cs" />
+    <Compile Include="Interfaces\Space\IFields.cs" />
+    <Compile Include="Interfaces\Space\IPattern.cs" />
+    <Compile Include="Interfaces\Space\ITuple.cs" />
+    <Compile Include="Interfaces\Space\ISpace.cs" />
+    <Compile Include="BaseClasses\Network\Messages\MessageBase.cs" />
     <Compile Include="Objects\Network\ConnectionModes\Conn.cs" />
     <Compile Include="Objects\Network\Messages\Requests\GetRequest.cs" />
     <Compile Include="Objects\Network\Messages\Responses\GetResponse.cs" />
@@ -118,6 +116,7 @@
     <Compile Include="Objects\Utility\ExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

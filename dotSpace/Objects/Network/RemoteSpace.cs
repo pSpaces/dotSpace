@@ -1,5 +1,7 @@
 ﻿using dotSpace.Enumerations;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
+using dotSpace.Interfaces.Space;
 using dotSpace.Objects.Network.ConnectionModes;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;

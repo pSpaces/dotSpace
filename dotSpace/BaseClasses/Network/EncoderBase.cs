@@ -1,9 +1,9 @@
 ﻿using dotSpace.Interfaces;
-using dotSpace.Objects.Json;
+using dotSpace.Interfaces.Network;
 using System;
 using System.Web.Script.Serialization;
 
-namespace dotSpace.BaseClasses
+namespace dotSpace.BaseClasses.Network
 {
     /// <summary>
     /// Provides basic functionality for serializing and deserializing json objects. This is an abstract class.
@@ -36,7 +36,7 @@ namespace dotSpace.BaseClasses
         /// </summary>
         public string Encode(IMessage message)
         {
-            TypeConverter.Box(message);
+            message.Box();
             return this.Serialize(message);
         }
 

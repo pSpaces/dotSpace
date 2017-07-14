@@ -1,6 +1,4 @@
-﻿using dotSpace.BaseClasses;
-using dotSpace.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace dotSpace.Objects.Json
@@ -45,76 +43,7 @@ namespace dotSpace.Objects.Json
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
 
-        /// <summary>
-        /// Boxes the message contents from native .NET primitive types into language independent textual representations. 
-        /// </summary>
-        public static void Box(IMessage message)
-        {
-            if (message is IResult)
-            {
-                IResult response = (IResult)message;
-                response.Result = Box(response.Result);
-            }
-            if(message is IEnumerableResult)
-            {
-                IEnumerableResult response = (IEnumerableResult)message;
-                List<object[]> results = new List<object[]>();
-                foreach(object[] result in response.Result)
-                {
-                    results.Add(Box(result));
-                }
-                response.Result = results;
-            }
-            if (message is IReadRequest)
-            {
-                IReadRequest readRequest = (IReadRequest)message;
-                readRequest.Template = Box(readRequest.Template);
-            }
-
-            if (message is IWriteRequest)
-            {
-                IWriteRequest writeRequest = (IWriteRequest)message;
-                writeRequest.Tuple = Box(writeRequest.Tuple);
-            }
-        }
-
-        /// <summary>
-        /// Unboxes the message contents from language independent textual representations into native .NET primitive types. 
-        /// </summary>
-        public static void Unbox(MessageBase message)
-        {
-            if (message is IResult)
-            {
-                IResult response = (IResult)message;
-                response.Result = Unbox(response.Result);
-            }
-            if (message is IEnumerableResult)
-            {
-                IEnumerableResult response = (IEnumerableResult)message;
-                List<object[]> results = new List<object[]>();
-                foreach (object[] result in response.Result)
-                {
-                    results.Add(Unbox(result));
-                }
-                response.Result = results;
-            }
-            if (message is IReadRequest)
-            {
-                IReadRequest readRequest = (IReadRequest)message;
-                readRequest.Template = Unbox(readRequest.Template);
-            }
-            if (message is IWriteRequest)
-            {
-                IWriteRequest writeRequest = (IWriteRequest)message;
-                writeRequest.Tuple = Unbox(writeRequest.Tuple);
-            }
-        }
-
-        #endregion
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        #region // Private Methods
-        private static object[] Box(object[] values)
+        public static object[] Box(object[] values)
         {
             if (values == null)
                 return null;
@@ -133,7 +62,7 @@ namespace dotSpace.Objects.Json
             return newValues;
         }
 
-        private static object[] Unbox(object[] values)
+        public static object[] Unbox(object[] values)
         {
             if (values == null)
                 return null;
@@ -152,6 +81,12 @@ namespace dotSpace.Objects.Json
 
             return unboxedValues.ToArray();
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Private Methods
+
 
         private static void AddType(string unboxedType, Type boxedType)
         {

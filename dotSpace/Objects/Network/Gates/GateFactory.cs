@@ -1,5 +1,6 @@
 ﻿using dotSpace.Enumerations;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
 
 namespace dotSpace.Objects.Network.Gates
 {

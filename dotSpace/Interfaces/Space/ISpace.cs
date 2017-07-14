@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace dotSpace.Interfaces
+namespace dotSpace.Interfaces.Space
 {
     /// <summary>
     /// Defines the minimal required operations that a tuple space datastructure should support. 

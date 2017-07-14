@@ -1,4 +1,4 @@
-﻿namespace dotSpace.Interfaces
+﻿namespace dotSpace.Interfaces.Space
 {
     /// <summary>
     /// Defines the operations neccessary to create custom tuples used by the concrete spaces.

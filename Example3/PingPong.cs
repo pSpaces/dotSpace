@@ -1,5 +1,7 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.BaseClasses.Space;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Space;
 using System;
 
 namespace Example3

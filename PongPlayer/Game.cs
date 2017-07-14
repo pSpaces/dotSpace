@@ -1,4 +1,5 @@
 ﻿using dotSpace.Interfaces;
+using dotSpace.Interfaces.Space;
 using Pong;
 
 namespace PongPlayer

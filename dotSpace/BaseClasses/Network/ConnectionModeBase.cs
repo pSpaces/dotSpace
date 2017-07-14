@@ -1,11 +1,11 @@
-﻿using dotSpace.Enumerations;
+﻿using dotSpace.BaseClasses.Network.Messages;
+using dotSpace.Enumerations;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
 using dotSpace.Objects.Network;
-using dotSpace.Objects.Network.Messages.Requests;
-using dotSpace.Objects.Network.Messages.Responses;
 using System;
 
-namespace dotSpace.BaseClasses
+namespace dotSpace.BaseClasses.Network
 {
     /// <summary>
     /// Provides basic functionality for supporting multiple connectionschemes, and validating messages. This is an abstract class.
@@ -56,12 +56,12 @@ namespace dotSpace.BaseClasses
         /// </summary>
         protected IMessage ValidateResponse(IMessage message)
         {
-            if (message is BasicResponse)
+            if (message is ResponseBase)
             {
-                BasicResponse response = (BasicResponse)message;
+                ResponseBase response = (ResponseBase)message;
                 if (response.Code == StatusCode.OK)
                 {
-                    return (BasicResponse)message;
+                    return (ResponseBase)message;
                 }
                 throw new Exception(string.Format("{0} - {1}", response.Code, response.Message));
             }
@@ -72,9 +72,9 @@ namespace dotSpace.BaseClasses
         /// </summary>
         protected IMessage ValidateRequest(IMessage message)
         {
-            if (message is BasicRequest)
+            if (message is RequestBase)
             {
-                return (BasicRequest)message;
+                return (RequestBase)message;
             }
             throw new Exception(string.Format("{0} - {1}", StatusCode.BAD_REQUEST, StatusMessage.BAD_REQUEST));
         } 

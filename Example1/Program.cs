@@ -1,5 +1,7 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.BaseClasses.Space;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Space;
 using dotSpace.Objects.Space;
 using System;
 
@@ -12,6 +14,7 @@ namespace Example1
             if(args.Length!=1)
             {
                 Console.WriteLine("Please specify your name");
+                return;
             }
             // Instantiate a new Fifobased tuple space.
             ISpace dtu = new FifoSpace();

@@ -1,9 +1,10 @@
 ﻿using dotSpace.Interfaces;
+using dotSpace.Interfaces.Space;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace dotSpace.BaseClasses
+namespace dotSpace.BaseClasses.Space
 {
     /// <summary>
     /// Provides basic functionality for a threaded interaction with a space. This is an abstract class.

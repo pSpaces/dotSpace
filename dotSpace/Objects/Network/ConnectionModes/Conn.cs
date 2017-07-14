@@ -1,7 +1,7 @@
-﻿using dotSpace.BaseClasses;
+﻿using dotSpace.BaseClasses.Network;
+using dotSpace.BaseClasses.Network.Messages;
 using dotSpace.Interfaces;
-using dotSpace.Objects.Network.Messages.Requests;
-using dotSpace.Objects.Network.Messages.Responses;
+using dotSpace.Interfaces.Network;
 
 namespace dotSpace.Objects.Network.ConnectionModes
 {
@@ -30,9 +30,9 @@ namespace dotSpace.Objects.Network.ConnectionModes
         /// </summary>
         public override void ProcessRequest(IOperationMap operationMap)
         {
-            BasicRequest request = (BasicRequest)this.protocol.Receive(this.encoder);
-            request = (BasicRequest)this.ValidateRequest(request);
-            BasicResponse response = (BasicResponse)operationMap.Execute(request);
+            RequestBase request = (RequestBase)this.protocol.Receive(this.encoder);
+            request = (RequestBase)this.ValidateRequest(request);
+            ResponseBase response = (ResponseBase)operationMap.Execute(request);
             this.protocol.Send(response, this.encoder);
         }
         /// <summary>

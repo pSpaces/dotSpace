@@ -1,9 +1,10 @@
 ﻿using dotSpace.Enumerations;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
 using System;
 using System.Web.Script.Serialization;
 
-namespace dotSpace.BaseClasses
+namespace dotSpace.BaseClasses.Network.Messages
 {
     /// <summary>
     /// Toplevel entity containing the minimal properties any message contain. This is an abstract class.
@@ -65,6 +66,20 @@ namespace dotSpace.BaseClasses
                 this.Actiontype = Enum.TryParse(value, true, out action) ? action : ActionType.NONE;
             }
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
+
+        /// <summary>
+        /// Boxes the message contents from native .NET primitive types into language independent textual representations. 
+        /// </summary>
+        public abstract void Box();
+        /// <summary>
+        /// Unboxes the message contents from language independent textual representations into native .NET primitive types. 
+        /// </summary>
+        public abstract void Unbox();
 
         #endregion
     }

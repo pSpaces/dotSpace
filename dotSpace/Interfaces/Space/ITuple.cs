@@ -1,4 +1,4 @@
-﻿namespace dotSpace.Interfaces
+﻿namespace dotSpace.Interfaces.Space
 {
     /// <summary>
     /// Provides the primitives required to define a tuple.

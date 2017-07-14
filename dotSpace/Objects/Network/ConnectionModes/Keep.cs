@@ -1,7 +1,7 @@
-﻿using dotSpace.BaseClasses;
+﻿using dotSpace.BaseClasses.Network;
+using dotSpace.BaseClasses.Network.Messages;
 using dotSpace.Interfaces;
-using dotSpace.Objects.Network.Messages.Requests;
-using dotSpace.Objects.Network.Messages.Responses;
+using dotSpace.Interfaces.Network;
 using dotSpace.Objects.Utility;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,12 +46,12 @@ namespace dotSpace.Objects.Network.ConnectionModes
         {
             while (true) // FIX THIS
             {
-                BasicRequest request = (BasicRequest)this.protocol.Receive(this.encoder);
+                RequestBase request = (RequestBase)this.protocol.Receive(this.encoder);
                 var t = Task.Factory.StartNew(() =>
                 {
-                    BasicRequest req = request;
-                    req = (BasicRequest)this.ValidateRequest(req);
-                    BasicResponse response = (BasicResponse)operationMap.Execute(req);
+                    RequestBase req = request;
+                    req = (RequestBase)this.ValidateRequest(req);
+                    ResponseBase response = (ResponseBase)operationMap.Execute(req);
                     lock (this.protocol)
                     {
                         this.protocol.Send(response, this.encoder);

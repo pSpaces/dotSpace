@@ -1,4 +1,4 @@
-﻿namespace dotSpace.Interfaces
+﻿namespace dotSpace.Interfaces.Network
 {
     /// <summary>
     /// This interface specifies the operations required to map requests with operations on a space repository.

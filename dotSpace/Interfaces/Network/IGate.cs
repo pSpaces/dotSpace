@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace dotSpace.Interfaces
+namespace dotSpace.Interfaces.Network
 {
     /// <summary>
     /// Defines a mechanism for controlling the flow of Gate events.

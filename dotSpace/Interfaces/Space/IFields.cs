@@ -1,4 +1,4 @@
-﻿namespace dotSpace.Interfaces
+﻿namespace dotSpace.Interfaces.Space
 {
     /// <summary>
     /// Defines a set of values.

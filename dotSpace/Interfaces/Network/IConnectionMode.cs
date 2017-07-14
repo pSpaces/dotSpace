@@ -1,8 +1,4 @@
-﻿using dotSpace.Objects.Network;
-using dotSpace.Objects.Network.Messages.Requests;
-using dotSpace.Objects.Network.Messages.Responses;
-
-namespace dotSpace.Interfaces
+﻿namespace dotSpace.Interfaces.Network
 {
     /// <summary>
     /// This interface specifies the operations required to support any given connection mode.

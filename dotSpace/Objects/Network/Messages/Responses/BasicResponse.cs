@@ -1,12 +1,12 @@
-﻿using dotSpace.BaseClasses;
+﻿using dotSpace.BaseClasses.Network.Messages;
 using dotSpace.Enumerations;
 
 namespace dotSpace.Objects.Network.Messages.Responses
 {
     /// <summary>
-    /// Entity containing the minimal properties of any response type message.
+    /// Concrete entity containing the minimal properties of any response type message.
     /// </summary>
-    public class BasicResponse : MessageBase
+    public class BasicResponse : ResponseBase  
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
@@ -21,26 +21,28 @@ namespace dotSpace.Objects.Network.Messages.Responses
         /// <summary>
         /// Initializes a new instances of the BasicResponse class.
         /// </summary>
-        public BasicResponse(ActionType action, string source, string session, string target, StatusCode code, string message) : base(action, source, session, target)
+        public BasicResponse(ActionType action, string source, string session, string target, StatusCode code, string message) : base(action, source, session, target, code, message)
         {
-            this.Code = code;
-            this.Message = message;
         }
 
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
-        #region // Public Properties
+        #region // Public Methods
 
         /// <summary>
-        /// Gets or sets the status code representing the reponse.
+        /// Boxes the message contents from native .NET primitive types into language independent textual representations. 
         /// </summary>
-        public StatusCode Code { get; set; }
+        public override void Box()
+        {
+        }
 
         /// <summary>
-        /// Gets or sets the status message as a textual representation of the status code.
+        /// Unboxes the message contents from language independent textual representations into native .NET primitive types. 
         /// </summary>
-        public string Message { get; set; }
+        public override void Unbox()
+        {
+        }
 
         #endregion
 

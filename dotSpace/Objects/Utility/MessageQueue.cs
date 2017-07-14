@@ -1,5 +1,6 @@
-﻿using dotSpace.BaseClasses;
+﻿using dotSpace.BaseClasses.Network.Messages;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
 using System.Collections.Generic;
 using System.Threading;
 

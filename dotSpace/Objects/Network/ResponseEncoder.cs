@@ -1,6 +1,8 @@
-﻿using dotSpace.BaseClasses;
+﻿using dotSpace.BaseClasses.Network;
+using dotSpace.BaseClasses.Network.Messages;
 using dotSpace.Enumerations;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
 using dotSpace.Objects.Json;
 using dotSpace.Objects.Network.Messages.Requests;
 
@@ -20,7 +22,7 @@ namespace dotSpace.Objects.Network
         /// </summary>
         public override IMessage Decode(string msg)
         {
-            BasicRequest breq = Deserialize<BasicRequest>(msg);
+            RequestBase breq = Deserialize<BasicRequest>(msg);
             switch (breq.Actiontype)
             {
                 case ActionType.GET_REQUEST: breq = this.Deserialize<GetRequest>(msg, typeof(PatternBinding)); break;
@@ -32,7 +34,7 @@ namespace dotSpace.Objects.Network
                 case ActionType.PUT_REQUEST: breq = this.Deserialize<PutRequest>(msg); break;
             }
 
-            TypeConverter.Unbox(breq);
+            breq.Unbox();
             return breq;
         }
 

@@ -1,4 +1,5 @@
 ﻿using dotSpace.Interfaces;
+using dotSpace.Interfaces.Space;
 using dotSpace.Objects.Utility;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Threading;
 
 
-namespace dotSpace.BaseClasses
+namespace dotSpace.BaseClasses.Space
 {
     /// <summary>
     /// Provides the basic functionality for a tuplespace datastructure. 

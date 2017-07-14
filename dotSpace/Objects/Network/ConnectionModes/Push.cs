@@ -1,8 +1,11 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.BaseClasses.Network;
 using dotSpace.Enumerations;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
+using System;
 
 namespace dotSpace.Objects.Network.ConnectionModes
 {
@@ -20,6 +23,7 @@ namespace dotSpace.Objects.Network.ConnectionModes
         /// </summary>
         public Push(IProtocol protocol, IEncoder encoder) : base(protocol, encoder)
         {
+            throw new Exception("The Pull connection scheme is not supported.");
         }
 
         #endregion
@@ -38,9 +42,7 @@ namespace dotSpace.Objects.Network.ConnectionModes
         /// </summary>
         public override T PerformRequest<T>(IMessage request)
         {
-            IMessage message = new BasicResponse(request.Actiontype, request.Source, request.Session, request.Target, StatusCode.NOT_IMPLEMENTED, StatusMessage.NOT_IMPLEMENTED);
-            this.protocol.Close();
-            return (T)this.ValidateResponse(message);
+            return default(T);
         }
 
         #endregion

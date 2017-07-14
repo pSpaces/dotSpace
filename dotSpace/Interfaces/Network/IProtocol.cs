@@ -1,6 +1,6 @@
 ﻿using dotSpace.BaseClasses;
 
-namespace dotSpace.Interfaces
+namespace dotSpace.Interfaces.Network
 {
     /// <summary>
     /// Defines the functionality for communication primitives. 

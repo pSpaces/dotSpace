@@ -1,5 +1,7 @@
 ﻿using dotSpace.BaseClasses;
+using dotSpace.BaseClasses.Network;
 using dotSpace.Interfaces;
+using dotSpace.Interfaces.Network;
 
 namespace dotSpace.Objects.Network
 {
