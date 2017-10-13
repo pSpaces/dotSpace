@@ -13,7 +13,7 @@ namespace Example2
         static void Main(string[] args)
         {
             // Instantiate a new Fifo based space.
-            ISpace ts = new FifoSpace();
+            ISpace ts = new SequentialSpace();
 
             // Insert the forks that the philosophers must share.
             ts.Put("FORK", 1);

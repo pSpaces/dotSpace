@@ -10,7 +10,7 @@ namespace LocalLifeforms
     {
         static void Main(string[] args)
         {
-            ISpace ts = new FifoSpace(new EntityFactory());
+            ISpace ts = new SequentialSpace(new EntityFactory());
             TerminalInfo.Initialize(80, 24);
             Game lifeforms = new Game(ts);
             lifeforms.AddLifeform(3, 100, 25);

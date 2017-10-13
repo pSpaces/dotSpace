@@ -12,7 +12,7 @@ namespace Example4
     {
         static void Main(string[] args)
         {
-            ISpace ts = new FifoSpace();
+            ISpace ts = new SequentialSpace();
             List<AgentBase> agents = new List<AgentBase>();
 
             // We create Alice and Bob as Producer/Consumer agents

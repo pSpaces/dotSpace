@@ -23,7 +23,7 @@ namespace Example8
                     repository.AddGate("tcp://127.0.0.1:123?CONN");
                     
                     // Add a new fifo based space
-                    repository.AddSpace("fridge", new FifoSpace());
+                    repository.AddSpace("fridge", new SequentialSpace());
                     
                     // Create a new agent, and let the agent use the local tuple space instead of a networked remotespace.
                     AgentBase alice = new Producer("Alice", repository.GetSpace("fridge"));

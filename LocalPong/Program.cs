@@ -10,7 +10,7 @@ namespace LocalPong
     {
         static void Main(string[] args)
         {
-            ISpace ts = new FifoSpace(new EntityFactory());
+            ISpace ts = new SequentialSpace(new EntityFactory());
             TerminalInfo.Initialize(80, 24);
             Game pongGame = new Game(ts);
             pongGame.AddPlayer(new AIPlayer(1, "AI1", ts));

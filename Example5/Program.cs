@@ -24,7 +24,7 @@ namespace Example5
             repository.AddGate("tcp://127.0.0.1:123?CONN");
 
             // Add a new Fifo based space.
-            repository.AddSpace("dtu", new FifoSpace());
+            repository.AddSpace("dtu", new SequentialSpace());
 
             // Insert a tuple with a message.
             repository.Put("dtu", "Hello student!");

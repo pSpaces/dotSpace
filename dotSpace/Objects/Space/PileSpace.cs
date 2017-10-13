@@ -10,16 +10,16 @@ namespace dotSpace.Objects.Space
     /// Represents a strongly typed set of tuples that can be access through pattern matching. Provides methods to query and manipulate the set.
     /// This class imposes lifo ordering on the underlying tuples.
     /// </summary>
-    public sealed class LifoSpace : SpaceBase
+    public sealed class PileSpace : SpaceBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
 
         /// <summary>
-        /// Initializes a new instance of the FifoSpace class. All tuples will be created using the provided tuple factory;
+        /// Initializes a new instance of the PileSpace class. All tuples will be created using the provided tuple factory;
         /// if none is provided the default TupleFactory will be used.
         /// </summary>
-        public LifoSpace(ITupleFactory tuplefactory = null) : base(tuplefactory ?? new TupleFactory())
+        public PileSpace(ITupleFactory tuplefactory = null) : base(tuplefactory ?? new TupleFactory())
         {
         }
 

@@ -17,7 +17,7 @@ namespace Example1
                 return;
             }
             // Instantiate a new Fifobased tuple space.
-            ISpace dtu = new FifoSpace();
+            ISpace dtu = new SequentialSpace();
             
             // Insert a tuple with a message.
             dtu.Put("Hello student!");

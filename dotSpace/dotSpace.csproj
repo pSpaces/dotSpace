@@ -68,7 +68,6 @@
     <Compile Include="Objects\Network\Gates\GateFactory.cs" />
     <Compile Include="Objects\Network\Protocols\Udp.cs" />
     <Compile Include="Objects\Network\Gates\UdpGate.cs" />
-    <Compile Include="Objects\Space\RandomSpace.cs" />
     <Compile Include="Objects\Space\LifoSpace.cs" />
     <Compile Include="Objects\Network\ConnectionModes\Keep.cs" />
     <Compile Include="Objects\Network\Gates\TcpGate.cs" />

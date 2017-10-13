@@ -11,7 +11,7 @@ namespace PongServer
         {
             SpaceRepository repository = new SpaceRepository();
             repository.AddGate("tcp://127.0.0.1:123?KEEP");
-            repository.AddSpace("pong", new FifoSpace(new EntityFactory()));
+            repository.AddSpace("pong", new SequentialSpace(new EntityFactory()));
             TerminalInfo.Initialize(80, 24);
             Game pongGame = new Game(repository.GetSpace("pong"));
             pongGame.Run();

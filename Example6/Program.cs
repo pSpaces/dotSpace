@@ -22,7 +22,7 @@ namespace Example6
                     repository.AddGate("tcp://127.0.0.1:31415?KEEP");
 
                     // Add a new Fifo based space to the repository.
-                    repository.AddSpace("DiningTable", new FifoSpace());
+                    repository.AddSpace("DiningTable", new SequentialSpace());
                     
                     // Insert the forks that the philosophers must share.
                     repository.Put("DiningTable", "FORK", 1);
