@@ -68,7 +68,7 @@
     <Compile Include="Objects\Network\Gates\GateFactory.cs" />
     <Compile Include="Objects\Network\Protocols\Udp.cs" />
     <Compile Include="Objects\Network\Gates\UdpGate.cs" />
-    <Compile Include="Objects\Space\LifoSpace.cs" />
+    <Compile Include="Objects\Space\PileSpace.cs" />
     <Compile Include="Objects\Network\ConnectionModes\Keep.cs" />
     <Compile Include="Objects\Network\Gates\TcpGate.cs" />
     <Compile Include="Objects\Network\RemoteSpace.cs" />
@@ -110,7 +110,7 @@
     <Compile Include="Objects\Network\StatusMessage.cs" />
     <Compile Include="Objects\Network\OperationMap.cs" />
     <Compile Include="Objects\Space\Tuple.cs" />
-    <Compile Include="Objects\Space\FifoSpace.cs" />
+    <Compile Include="Objects\Space\SequentialSpace.cs" />
     <Compile Include="Objects\Network\ConnectionString.cs" />
     <Compile Include="Objects\Utility\ExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

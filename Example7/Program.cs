@@ -15,8 +15,8 @@ namespace Example7
                 repository.AddGate("tcp://127.0.0.1:123?KEEP");
                 repository.AddGate("tcp://127.0.0.1:124?KEEP");
 
-                // Create a new Random based space, and insert the ping.
-                repository.AddSpace("pingpong", new RandomSpace());
+                // Create a new fifo based space, and insert the ping.
+                repository.AddSpace("pingpong", new SequentialSpace());
                 repository.Put("pingpong", "ping", 0);
 
                 // Create two seperate remotespaces and agents.
