@@ -222,9 +222,11 @@ namespace dotSpace.BaseClasses.Space
             Monitor.Exit(this.bucketAccess);
 
             bucketLock.EnterWriteLock();
+            Monitor.Enter(bucket);
             bucket.Insert(this.GetIndex(bucket.Count), this.Copy(values));
+            Monitor.PulseAll(bucket);
+            Monitor.Exit(bucket);
             bucketLock.ExitWriteLock();
-            this.Awake(bucket);
         }
 
         #endregion
@@ -257,7 +259,7 @@ namespace dotSpace.BaseClasses.Space
 
         private ITuple Copy(ITuple tuple)
         {
-            return tuple != null ? this.tupleFactory.Create(this.CopyFields(tuple.Fields)) : null; 
+            return tuple != null ? this.tupleFactory.Create(this.CopyFields(tuple.Fields)) : null;
         }
 
         private ulong ComputeHash(object[] values)
@@ -273,17 +275,21 @@ namespace dotSpace.BaseClasses.Space
         private ITuple WaitUntilMatch(List<ITuple> bucket, ReaderWriterLockSlim bucketLock, object[] pattern)
         {
             ITuple t;
-            while (((t = this.Find(bucket, bucketLock, pattern)) == null))
+            while ((t = this.Find(bucket, bucketLock, pattern, false)) == null)
             {
-                this.Wait(bucket);
+                Monitor.Enter(bucket);
+                bucketLock.ExitReadLock();
+                Monitor.Wait(bucket);
+                Monitor.Exit(bucket);
             }
+            bucketLock.ExitReadLock();
             return t;
         }
-        private ITuple Find(List<ITuple> bucket, ReaderWriterLockSlim bucketLock, object[] pattern)
+        private ITuple Find(List<ITuple> bucket, ReaderWriterLockSlim bucketLock, object[] pattern, bool exit = true)
         {
             bucketLock.EnterReadLock();
             ITuple t = bucket.Where(x => this.Match(pattern, x.Fields)).FirstOrDefault();
-            bucketLock.ExitReadLock();
+            if (exit) bucketLock.ExitReadLock();
             return t;
         }
         private IEnumerable<ITuple> FindAll(List<ITuple> bucket, ReaderWriterLockSlim bucketLock, object[] pattern)
@@ -335,18 +341,6 @@ namespace dotSpace.BaseClasses.Space
                 this.bucketLocks.Add(hash, new ReaderWriterLockSlim());
             }
             return this.bucketLocks[hash];
-        }
-        private void Wait(object _lock)
-        {
-            Monitor.Enter(_lock);
-            Monitor.Wait(_lock);
-            Monitor.Exit(_lock);
-        }
-        private void Awake(object _lock)
-        {
-            Monitor.Enter(_lock);
-            Monitor.PulseAll(_lock);
-            Monitor.Exit(_lock);
         }
 
         #endregion
