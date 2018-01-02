@@ -1,4 +1,4 @@
-Copyright (c) 2017 Alberto Lluch Lafuente <albl@dtu.dk> and the goSpace Developers (see and include the full [authors file](AUTHORS.md)).
+Copyright (c) 2017 Alberto Lluch Lafuente <albl@dtu.dk> and the dotSpace Developers (see and include the full [authors file](AUTHORS.md)).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
