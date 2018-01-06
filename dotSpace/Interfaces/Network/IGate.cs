@@ -1,4 +1,5 @@
 ﻿using System;
+using dotSpace.Objects.Network;
 
 namespace dotSpace.Interfaces.Network
 {
@@ -7,6 +8,11 @@ namespace dotSpace.Interfaces.Network
     /// </summary>
     public interface IGate
     {
+        /// <summary>
+        /// Connection string representing the endpoint.
+        /// </summary>
+        ConnectionString ConnectionString { get; }
+
         /// <summary>
         /// Starts the gate, and the callback function is executed when an incoming connection is established
         /// </summary>

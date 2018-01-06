@@ -9,6 +9,9 @@ namespace dotSpace.Objects.Network
     /// </summary>
     public class ConnectionString
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Constructors
+
         /// <summary>
         /// Initializes a new instances of the ConnectionString class.
         /// </summary>
@@ -26,6 +29,11 @@ namespace dotSpace.Objects.Network
                 this.Mode = (ConnectionMode)Enum.Parse(typeof(ConnectionMode), mode);
             }
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Properties
 
         /// <summary>
         /// Gets the specified protocol. This property is optional. If no value was defined, it defaults to TCP.
@@ -51,5 +59,29 @@ namespace dotSpace.Objects.Network
         /// Gets the specified connection scheme. This property is optional. If no value was defined, it defaults to KEEP.
         /// </summary>
         public ConnectionMode Mode { get; private set; }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Methods
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        /// <summary>
+        /// Returns true if the values representing the connection string are equal.
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            if (obj is ConnectionString other)
+            {
+                return this.Protocol == other.Protocol && this.Host.Equals(other.Host)
+                       && this.Port == other.Port && this.Target.Equals(other.Target) && this.Mode == other.Mode;
+            }
+            return false;
+        }
+        
+        #endregion
     }
 }

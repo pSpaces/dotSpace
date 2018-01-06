@@ -49,7 +49,7 @@ namespace dotSpace.Objects.Network.Gates
             if (!this.listening)
             {
                 this.listening = true;
-                IConnectionMode mode = this.GetMode(this.connectionString.Mode, new Udp(this.connectionString.Host, this.connectionString.Port));
+                IConnectionMode mode = this.GetMode(this.ConnectionString.Mode, new Udp(this.ConnectionString.Host, this.ConnectionString.Port));
                 new Thread(() => { callback(mode); }).Start();
             }
         }

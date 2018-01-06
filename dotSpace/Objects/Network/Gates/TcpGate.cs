@@ -1,6 +1,4 @@
-﻿using dotSpace.BaseClasses;
-using dotSpace.BaseClasses.Network;
-using dotSpace.Interfaces;
+﻿using dotSpace.BaseClasses.Network;
 using dotSpace.Interfaces.Network;
 using dotSpace.Objects.Network.Protocols;
 using System;
@@ -36,7 +34,7 @@ namespace dotSpace.Objects.Network.Gates
         {
             this.backlog = 50;
             this.ipAddress = IPAddress.Parse(connectionstring.Host);
-            this.listener = new TcpListener(ipAddress, this.connectionString.Port);
+            this.listener = new TcpListener(ipAddress, this.ConnectionString.Port);
         }
 
         #endregion
@@ -74,7 +72,7 @@ namespace dotSpace.Objects.Network.Gates
         private void Listen()
         {
             this.listener.Start(this.backlog);
-            Console.WriteLine("Current endpoint: {0}:{1}", this.ipAddress.ToString(), this.connectionString.Port);
+            Console.WriteLine("Current endpoint: {0}:{1}", this.ipAddress.ToString(), this.ConnectionString.Port);
             Console.WriteLine("Begin listening...");
             try
             {
@@ -82,13 +80,13 @@ namespace dotSpace.Objects.Network.Gates
                 {
                     TcpClient client = listener.AcceptTcpClient();
                     Tcp protocol = new Tcp(client);
-                    IConnectionMode mode = this.GetMode(this.connectionString.Mode, protocol);
+                    IConnectionMode mode = this.GetMode(this.ConnectionString.Mode, protocol);
                     new Thread(() => { this.callBack(mode); }).Start();
                 }
             }
             catch (Exception e)
             {
-                throw e;
+                // TODO: Error handling: throw e;
             }
             finally
             {

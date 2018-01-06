@@ -1,6 +1,4 @@
-﻿using dotSpace.Interfaces;
-using dotSpace.Interfaces.Space;
-using dotSpace.Objects.Utility;
+﻿using dotSpace.Interfaces.Space;
 using System;
 using System.Collections.Generic;
 using System.Linq;

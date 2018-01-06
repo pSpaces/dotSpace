@@ -10,9 +10,13 @@ namespace dotSpace.Interfaces.Network
     public interface IRepository
     {
         /// <summary>
-        /// Adds a new Gate to the repository based on the provided connectionstring.
+        /// Adds a new Gate to the repository based on the provided uri.
         /// </summary>
-        void AddGate(string connectionstring);
+        void AddGate(string uri);
+        /// <summary>
+        /// Closes the gate represented by the specific connectionstring, and terminates the underlying thread.
+        /// </summary>
+        void CloseGate(string connectionString);
         /// <summary>
         /// Adds a new Space to the repository, identified by the specified parameter.
         /// </summary>

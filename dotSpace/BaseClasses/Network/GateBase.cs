@@ -15,7 +15,6 @@ namespace dotSpace.BaseClasses.Network
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
 
-        protected ConnectionString connectionString;
         protected IEncoder encoder;
 
         #endregion
@@ -29,8 +28,18 @@ namespace dotSpace.BaseClasses.Network
         public GateBase(IEncoder encoder, ConnectionString connectionString)
         {
             this.encoder = encoder;
-            this.connectionString = connectionString;
+            this.ConnectionString = connectionString;
         }
+
+        #endregion
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        #region // Public Properties
+
+        /// <summary>
+        /// Property based representation of the uri endpoint.
+        /// </summary>
+        public ConnectionString ConnectionString { get; }
 
         #endregion
 

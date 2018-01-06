@@ -1,9 +1,10 @@
-﻿using dotSpace.Interfaces;
+﻿using System;
 using dotSpace.Interfaces.Network;
 using dotSpace.Interfaces.Space;
 using dotSpace.Objects.Network;
 using dotSpace.Objects.Network.Gates;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace dotSpace.BaseClasses.Network
 {
@@ -12,7 +13,7 @@ namespace dotSpace.BaseClasses.Network
     /// The RepositoryBase class allows direct access to the contained spaces through their respective identifies.
     /// Additionally, RepositoryBase facilitates distributed access to the underlying spaces through Gates. 
     /// </summary>
-    public abstract class RepositoryBase : IRepository
+    public abstract class RepositoryBase : IRepository, IDisposable
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Fields
@@ -26,7 +27,7 @@ namespace dotSpace.BaseClasses.Network
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Constructors
-        
+
         /// <summary>
         /// Initializes a new instance of the RepositoryBase class.
         /// </summary>
@@ -42,7 +43,7 @@ namespace dotSpace.BaseClasses.Network
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
-        
+
         /// <summary>
         /// Adds a new Gate to the repository based on the provided connectionstring.
         /// </summary>
@@ -53,6 +54,24 @@ namespace dotSpace.BaseClasses.Network
             {
                 this.gates.Add(gate);
                 gate.Start(this.OnConnect);
+            }
+        }
+        /// <summary>
+        /// Closes the gate represented by the specific connectionstring, and terminates the underlying thread.
+        /// </summary>
+        public void CloseGate(string uri)
+        {
+            ConnectionString connectionString = new ConnectionString(uri);
+            this.gates.FirstOrDefault(x => x.ConnectionString.Equals(connectionString))?.Stop();
+        }
+        /// <summary>
+        /// Closes all gates, and terminates the underlying associated thread.
+        /// </summary>
+        public void Dispose()
+        {
+            foreach (IGate gate in this.gates)
+            {
+                gate.Stop();
             }
         }
         /// <summary>
@@ -179,7 +198,7 @@ namespace dotSpace.BaseClasses.Network
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Protected Methods
-        
+
         /// <summary>
         /// Template method that is called when the repository receives an incoming connection.
         /// </summary>
