@@ -3,6 +3,7 @@ using dotSpace.BaseClasses.Network.Messages;
 using dotSpace.Interfaces;
 using dotSpace.Interfaces.Network;
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -49,8 +50,8 @@ namespace dotSpace.Objects.Network.Protocols
             try
             {
                 Byte[] receiveBytes = this.client.Receive(ref this.endpoint);
-                string msg = Encoding.ASCII.GetString(receiveBytes);
-                return (MessageBase)encoder.Decode(msg);
+                MemoryStream bytes = new MemoryStream(receiveBytes);
+                return (MessageBase)encoder.Decode(bytes);
             }
             catch (Exception e)
             {
@@ -67,8 +68,9 @@ namespace dotSpace.Objects.Network.Protocols
         {
             try
             {
-                string msg = encoder.Encode(message);
-                byte[] data  = Encoding.ASCII.GetBytes(msg);
+                MemoryStream bytes = new MemoryStream();
+                encoder.Encode(bytes, message);
+                byte[] data = bytes.ToArray();
                 this.client.Send(data, data.Length);
             }
             catch (Exception e)

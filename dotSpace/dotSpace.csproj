@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseClasses\Network\Messages\ReturnResponseBase.cs" />
+    <Compile Include="BaseClasses\Network\Messages\TemplateRequestBase.cs" />
     <Compile Include="BaseClasses\Space\AgentBase.cs" />
     <Compile Include="BaseClasses\Network\Messages\RequestBase.cs" />
     <Compile Include="BaseClasses\Network\Messages\ResponseBase.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="Interfaces\Network\IProtocol.cs" />
     <Compile Include="Interfaces\Network\IMessage.cs" />
     <Compile Include="Objects\Network\ConnectionModes\Pull.cs" />
+    <Compile Include="Objects\Network\Encoders\Binary\BinaryEncoder.cs" />
     <Compile Include="Objects\Network\Encoders\Binary\BinarySerializer.cs" />
     <Compile Include="Objects\Network\Encoders\Binary\Exceptions\ClassDictionaryException.cs" />
     <Compile Include="Objects\Network\Encoders\Binary\Utilities\ClassEntry.cs" />

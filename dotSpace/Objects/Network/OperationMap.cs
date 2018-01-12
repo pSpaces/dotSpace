@@ -97,7 +97,7 @@ namespace dotSpace.Objects.Network
             {
                 GetAllRequest getReq = (GetAllRequest)request;
                 IEnumerable<ITuple> tuples = ts.GetAll(new Pattern(getReq.Template));
-                return new GetAllResponse(request.Source, request.Session, request.Target, tuples?.Select(x => x.Fields) ?? null, StatusCode.OK, StatusMessage.OK);
+                return new GetAllResponse(request.Source, request.Session, request.Target, tuples?.Select(x => x.Fields).ToArray() ?? null, StatusCode.OK, StatusMessage.OK);
             }
             return new GetAllResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }
@@ -130,7 +130,7 @@ namespace dotSpace.Objects.Network
             {
                 QueryAllRequest getReq = (QueryAllRequest)request;
                 IEnumerable<ITuple> tuples = ts.QueryAll(new Pattern(getReq.Template));
-                return new QueryAllResponse(request.Source, request.Session, request.Target, tuples?.Select(x => x.Fields) ?? null, StatusCode.OK, StatusMessage.OK);
+                return new QueryAllResponse(request.Source, request.Session, request.Target, tuples?.Select(x => x.Fields).ToArray() ?? null, StatusCode.OK, StatusMessage.OK);
             }
             return new QueryAllResponse(request.Source, request.Session, request.Target, null, StatusCode.NOT_FOUND, StatusMessage.NOT_FOUND);
         }

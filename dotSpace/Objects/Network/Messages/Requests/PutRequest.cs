@@ -38,26 +38,5 @@ namespace dotSpace.Objects.Network.Messages.Requests
         public object[] Tuple { get; set; }
 
         #endregion
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        #region // Public Methods
-
-        /// <summary>
-        /// Boxes the message contents from native .NET primitive types into language independent textual representations. 
-        /// </summary>
-        public override void Box()
-        {
-            this.Tuple = TypeConverter.Box(this.Tuple);
-        }
-
-        /// <summary>
-        /// Unboxes the message contents from language independent textual representations into native .NET primitive types. 
-        /// </summary>
-        public override void Unbox()
-        {
-            this.Tuple = TypeConverter.Unbox(this.Tuple);
-        }
-
-        #endregion
     }
 }
