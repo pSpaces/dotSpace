@@ -65,6 +65,13 @@
     <Compile Include="Interfaces\Network\IProtocol.cs" />
     <Compile Include="Interfaces\Network\IMessage.cs" />
     <Compile Include="Objects\Network\ConnectionModes\Pull.cs" />
+    <Compile Include="Objects\Network\Encoders\Binary\BinarySerializer.cs" />
+    <Compile Include="Objects\Network\Encoders\Binary\Exceptions\ClassDictionaryException.cs" />
+    <Compile Include="Objects\Network\Encoders\Binary\Utilities\ClassEntry.cs" />
+    <Compile Include="Objects\Network\Encoders\Binary\Utilities\ClassRegistry.cs" />
+    <Compile Include="Objects\Network\Encoders\Binary\Exceptions\ParseException.cs" />
+    <Compile Include="Objects\Network\Encoders\Binary\Utilities\TwoWayDictionary.cs" />
+    <Compile Include="Objects\Network\Encoders\Binary\Utilities\TypeConverter.cs" />
     <Compile Include="Objects\Network\Gates\GateFactory.cs" />
     <Compile Include="Objects\Network\Protocols\Udp.cs" />
     <Compile Include="Objects\Network\Gates\UdpGate.cs" />
