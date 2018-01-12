@@ -68,19 +68,5 @@ namespace dotSpace.BaseClasses.Network.Messages
         }
 
         #endregion
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        #region // Public Methods
-
-        /// <summary>
-        /// Boxes the message contents from native .NET primitive types into language independent textual representations. 
-        /// </summary>
-        public abstract void Box();
-        /// <summary>
-        /// Unboxes the message contents from language independent textual representations into native .NET primitive types. 
-        /// </summary>
-        public abstract void Unbox();
-
-        #endregion
     }
 }

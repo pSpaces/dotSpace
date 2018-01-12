@@ -51,8 +51,7 @@ namespace dotSpace.Objects.Network.Protocols
         {
             try
             {
-                string msg = reader.ReadLine();
-                return (MessageBase)encoder.Decode(msg);
+                return (MessageBase)encoder.Decode(netStream);
             }
             catch (Exception e)
             {
@@ -68,8 +67,7 @@ namespace dotSpace.Objects.Network.Protocols
         {
             try
             {
-                string msg = encoder.Encode(message);
-                writer.WriteLine(msg);
+                encoder.Encode(netStream, message);
             }
             catch (Exception e)
             {
