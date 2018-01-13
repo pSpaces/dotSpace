@@ -1,4 +1,5 @@
-﻿using dotSpace.Interfaces;
+﻿using dotSpace.BaseClasses.Network.Json;
+using dotSpace.Interfaces;
 using dotSpace.Interfaces.Network;
 using dotSpace.Interfaces.Space;
 using dotSpace.Objects.Network;
