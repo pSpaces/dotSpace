@@ -1,14 +1,16 @@
-﻿using dotSpace.Interfaces.Network;
+﻿using dotSpace.BaseClasses.Network.Messages;
+using dotSpace.Interfaces.Network;
+using dotSpace.Objects.Json;
 using System;
 using System.IO;
 using System.Web.Script.Serialization;
 
-namespace dotSpace.BaseClasses.Network
+namespace dotSpace.BaseClasses.Network.Json
 {
     /// <summary>
     /// Provides basic functionality for serializing and deserializing json objects. This is an abstract class.
     /// </summary>
-    public abstract class EncoderBase : IEncoder
+    public abstract class JsonEncoderBase : IEncoder
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods
@@ -31,11 +33,10 @@ namespace dotSpace.BaseClasses.Network
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             StreamWriter writer = new StreamWriter(stream);
-            long start = stream.Position;
             string msg = serializer.Serialize(message);
             writer.WriteLine(msg);
             writer.Flush();
-            return Convert.ToInt32(stream.Position - start);
+            return msg.Length;
         }
 
         /// <summary>
@@ -43,7 +44,10 @@ namespace dotSpace.BaseClasses.Network
         /// </summary>
         public int Encode(Stream stream, IMessage message)
         {
-            
+            if (message is TemplateRequestBase)
+                ((TemplateRequestBase)message).Template = TypeConverter.Box(((TemplateRequestBase)message).Template);
+            else if (message is ReturnResponseBase)
+                ((ReturnResponseBase)message).Result = TypeConverter.Box(((ReturnResponseBase)message).Result);
             return this.Serialize(stream, message);
         }
 

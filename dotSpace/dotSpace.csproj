@@ -50,7 +50,7 @@
     <Compile Include="BaseClasses\Space\AgentBase.cs" />
     <Compile Include="BaseClasses\Network\Messages\RequestBase.cs" />
     <Compile Include="BaseClasses\Network\Messages\ResponseBase.cs" />
-    <Compile Include="BaseClasses\Network\EncoderBase.cs" />
+    <Compile Include="Objects\Network\Json\JsonEncoderBase.cs" />
     <Compile Include="BaseClasses\Network\GateBase.cs" />
     <Compile Include="BaseClasses\Network\RepositoryBase.cs" />
     <Compile Include="BaseClasses\Network\ConnectionModeBase.cs" />
@@ -96,8 +96,8 @@
     <Compile Include="Objects\Network\Messages\Responses\QueryPResponse.cs" />
     <Compile Include="Objects\Network\Messages\Responses\QueryResponse.cs" />
     <Compile Include="Objects\Network\ConnectionModes\Push.cs" />
-    <Compile Include="Objects\Network\ResponseEncoder.cs" />
-    <Compile Include="Objects\Network\RequestEncoder.cs" />
+    <Compile Include="Objects\Network\Json\JsonResponseEncoder.cs" />
+    <Compile Include="Objects\Network\Json\JsonRequestEncoder.cs" />
     <Compile Include="Objects\Network\Messages\Responses\BasicResponse.cs" />
     <Compile Include="Enumerations\Action.cs" />
     <Compile Include="Enumerations\ConnectionMode.cs" />
