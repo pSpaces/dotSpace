@@ -40,20 +40,24 @@ namespace dotSpace.BaseClasses.Network.Messages
         /// <summary>
         /// Gets or sets the identify of the original requester.
         /// </summary>
-        public string Source { get; set; }
+        private string _source;
+        public string Source { get { return _source; } set { _source = value; } }
         /// <summary>
         /// Gets or sets the unique session identifier used by the source to distinguish requests.
         /// </summary>
-        public string Session { get; set; }
+        public string _session;
+        public string Session { get { return _session; } set { _session = value; } }
         /// <summary>
         /// Gets or sets the global identifier that identifies the target space.
         /// </summary>
-        public string Target { get; set; }
+        public string _target;
+        public string Target { get { return _target; } set { _target = value; } }
         /// <summary>
         ///  Gets or sets the action to be executed by the remote space.
         /// </summary>
         [ScriptIgnore]
-        public ActionType Actiontype { get; set; }
+        public ActionType _actiontype;
+        public ActionType Actiontype { get { return _actiontype; } set { _actiontype = value; } }
         /// <summary>
         /// See Actiontype. Specified due to json.
         /// </summary>

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace org.dotspace.io.tools
+namespace dotSpace.Objects.Network.Encoders.Binary.Utilities
 {
     public class TwoWayDictionary<T1, T2> : IDictionary<T1, T2>
     {

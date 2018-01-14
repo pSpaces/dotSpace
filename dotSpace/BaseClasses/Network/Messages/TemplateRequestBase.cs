@@ -1,5 +1,4 @@
 ﻿using dotSpace.Enumerations;
-using dotSpace.Objects.Json;
 
 namespace dotSpace.BaseClasses.Network.Messages
 {
@@ -34,7 +33,7 @@ namespace dotSpace.BaseClasses.Network.Messages
         /// <summary>
         /// Gets or sets the underlying array of values constituting the template pattern.
         /// </summary>
-        public object[] Template { get; set; }
+        public object[] Template;
 
         #endregion
     }

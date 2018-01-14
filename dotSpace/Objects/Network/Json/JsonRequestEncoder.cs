@@ -1,18 +1,16 @@
-﻿using dotSpace.BaseClasses.Network;
-using dotSpace.BaseClasses.Network.Messages;
+﻿using dotSpace.BaseClasses.Network.Messages;
 using dotSpace.Enumerations;
 using dotSpace.Interfaces.Network;
-using dotSpace.Objects.Json;
 using dotSpace.Objects.Network.Messages.Responses;
 using System.IO;
 
-namespace dotSpace.BaseClasses.Network.Json
+namespace dotSpace.Objects.Network.Json
 {
     /// <summary>
     /// Provides basic functionality for serializing and deserializing requests as json string. 
     /// Furthermore, the underlying values are boxed and unboxed thereby supporting language independent types.
     /// </summary>
-    public sealed class RequestEncoder : JsonEncoderBase
+    public sealed class JsonRequestEncoder : JsonEncoderBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////
         #region // Public Methods

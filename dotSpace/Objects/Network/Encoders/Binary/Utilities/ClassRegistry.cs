@@ -1,8 +1,8 @@
-﻿using org.dotspace.io.tools.exceptions;
+﻿using dotSpace.Objects.Network.Encoders.Binary.Exceptions;
 using System;
 using System.Collections.Generic;
 
-namespace org.dotspace.io.tools
+namespace dotSpace.Objects.Network.Encoders.Binary.Utilities
 {
     public class ClassRegistry
     {

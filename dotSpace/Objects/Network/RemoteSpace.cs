@@ -1,9 +1,9 @@
-﻿using dotSpace.BaseClasses.Network.Json;
-using dotSpace.Enumerations;
-using dotSpace.Interfaces;
+﻿using dotSpace.Enumerations;
 using dotSpace.Interfaces.Network;
 using dotSpace.Interfaces.Space;
 using dotSpace.Objects.Network.ConnectionModes;
+using dotSpace.Objects.Network.Encoders.Binary;
+using dotSpace.Objects.Network.Json;
 using dotSpace.Objects.Network.Messages.Requests;
 using dotSpace.Objects.Network.Messages.Responses;
 using dotSpace.Objects.Network.Protocols;
@@ -40,7 +40,7 @@ namespace dotSpace.Objects.Network
         public RemoteSpace(string uri, ITupleFactory tuplefactory = null)
         {
             this.connectionString = new ConnectionString(uri);
-            this.encoder = new RequestEncoder();
+            this.encoder = new BinaryEncoder();
             this.tupleFactory = tuplefactory ?? new TupleFactory();
             if (string.IsNullOrEmpty(this.connectionString.Target))
             {

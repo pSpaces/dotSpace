@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Text;
-using static org.dotspace.io.binary.BinarySerializer;
+using static dotSpace.Objects.Network.Encoders.Binary.BinarySerializer;
 
-namespace org.dotspace.io.binary
+namespace dotSpace.Objects.Network.Encoders.Binary.Utilities
 {
-    public class TypeConverter
+    public static class TypeConverter
     {
-        public byte[] GetBytes(int v)
+        public static byte[] GetBytes(int v)
         {
             byte[] result = BitConverter.GetBytes(v);
             if (!BitConverter.IsLittleEndian)
@@ -14,13 +14,13 @@ namespace org.dotspace.io.binary
             return result;
         }
 
-        public int ToInt32(byte[] v) => ToInt32(v, 0);
-        public int ToInt32(byte[] v, int i)
+        public static int ToInt32(byte[] v) => ToInt32(v, 0);
+        public static int ToInt32(byte[] v, int i)
         {
             return BitConverter.ToInt32(v, i);
         }
 
-        public byte[] GetBytes(uint v)
+        public static byte[] GetBytes(uint v)
         {
             byte[] result = BitConverter.GetBytes(v);
             if (!BitConverter.IsLittleEndian)
@@ -28,13 +28,13 @@ namespace org.dotspace.io.binary
             return result;
         }
 
-        public uint ToUInt32(byte[] v) => ToUInt32(v, 0);
-        public uint ToUInt32(byte[] v, int i)
+        public static uint ToUInt32(byte[] v) => ToUInt32(v, 0);
+        public static uint ToUInt32(byte[] v, int i)
         {
             return BitConverter.ToUInt32(v, 0);
         }
 
-        public byte[] GetBytes(short v)
+        public static byte[] GetBytes(short v)
         {
             byte[] result = BitConverter.GetBytes(v);
             if (!BitConverter.IsLittleEndian)
@@ -42,13 +42,13 @@ namespace org.dotspace.io.binary
             return result;
         }
 
-        public short ToInt16(byte[] v) => ToInt16(v, 0);
-        public short ToInt16(byte[] v, int i)
+        public static short ToInt16(byte[] v) => ToInt16(v, 0);
+        public static short ToInt16(byte[] v, int i)
         {
             return BitConverter.ToInt16(v, 0);
         }
 
-        public byte[] GetBytes(ushort v)
+        public static byte[] GetBytes(ushort v)
         {
             byte[] result = BitConverter.GetBytes(v);
             if (!BitConverter.IsLittleEndian)
@@ -56,13 +56,13 @@ namespace org.dotspace.io.binary
             return result;
         }
 
-        public ushort ToUInt16(byte[] v) => ToUInt16(v, 0);
-        public ushort ToUInt16(byte[] v, int i)
+        public static ushort ToUInt16(byte[] v) => ToUInt16(v, 0);
+        public static ushort ToUInt16(byte[] v, int i)
         {
             return BitConverter.ToUInt16(v, 0);
         }
 
-        public byte[] GetBytes(long v)
+        public static byte[] GetBytes(long v)
         {
             byte[] result = BitConverter.GetBytes(v);
             if (!BitConverter.IsLittleEndian)
@@ -70,13 +70,13 @@ namespace org.dotspace.io.binary
             return result;
         }
 
-        public long ToInt64(byte[] v) => ToInt64(v, 0);
-        public long ToInt64(byte[] v, int i)
+        public static long ToInt64(byte[] v) => ToInt64(v, 0);
+        public static long ToInt64(byte[] v, int i)
         {
             return BitConverter.ToInt64(v, 0);
         }
 
-        public byte[] GetBytes(ulong v)
+        public static byte[] GetBytes(ulong v)
         {
             byte[] result = BitConverter.GetBytes(v);
             if (!BitConverter.IsLittleEndian)
@@ -84,13 +84,13 @@ namespace org.dotspace.io.binary
             return result;
         }
 
-        public ulong ToUInt64(byte[] v) => ToUInt64(v, 0);
-        public ulong ToUInt64(byte[] v, int i)
+        public static ulong ToUInt64(byte[] v) => ToUInt64(v, 0);
+        public static ulong ToUInt64(byte[] v, int i)
         {
             return BitConverter.ToUInt64(v, 0);
         }
 
-        public byte[] GetBytes(bool v)
+        public static byte[] GetBytes(bool v)
         {
             byte[] result = BitConverter.GetBytes(v);
             if (!BitConverter.IsLittleEndian)
@@ -98,13 +98,13 @@ namespace org.dotspace.io.binary
             return result;
         }
 
-        public bool ToBoolean(byte[] v) => ToBoolean(v, 0);
-        public bool ToBoolean(byte[] v, int i)
+        public static bool ToBoolean(byte[] v) => ToBoolean(v, 0);
+        public static bool ToBoolean(byte[] v, int i)
         {
             return BitConverter.ToBoolean(v, 0);
         }
 
-        public byte[] GetBytes(char v, CharEncoding e)
+        public static byte[] GetBytes(char v, CharEncoding e)
         {
             switch (e)
             {
@@ -118,8 +118,8 @@ namespace org.dotspace.io.binary
                     return new UnicodeEncoding().GetBytes(new char[] { v });
             }
         }
-        
-        public char ToChar(byte[] v, CharEncoding e)
+
+        public static char ToChar(byte[] v, CharEncoding e)
         {
             switch (e)
             {
@@ -134,7 +134,7 @@ namespace org.dotspace.io.binary
             }
         }
 
-        public byte[] GetBytes(string v, CharEncoding e)
+        public static byte[] GetBytes(string v, CharEncoding e)
         {
             switch (e)
             {
@@ -148,8 +148,8 @@ namespace org.dotspace.io.binary
                     return new UnicodeEncoding().GetBytes(v);
             }
         }
-        
-        public string ToString(byte[] v, CharEncoding e)
+
+        public static string ToString(byte[] v, CharEncoding e)
         {
             switch (e)
             {
@@ -164,7 +164,7 @@ namespace org.dotspace.io.binary
             }
         }
 
-        public byte[] GetBytes(float v)
+        public static byte[] GetBytes(float v)
         {
             byte[] result = BitConverter.GetBytes(v);
             if (!BitConverter.IsLittleEndian)
@@ -172,13 +172,13 @@ namespace org.dotspace.io.binary
             return result;
         }
 
-        public float ToSingle(byte[] v) => ToSingle(v, 0);
-        public float ToSingle(byte[] v, int i)
+        public static float ToSingle(byte[] v) => ToSingle(v, 0);
+        public static float ToSingle(byte[] v, int i)
         {
             return BitConverter.ToSingle(v, 0);
         }
 
-        public byte[] GetBytes(double v)
+        public static byte[] GetBytes(double v)
         {
             byte[] result = BitConverter.GetBytes(v);
             if (!BitConverter.IsLittleEndian)
@@ -186,13 +186,13 @@ namespace org.dotspace.io.binary
             return result;
         }
 
-        public double ToDouble(byte[] v) => ToDouble(v, 0);
-        public double ToDouble(byte[] v, int i)
+        public static double ToDouble(byte[] v) => ToDouble(v, 0);
+        public static double ToDouble(byte[] v, int i)
         {
             return BitConverter.ToDouble(v, 0);
         }
 
-        public byte[] GetBytes(decimal v)
+        public static byte[] GetBytes(decimal v)
         {
             int[] dec = Decimal.GetBits(v);
             byte[] result = new byte[dec.Length * 4];
@@ -208,8 +208,8 @@ namespace org.dotspace.io.binary
             return result;
         }
 
-        public decimal ToDecimal(byte[] v) => ToDecimal(v, 0);
-        public decimal ToDecimal(byte[] v, int i)
+        public static decimal ToDecimal(byte[] v) => ToDecimal(v, 0);
+        public static decimal ToDecimal(byte[] v, int i)
         {
             int[] dec = new int[4];
             for (int index = 0; index < dec.Length; index++)

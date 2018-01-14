@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace dotSpace.Objects.Json
+namespace dotSpace.Objects.Network.Json
 {
     /// <summary>
     /// Provdes functionaly to convert .NET objects into json strings and back. 
