@@ -3,7 +3,7 @@ using dotSpace.Interfaces.Network;
 using dotSpace.Interfaces.Space;
 using dotSpace.Objects.Network.Encoders.Binary;
 using dotSpace.Objects.Network.Gates;
-using dotSpace.Objects.Network.Json;
+using dotSpace.Objects.Network;
 using System.Collections.Generic;
 using System.Linq;
 
