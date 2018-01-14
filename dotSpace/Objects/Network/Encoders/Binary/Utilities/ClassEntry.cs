@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace org.dotspace.io.tools
+namespace dotSpace.Objects.Network.Encoders.Binary.Utilities
 {
     public class ClassEntry
     {

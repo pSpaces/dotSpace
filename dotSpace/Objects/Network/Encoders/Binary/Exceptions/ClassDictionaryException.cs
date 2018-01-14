@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace org.dotspace.io.tools.exceptions
+namespace dotSpace.Objects.Network.Encoders.Binary.Exceptions
 {
     [Serializable]
     internal class ClassDictionaryException : Exception

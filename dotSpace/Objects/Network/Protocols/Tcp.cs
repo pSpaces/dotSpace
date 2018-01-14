@@ -19,8 +19,6 @@ namespace dotSpace.Objects.Network.Protocols
 
         private TcpClient client;
         private NetworkStream netStream;
-        private StreamReader reader;
-        private StreamWriter writer;
 
         #endregion
 
@@ -34,9 +32,6 @@ namespace dotSpace.Objects.Network.Protocols
         {
             this.client = client;
             this.netStream = client.GetStream();
-            this.reader = new StreamReader(this.netStream);
-            this.writer = new StreamWriter(this.netStream);
-            this.writer.AutoFlush = true;
         }
 
         #endregion

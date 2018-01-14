@@ -34,12 +34,12 @@ namespace dotSpace.BaseClasses.Network.Messages
         /// <summary>
         /// Gets or sets the status code representing the reponse.
         /// </summary>
-        public StatusCode Code { get; set; }
+        public StatusCode Code;
 
         /// <summary>
         /// Gets or sets the status message as a textual representation of the status code.
         /// </summary>
-        public string Message { get; set; }
+        public string Message;
 
         #endregion
 

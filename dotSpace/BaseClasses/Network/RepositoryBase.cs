@@ -1,8 +1,9 @@
 ﻿using System;
 using dotSpace.Interfaces.Network;
 using dotSpace.Interfaces.Space;
-using dotSpace.Objects.Network;
+using dotSpace.Objects.Network.Encoders.Binary;
 using dotSpace.Objects.Network.Gates;
+using dotSpace.Objects.Network.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -35,7 +36,7 @@ namespace dotSpace.BaseClasses.Network
         {
             this.spaces = new Dictionary<string, ISpace>();
             this.gates = new List<IGate>();
-            this.encoder = new ResponseEncoder();
+            this.encoder = new BinaryEncoder();
             this.gateFactory = new GateFactory();
         }
 

@@ -33,7 +33,7 @@ namespace dotSpace.BaseClasses.Network.Messages
         /// <summary>
         /// Gets or sets the underlying array of values constituting the tuple values given as response to a request.
         /// </summary>
-        public object[] Result { get; set; }
+        public object[] Result;
 
         #endregion
     }

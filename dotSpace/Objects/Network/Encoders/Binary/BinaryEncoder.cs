@@ -1,30 +1,47 @@
-﻿using dotSpace.Interfaces.Network;
-using org.dotspace.io.binary;
+﻿using dotSpace.BaseClasses.Network.Messages;
+using dotSpace.Interfaces.Network;
+using dotSpace.Objects.Network.Encoders.Binary.Utilities;
 using System;
 using System.IO;
 
 namespace dotSpace.Objects.Network.Encoders.Binary
 {
-    class BinaryEncoder : IEncoder
+    public sealed class BinaryEncoder : IEncoder
     {
-        public IMessage Decode(Stream msg)
+        private BinarySerializer serializer = new BinarySerializer();
+
+        public int Serialize(Stream stream, IMessage message, params Type[] types)
         {
-            throw new NotImplementedException();
+            BinarySerializer serializer = new BinarySerializer();
+            var msg = serializer.Serialize(message);
+            var bytelength = TypeConverter.GetBytes(msg.Length);
+            stream.Write(bytelength, 0, bytelength.Length);
+            stream.Write(msg, 0, msg.Length);
+            stream.Flush();
+            return msg.Length;
         }
 
         public T Deserialize<T>(Stream stream, params Type[] types)
         {
-            throw new NotImplementedException();
+            BinarySerializer serializer = new BinarySerializer();
+            byte[] lengthBytes = new byte[4];
+            stream.Read(lengthBytes, 0, lengthBytes.Length);
+            int length = TypeConverter.ToInt32(lengthBytes);
+            byte[] bytes = new byte[length];
+            stream.Read(bytes, 0, bytes.Length);
+            return (T)serializer.Deserialize(typeof(T), bytes);
         }
 
         public int Encode(Stream stream, IMessage message)
         {
-            throw new NotImplementedException();
+            int n = this.Serialize(stream, message);
+            return n;
         }
 
-        public int Serialize(Stream stream, IMessage message, params Type[] types)
+        public IMessage Decode(Stream stream)
         {
-            throw new NotImplementedException();
+            MessageBase breq = this.Deserialize<MessageBase>(stream);
+            return breq;
         }
     }
 }

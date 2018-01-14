@@ -1,6 +1,5 @@
 ﻿using dotSpace.BaseClasses.Network.Messages;
 using dotSpace.Enumerations;
-using dotSpace.Objects.Json;
 
 namespace dotSpace.Objects.Network.Messages.Requests
 {

@@ -1,12 +1,13 @@
-﻿using org.dotspace.io.tools;
-using org.dotspace.io.xml;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Linq;
+using dotSpace.Objects.Network.Encoders.Binary.Utilities;
+using dotSpace.Objects.Network.Encoders.Binary.Exceptions;
 
-namespace org.dotspace.io.binary
+namespace dotSpace.Objects.Network.Encoders.Binary
 {
     public class BinarySerializer
     {
@@ -63,12 +64,16 @@ namespace org.dotspace.io.binary
             { typeof(String), PrimitiveTypes.String },
             { typeof(Enum), PrimitiveTypes.Enum }
         };
-        private static readonly HashSet<byte> binaryprimitives = new HashSet<byte>() // Used for checking if byte is a Primitive TAG.
+        private static readonly Dictionary<byte, Type> binaryprimitives = new Dictionary<byte, Type>() // Used for checking if byte is a Primitive TAG.
         {
-            INT, DOUBLE, BOOL, CHAR, STRING, ENUM
+            { INT, typeof(Int32) },
+            { DOUBLE, typeof(Double) },
+            { BOOL, typeof(Boolean) },
+            { CHAR, typeof(Char) },
+            { STRING, typeof(String) },
+            { ENUM, typeof(Enum) }
         };
-
-        private TypeConverter convertor = new TypeConverter();
+        
         public Stream stream;
         public int LastRead;
         #endregion
@@ -147,7 +152,6 @@ namespace org.dotspace.io.binary
                 else
                     Length = Lengths._32bit;
             }
-            LastRead = stream.ReadByte();
             Object obj = NewObjectDeserialization(type);
             CharEncoder = tempEncoder;
             Length = tempLength;
@@ -169,14 +173,10 @@ namespace org.dotspace.io.binary
             else
             {
                 stream.WriteByte(CLASS); // Class TAG.
-                byte[] bytes = convertor.GetBytes(type.Name, CharEncoder);
+                byte[] bytes = TypeConverter.GetBytes(type.AssemblyQualifiedName, CharEncoder);
                 byte[] byteslength = LengthToBytes(bytes.Length);
-                stream.Write(byteslength, 0, byteslength.Length); // Class name data length.
-                stream.Write(bytes, 0, bytes.Length); // Class name.
-                byte[] bytes2 = convertor.GetBytes(type.AssemblyQualifiedName, CharEncoder);
-                byte[] byteslength2 = LengthToBytes(bytes2.Length);
-                stream.Write(byteslength2, 0, byteslength2.Length); // Class full name data length.
-                stream.Write(bytes2, 0, bytes2.Length); // Class full name.
+                stream.Write(byteslength, 0, byteslength.Length); // Class full name data length.
+                stream.Write(bytes, 0, bytes.Length); // Class full name.
 
                 Type[] parametertypes = type.GetGenericArguments();
                 if (type.ContainsGenericParameters)
@@ -191,12 +191,12 @@ namespace org.dotspace.io.binary
         public Type ClassDeserialization(Type expectedType)
         {
             Type result = null;
-            if (binaryprimitives.Contains(Convert.ToByte(LastRead)))
+            if (binaryprimitives.ContainsKey(Convert.ToByte(LastRead)))
             {
-                if (LastRead.Equals(PrimitiveToTAG(primitives[expectedType])))
+                if (primitives.ContainsKey(expectedType) && LastRead.Equals(PrimitiveToTAG(primitives[expectedType])))
                     result = expectedType;
                 else
-                    throw new Exception(expectedType.ToString() + " was expected, but was of unknown type.");
+                    result = binaryprimitives[Convert.ToByte(LastRead)];
                 LastRead = stream.ReadByte();
                 return result;
             }
@@ -209,20 +209,14 @@ namespace org.dotspace.io.binary
             }
             else if (LastRead.Equals(CLASS)) // Class TAG.
             {
-                int length = ReadLength(); // Class name data length.
-                byte[] nameBytes = new byte[length];
-                stream.Read(nameBytes, 0, nameBytes.Length); // Class name.
-                String className = convertor.ToString(nameBytes, CharEncoder);
                 int fullLength = ReadLength(); // Class full name data length.
                 byte[] fullnameBytes = new byte[fullLength];
                 stream.Read(fullnameBytes, 0, fullnameBytes.Length); // Class full name.
-                String fullclassName = convertor.ToString(fullnameBytes, CharEncoder);
+                String className = TypeConverter.ToString(fullnameBytes, CharEncoder);
                 if (ClassRegistry.ContainsValue(className))
                     result = ClassRegistry.Get(className);
                 if (result == null)
                     result = Type.GetType(className, false, true);
-                if (result == null)
-                    result = Type.GetType(fullclassName, false, true);
                 if (result == null)
                     result = expectedType; // Nothing else works, try and parse data into the expected type given.
                 LastRead = stream.ReadByte();
@@ -267,6 +261,7 @@ namespace org.dotspace.io.binary
                     byte[] bytes = LengthToBytes(array.GetLength(i));
                     stream.Write(bytes, 0, bytes.Length); // Array length data.
                 }
+                stream.WriteByte(0);
 
                 int[] indices = new int[array.Rank];
                 bool c = true;
@@ -303,18 +298,21 @@ namespace org.dotspace.io.binary
             }
             else // REMEMBER POSSIBLE T CLASS ARGUMENT! Examine and Instantiate Generic Types with Reflection.
             {
-                FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
                 LinkedList<FieldInfo> fieldslist = new LinkedList<FieldInfo>();
                 foreach (FieldInfo field in fields) // Sort out fields with the NotSerializable modifier and fields with null values.
                     if (!field.IsNotSerialized && field.GetValue(obj) != null)
                         fieldslist.AddLast(field);
+                var hiddenfields = GetAllHiddenFields(obj, obj.GetType());
+                foreach (FieldInfo f in hiddenfields)
+                    fieldslist.AddLast(f);
                 stream.WriteByte(OBJECT); // Object TAG.
                 byte[] bytes = LengthToBytes(fieldslist.Count);
                 stream.Write(bytes, 0, bytes.Length); // Field count.
                 foreach (FieldInfo field in fieldslist)
                 {
                     stream.WriteByte(FIELD); // Field TAG.
-                    byte[] fieldname = convertor.GetBytes(field.Name, CharEncoder);
+                    byte[] fieldname = TypeConverter.GetBytes(field.Name, CharEncoder);
                     byte[] fieldnamelength = LengthToBytes(fieldname.Length);
                     stream.Write(fieldnamelength, 0, fieldnamelength.Length); // Field name data length.
                     stream.Write(fieldname, 0, fieldname.Length); // Field name data.
@@ -325,16 +323,16 @@ namespace org.dotspace.io.binary
         }
         private Object NewObjectDeserialization(Type expectedType)
         {
-            if (LastRead.Equals(CLASS) || LastRead.Equals(ARRAY) || binaryprimitives.Contains(Convert.ToByte(LastRead)))
+            LastRead = stream.ReadByte(); // New TAG.
+            if (LastRead.Equals(CLASS) || LastRead.Equals(ARRAY) || binaryprimitives.ContainsKey(Convert.ToByte(LastRead)))
             {
                 expectedType = ClassDeserialization(expectedType);
                 if (LastRead.Equals(CLASS))
                     return expectedType;
             }
-            if (binaryprimitives.Contains(Convert.ToByte(LastRead))) // Read Primitive TAG. INT, BOOL, CHAR etc. Or an Enum is expected.
+            if (binaryprimitives.ContainsKey(Convert.ToByte(LastRead))) // Read Primitive TAG. INT, BOOL, CHAR etc. Or an Enum is expected.
             {
                 var result = ReadPrimitive(expectedType); // Primitive data length. // Primitive data. int, bool, string etc.
-                LastRead = stream.ReadByte(); // New TAG.
                 return result;
             }
             else if (LastRead.Equals(ARRAY)) // Read Array TAG.
@@ -373,7 +371,6 @@ namespace org.dotspace.io.binary
                 // IDictionary
                 // Else ICollection
                 int count = ReadLength(); // Collection count.
-                LastRead = stream.ReadByte(); // New TAG.
                 dynamic collection = Activator.CreateInstance(expectedType);
                 for (int i = 0; i < count; i++) // Reconstruct collection through iteration.
                 {
@@ -386,17 +383,16 @@ namespace org.dotspace.io.binary
             {
                 Object obj = Activator.CreateInstance(expectedType);
                 int count = ReadLength(); // Field count.
-                LastRead = Convert.ToByte(stream.ReadByte()); // Field TAG.
                 for (int i = 0; i < count; i++)
                 {
+                    LastRead = Convert.ToByte(stream.ReadByte()); // Field TAG.
                     if (!LastRead.Equals(FIELD))
                         throw new Exception("Not a field.");
                     int length = ReadLength(); // Field name data length.
                     byte[] bytes = new byte[length];
                     stream.Read(bytes, 0, length); // Field name data.
-                    String fieldName = convertor.ToString(bytes, CharEncoder);
+                    String fieldName = TypeConverter.ToString(bytes, CharEncoder);
                     FieldInfo field = expectedType.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                    LastRead = stream.ReadByte(); // New TAG.
                     if (field != null)
                         field.SetValue(obj, NewObjectDeserialization(field.FieldType)); // Field data deserializing.
                     else
@@ -428,14 +424,50 @@ namespace org.dotspace.io.binary
             Skip(); // Start skipping field.
             void Skip()
             {
+                LastRead = stream.ReadByte();
+                if (LastRead.Equals(CLASS) || LastRead.Equals(ARRAY) || binaryprimitives.ContainsKey(Convert.ToByte(LastRead)))
+                {
+                    SkipClass();
+                    if (LastRead.Equals(CLASS))
+                        return;
+                }
                 if (LastRead.Equals(ARRAY))
                     SkipArray();
-                if (LastRead.Equals(COLLECTION))
+                else if (LastRead.Equals(COLLECTION))
                     SkipCollection();
-                if (LastRead.Equals(OBJECT))
+                else if (LastRead.Equals(OBJECT))
                     SkipObject();
-                else
+                else if (binaryprimitives.ContainsKey(Convert.ToByte(LastRead)))
                     SkipPrimitive();
+            }
+            void SkipClass()
+            {
+                if (binaryprimitives.ContainsKey(Convert.ToByte(LastRead)))
+                {
+                    LastRead = stream.ReadByte();
+                }
+                else if (LastRead.Equals(ARRAY)) // Array TAG.
+                {
+                    int arrayRank = stream.ReadByte(); // Array dimensions.
+                    LastRead = stream.ReadByte();
+                    SkipClass();
+                }
+                else if (LastRead.Equals(CLASS)) // Class TAG.
+                {
+                    int fullLength = ReadLength(); // Class full name data length.
+                    byte[] fullnameBytes = new byte[fullLength];
+                    stream.Read(fullnameBytes, 0, fullnameBytes.Length); // Class full name.
+                    LastRead = stream.ReadByte();
+                    if (LastRead.Equals(CLASSPARAMETER)) // Class parameter TAG.
+                    {
+                        int count = stream.ReadByte(); // Number of class parameters
+                        LastRead = stream.ReadByte();
+                        for (int i = 0; i < count; i++)
+                        {
+                            SkipClass();
+                        }
+                    }
+                }
             }
             void SkipArray()
             {
@@ -452,7 +484,6 @@ namespace org.dotspace.io.binary
             void SkipCollection()
             {
                 int count = stream.ReadByte(); // Collection count.
-                LastRead = stream.ReadByte();
                 for (int i = 0; i < count; i++)
                 {
                     Skip();
@@ -465,16 +496,49 @@ namespace org.dotspace.io.binary
                 {
                     stream.ReadByte(); // Field TAG.
                     int length = ReadLength(); // Length.
-                    stream.Seek(length, SeekOrigin.Current); // Field name.
-                    LastRead = stream.ReadByte();
+                    byte[] bytes = new byte[length];
+                    stream.Read(bytes, 0, bytes.Length); // Field name.
                     Skip();
                 }
             }
             void SkipPrimitive()
             {
-                int length = stream.ReadByte();
-                stream.Seek(length, SeekOrigin.Current);
-                LastRead = stream.ReadByte();
+                //int length = stream.ReadByte();
+                //byte[] bytes = new byte[length];
+                //stream.Read(bytes, 0, bytes.Length);
+                int length;
+                byte[] bytes;
+                if (LastRead.Equals(ENUM) || LastRead.Equals(STRING))
+                {
+                    byte[] lengthbytes;
+                    switch (Length) // Primitive data length.
+                    {
+                        case Lengths._8bit:
+                            length = stream.ReadByte();
+                            break;
+                        case Lengths._16bit:
+                            lengthbytes = new byte[2];
+                            stream.Read(lengthbytes, 0, lengthbytes.Length);
+                            length = TypeConverter.ToInt16(lengthbytes);
+                            break;
+                        case Lengths._32bit:
+                            lengthbytes = new byte[4];
+                            stream.Read(lengthbytes, 0, lengthbytes.Length);
+                            length = TypeConverter.ToInt32(lengthbytes);
+                            break;
+                        default:
+                            length = stream.ReadByte();
+                            break;
+                    }
+                    bytes = new byte[length];
+                    stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
+                }
+                else
+                {
+                    length = stream.ReadByte(); // Primitive data length.
+                    bytes = new byte[length];
+                    stream.Read(bytes, 0, length); // Primitive data. int, bool etc.
+                }
             }
         }
 
@@ -487,10 +551,10 @@ namespace org.dotspace.io.binary
                     lengthbytes = new byte[] { Convert.ToByte(length) };
                     break;
                 case Lengths._16bit:
-                    lengthbytes = convertor.GetBytes(Convert.ToInt16(length));
+                    lengthbytes = TypeConverter.GetBytes(Convert.ToInt16(length));
                     break;
                 case Lengths._32bit:
-                    lengthbytes = convertor.GetBytes(length);
+                    lengthbytes = TypeConverter.GetBytes(length);
                     break;
                 default:
                     lengthbytes = new byte[] { Convert.ToByte(length) };
@@ -510,12 +574,12 @@ namespace org.dotspace.io.binary
                 case Lengths._16bit:
                     lengthbytes = new byte[2];
                     stream.Read(lengthbytes, 0, lengthbytes.Length);
-                    length = convertor.ToInt16(lengthbytes);
+                    length = TypeConverter.ToInt16(lengthbytes);
                     break;
                 case Lengths._32bit:
                     lengthbytes = new byte[4];
                     stream.Read(lengthbytes, 0, lengthbytes.Length);
-                    length = convertor.ToInt32(lengthbytes);
+                    length = TypeConverter.ToInt32(lengthbytes);
                     break;
                 default:
                     length = stream.ReadByte();
@@ -531,7 +595,7 @@ namespace org.dotspace.io.binary
             byte[] data;
             if (obj.GetType().IsEnum)
             {
-                data = convertor.GetBytes(obj.ToString(), CharEncoder);
+                data = TypeConverter.GetBytes(obj.ToString(), CharEncoder);
                 length = LengthToBytes(data.Length);
                 type = ENUM;
             }
@@ -540,12 +604,12 @@ namespace org.dotspace.io.binary
                 switch (obj)
                 {
                     case Boolean b:
-                        data = convertor.GetBytes(b);
+                        data = TypeConverter.GetBytes(b);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = BOOL;
                         break;
                     case SByte sb:
-                        data = convertor.GetBytes(sb);
+                        data = TypeConverter.GetBytes(sb);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = INT;
                         break;
@@ -555,57 +619,57 @@ namespace org.dotspace.io.binary
                         type = INT;
                         break;
                     case Int16 i:
-                        data = convertor.GetBytes(i);
+                        data = TypeConverter.GetBytes(i);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = INT;
                         break;
                     case Int32 i:
-                        data = convertor.GetBytes(i);
+                        data = TypeConverter.GetBytes(i);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = INT;
                         break;
                     case Int64 i:
-                        data = convertor.GetBytes(i);
+                        data = TypeConverter.GetBytes(i);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = INT;
                         break;
                     case UInt16 ui:
-                        data = convertor.GetBytes(ui);
+                        data = TypeConverter.GetBytes(ui);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = INT;
                         break;
                     case UInt32 ui:
-                        data = convertor.GetBytes(ui);
+                        data = TypeConverter.GetBytes(ui);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = INT;
                         break;
                     case UInt64 ui:
-                        data = convertor.GetBytes(ui);
+                        data = TypeConverter.GetBytes(ui);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = INT;
                         break;
                     case Single s:
-                        data = convertor.GetBytes(s);
+                        data = TypeConverter.GetBytes(s);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = DOUBLE;
                         break;
                     case Double d:
-                        data = convertor.GetBytes(d);
+                        data = TypeConverter.GetBytes(d);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = DOUBLE;
                         break;
                     case Decimal d:
-                        data = convertor.GetBytes(d);
+                        data = TypeConverter.GetBytes(d);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = DOUBLE;
                         break;
                     case Char c:
-                        data = convertor.GetBytes(c);
+                        data = TypeConverter.GetBytes(c);
                         length = new byte[] { Convert.ToByte(data.Length) };
                         type = CHAR;
                         break;
                     case String s:
-                        data = convertor.GetBytes(s, CharEncoder);
+                        data = TypeConverter.GetBytes(s, CharEncoder);
                         length = LengthToBytes(data.Length);
                         type = STRING;
                         break;
@@ -634,12 +698,12 @@ namespace org.dotspace.io.binary
                     case Lengths._16bit:
                         lengthbytes = new byte[2];
                         stream.Read(lengthbytes, 0, lengthbytes.Length);
-                        length = convertor.ToInt16(lengthbytes);
+                        length = TypeConverter.ToInt16(lengthbytes);
                         break;
                     case Lengths._32bit:
                         lengthbytes = new byte[4];
                         stream.Read(lengthbytes, 0, lengthbytes.Length);
-                        length = convertor.ToInt32(lengthbytes);
+                        length = TypeConverter.ToInt32(lengthbytes);
                         break;
                     default:
                         length = stream.ReadByte();
@@ -647,7 +711,7 @@ namespace org.dotspace.io.binary
                 }
                 bytes = new byte[length];
                 stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                String str = convertor.ToString(bytes, CharEncoder);
+                String str = TypeConverter.ToString(bytes, CharEncoder);
                 foreach (Enum e in type.GetEnumValues())
                 {
                     if (e.ToString().Equals(str))
@@ -663,7 +727,7 @@ namespace org.dotspace.io.binary
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToBoolean(bytes);
+                        return TypeConverter.ToBoolean(bytes);
                     case PrimitiveTypes.SByte:
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
@@ -678,52 +742,52 @@ namespace org.dotspace.io.binary
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToInt16(bytes);
+                        return TypeConverter.ToInt16(bytes);
                     case PrimitiveTypes.Int32:
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToInt32(bytes);
+                        return TypeConverter.ToInt32(bytes);
                     case PrimitiveTypes.Int64:
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToInt64(bytes);
+                        return TypeConverter.ToInt64(bytes);
                     case PrimitiveTypes.UInt16:
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToUInt16(bytes);
+                        return TypeConverter.ToUInt16(bytes);
                     case PrimitiveTypes.UInt32:
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToUInt32(bytes);
+                        return TypeConverter.ToUInt32(bytes);
                     case PrimitiveTypes.UInt64:
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToUInt64(bytes);
+                        return TypeConverter.ToUInt64(bytes);
                     case PrimitiveTypes.Single:
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToSingle(bytes);
+                        return TypeConverter.ToSingle(bytes);
                     case PrimitiveTypes.Double:
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToDouble(bytes);
+                        return TypeConverter.ToDouble(bytes);
                     case PrimitiveTypes.Decimal:
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToDecimal(bytes);
+                        return TypeConverter.ToDecimal(bytes);
                     case PrimitiveTypes.Char:
                         length = stream.ReadByte(); // Primitive data length.
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToChar(bytes, CharEncoder);
+                        return TypeConverter.ToChar(bytes, CharEncoder);
                     case PrimitiveTypes.String:
                         byte[] lengthbytes;
                         switch (Length)
@@ -734,12 +798,12 @@ namespace org.dotspace.io.binary
                             case Lengths._16bit:
                                 lengthbytes = new byte[2];
                                 stream.Read(lengthbytes, 0, lengthbytes.Length);
-                                length = convertor.ToInt16(lengthbytes);
+                                length = TypeConverter.ToInt16(lengthbytes);
                                 break;
                             case Lengths._32bit:
                                 lengthbytes = new byte[4];
                                 stream.Read(lengthbytes, 0, lengthbytes.Length);
-                                length = convertor.ToInt32(lengthbytes);
+                                length = TypeConverter.ToInt32(lengthbytes);
                                 break;
                             default:
                                 length = stream.ReadByte();
@@ -747,7 +811,7 @@ namespace org.dotspace.io.binary
                         }
                         bytes = new byte[length];
                         stream.Read(bytes, 0, length); // Primitive data. int, bool, string etc.
-                        return convertor.ToString(bytes, CharEncoder);
+                        return TypeConverter.ToString(bytes, CharEncoder);
                     default:
                         throw new ParseException(type.ToString() + " is not a primitive.");
                 }
@@ -782,6 +846,16 @@ namespace org.dotspace.io.binary
                 default:
                     throw new Exception("Illegal Argument.");
             }
+        }
+        
+        private FieldInfo[] GetAllHiddenFields(object obj, Type type)
+        {
+            FieldInfo[] fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+            List<FieldInfo> fieldslist = new List<FieldInfo>();
+            foreach (FieldInfo field in fields) // Sort out fields with the NotSerializable modifier and fields with null values.
+                if (!field.IsNotSerialized && field.GetValue(obj) != null)
+                    fieldslist.Add(field);
+            return type.BaseType.Equals(typeof(Object)) ? fieldslist.ToArray() : fieldslist.ToArray().Concat(GetAllHiddenFields(obj, type.BaseType)).ToArray();
         }
         #endregion
     }

@@ -1,9 +1,5 @@
-﻿using dotSpace.BaseClasses;
-using dotSpace.BaseClasses.Network.Messages;
+﻿using dotSpace.BaseClasses.Network.Messages;
 using dotSpace.Enumerations;
-using dotSpace.Interfaces;
-using dotSpace.Objects.Json;
-using System.Collections.Generic;
 
 namespace dotSpace.Objects.Network.Messages.Responses
 {

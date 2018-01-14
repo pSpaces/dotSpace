@@ -1,11 +1,10 @@
 ﻿using dotSpace.BaseClasses.Network.Messages;
 using dotSpace.Interfaces.Network;
-using dotSpace.Objects.Json;
 using System;
 using System.IO;
 using System.Web.Script.Serialization;
 
-namespace dotSpace.BaseClasses.Network.Json
+namespace dotSpace.Objects.Network.Json
 {
     /// <summary>
     /// Provides basic functionality for serializing and deserializing json objects. This is an abstract class.

@@ -1,4 +1,4 @@
-﻿namespace dotSpace.Objects.Json
+﻿namespace dotSpace.Objects.Network.Json
 {
     /// <summary>
     /// Entity used for describing interoperable value types when serializing and deserializing json objects.
