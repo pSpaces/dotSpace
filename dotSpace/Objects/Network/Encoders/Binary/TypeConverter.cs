@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using static dotSpace.Objects.Network.Encoders.Binary.BinarySerializer;
+using static dotSpace.Objects.Network.Encoders.Binary.Configurations;
 
 namespace dotSpace.Objects.Network.Encoders.Binary.Utilities
 {
@@ -104,60 +104,60 @@ namespace dotSpace.Objects.Network.Encoders.Binary.Utilities
             return BitConverter.ToBoolean(v, 0);
         }
 
-        public static byte[] GetBytes(char v, CharEncoding e)
+        public static byte[] GetBytes(char v, CharEncodings e)
         {
             switch (e)
             {
-                case CharEncoding.UTF8:
+                case CharEncodings.UTF8:
                     return new UTF8Encoding().GetBytes(new char[] { v });
-                case CharEncoding.Unicode:
+                case CharEncodings.Unicode:
                     return new UnicodeEncoding().GetBytes(new char[] { v });
-                case CharEncoding.UTF32:
+                case CharEncodings.UTF32:
                     return new UTF32Encoding().GetBytes(new char[] { v });
                 default:
                     return new UnicodeEncoding().GetBytes(new char[] { v });
             }
         }
 
-        public static char ToChar(byte[] v, CharEncoding e)
+        public static char ToChar(byte[] v, CharEncodings e)
         {
             switch (e)
             {
-                case CharEncoding.UTF8:
+                case CharEncodings.UTF8:
                     return new UTF8Encoding().GetChars(v)[0];
-                case CharEncoding.Unicode:
+                case CharEncodings.Unicode:
                     return new UnicodeEncoding().GetChars(v)[0];
-                case CharEncoding.UTF32:
+                case CharEncodings.UTF32:
                     return new UTF32Encoding().GetChars(v)[0];
                 default:
                     return new UnicodeEncoding().GetChars(v)[0];
             }
         }
 
-        public static byte[] GetBytes(string v, CharEncoding e)
+        public static byte[] GetBytes(string v, CharEncodings e)
         {
             switch (e)
             {
-                case CharEncoding.UTF8:
+                case CharEncodings.UTF8:
                     return new UTF8Encoding().GetBytes(v);
-                case CharEncoding.Unicode:
+                case CharEncodings.Unicode:
                     return new UnicodeEncoding().GetBytes(v);
-                case CharEncoding.UTF32:
+                case CharEncodings.UTF32:
                     return new UTF32Encoding().GetBytes(v);
                 default:
                     return new UnicodeEncoding().GetBytes(v);
             }
         }
 
-        public static string ToString(byte[] v, CharEncoding e)
+        public static string ToString(byte[] v, CharEncodings e)
         {
             switch (e)
             {
-                case CharEncoding.UTF8:
+                case CharEncodings.UTF8:
                     return new UTF8Encoding().GetString(v);
-                case CharEncoding.Unicode:
+                case CharEncodings.Unicode:
                     return new UnicodeEncoding().GetString(v);
-                case CharEncoding.UTF32:
+                case CharEncodings.UTF32:
                     return new UTF32Encoding().GetString(v);
                 default:
                     return new UnicodeEncoding().GetString(v);
