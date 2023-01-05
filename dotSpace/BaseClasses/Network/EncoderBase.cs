@@ -1,8 +1,7 @@
 ﻿using dotSpace.Interfaces;
 using dotSpace.Interfaces.Network;
 using System;
-using System.Web.Script.Serialization;
-
+using System.Text.Json;
 namespace dotSpace.BaseClasses.Network
 {
     /// <summary>
@@ -18,8 +17,7 @@ namespace dotSpace.BaseClasses.Network
         /// </summary>
         public T Deserialize<T>(string json, params Type[] types)
         {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            return serializer.Deserialize<T>(json);
+            return JsonSerializer.Deserialize<T>(json);
         }
 
         /// <summary>
@@ -27,8 +25,8 @@ namespace dotSpace.BaseClasses.Network
         /// </summary>
         public string Serialize(IMessage message, params Type[] types)
         {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            return serializer.Serialize(message);
+            // Why this works is a mystery to me, but the serializer didn't want to serialize the message when it was an interface.
+            return JsonSerializer.Serialize(Convert.ChangeType(message, message.GetType()));
         }
 
         /// <summary>

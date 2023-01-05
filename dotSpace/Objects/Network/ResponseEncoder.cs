@@ -5,7 +5,6 @@ using dotSpace.Interfaces;
 using dotSpace.Interfaces.Network;
 using dotSpace.Objects.Json;
 using dotSpace.Objects.Network.Messages.Requests;
-
 namespace dotSpace.Objects.Network
 {
     /// <summary>

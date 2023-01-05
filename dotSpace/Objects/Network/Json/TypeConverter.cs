@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace dotSpace.Objects.Json
 {
@@ -16,6 +17,8 @@ namespace dotSpace.Objects.Json
         private static Dictionary<string, Type> unboxedTypes;
         private static Dictionary<Type, string> boxedTypes;
 
+        private static Dictionary<string,string> typeToString;
+
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +31,10 @@ namespace dotSpace.Objects.Json
         {
             unboxedTypes = new Dictionary<string, Type>();
             boxedTypes = new Dictionary<Type, string>();
+            typeToString = new Dictionary<string, string>();
+            typeToString.Add("int32", "int");
+            typeToString.Add("int64", "long");
+
             AddType("string", typeof(string));
             AddType("int", typeof(int));
             AddType("float", typeof(float));
@@ -66,19 +73,38 @@ namespace dotSpace.Objects.Json
         {
             if (values == null)
                 return null;
+
             List<object> unboxedValues = new List<object>();
-            foreach (Dictionary<string, object> kv in values)
+
+            foreach (object val in values)
             {
-                if (kv.Count == 1)
+                // This is only used if the JSON Serializer fails to correctly deserialize.
+                if (val is JsonElement)
                 {
-                    unboxedValues.Add(UnboxType((string)kv["TypeName"]));
+                    var value = (JsonElement)val;
+                    
+                    if (value.TryGetProperty("Value", out JsonElement _))
+                    {
+                        unboxedValues.Add(UnboxType(value.GetProperty("TypeName").GetString(), value.GetProperty("Value")));
+                    }
+                    else
+                    {
+                        unboxedValues.Add(UnboxType(value.GetProperty("TypeName").GetString()));
+                    }
                 }
-                else if (kv.Count == 2)
+                // As it sometimes manages to do it correctly.
+                else
                 {
-                    unboxedValues.Add(UnboxType((string)kv["TypeName"], kv["Value"]));
+                    if(val is Type)
+                    {
+                        unboxedValues.Add(UnboxType(((Type)val).Name.ToLower()));
+                    }
+                    else
+                    {
+                        unboxedValues.Add(UnboxType(val.GetType().Name.ToLower(), val));
+                    }
                 }
             }
-
             return unboxedValues.ToArray();
         }
 
@@ -105,6 +131,8 @@ namespace dotSpace.Objects.Json
 
         private static Type UnboxType(string typename)
         {
+            if (typeToString.ContainsKey(typename)) typename = typeToString[typename];
+
             if (unboxedTypes.ContainsKey(typename))
             {
                 return unboxedTypes[typename];
@@ -121,8 +149,21 @@ namespace dotSpace.Objects.Json
             throw new Exception("Attempting to box unsupported type");
         }
 
+        private static object UnboxType(string typename, JsonElement value)
+        {
+            if (typeToString.ContainsKey(typename)) typename = typeToString[typename];
+
+            if (unboxedTypes.ContainsKey(typename))
+            {
+                return JsonSerializer.Deserialize(value, unboxedTypes[typename]);
+            }
+            throw new Exception("Attempting to unbox unsupported type");
+        }
+
         private static object UnboxType(string typename, object value)
         {
+            if(typeToString.ContainsKey(typename)) typename = typeToString[typename];
+
             if (unboxedTypes.ContainsKey(typename))
             {
                 return Convert.ChangeType(value, unboxedTypes[typename]);
